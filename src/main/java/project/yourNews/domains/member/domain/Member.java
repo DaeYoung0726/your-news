@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.yourNews.domains.BaseTimeEntity;
 import project.yourNews.domains.post.domain.Post;
 import project.yourNews.domains.subNews.domain.SubNews;
 
@@ -24,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
