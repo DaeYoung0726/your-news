@@ -4,7 +4,9 @@ import lombok.Getter;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.domain.Role;
 import project.yourNews.domains.post.domain.Post;
+import project.yourNews.domains.post.dto.PostResponseDto;
 import project.yourNews.domains.subNews.domain.SubNews;
+import project.yourNews.domains.subNews.dto.SubNewsResponseDto;
 
 import java.util.List;
 
@@ -16,8 +18,8 @@ public class MemberResponseDto {
     private final String nickname;
     private final String email;
     private final Role role;
-    private final List<SubNews> subNews;    // SubNewsResponseDto로 바꾸기
-    private final List<Post> posts;         // PostResponseDto로 바꾸기
+    private final List<SubNewsResponseDto> subNews;    // SubNewsResponseDto로 바꾸기
+    private final List<PostResponseDto> posts;         // PostResponseDto로 바꾸기
 
     public MemberResponseDto(Member member) {
         this.id = member.getId();
@@ -25,7 +27,7 @@ public class MemberResponseDto {
         this.nickname = member.getNickname();
         this.email = member.getEmail();
         this.role = member.getRole();
-        this.subNews = member.getSubNews();
-        this.posts = member.getPosts();
+        this.subNews = member.getSubNews().stream().map(SubNewsResponseDto::new).toList();
+        this.posts = member.getPosts().stream().map(PostResponseDto::new).toList();
     }
 }
