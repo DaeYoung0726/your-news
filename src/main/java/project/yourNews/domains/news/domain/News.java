@@ -1,6 +1,7 @@
 package project.yourNews.domains.news.domain;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,9 +28,11 @@ public class News {
     private Long id;
 
     @NotNull
+    @Column(unique = true)
     private String newsName;
 
     @NotNull
+    @Column(unique = true)
     private String newsURL;
 
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)

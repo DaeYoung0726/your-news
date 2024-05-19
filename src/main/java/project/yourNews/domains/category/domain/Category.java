@@ -27,14 +27,10 @@ public class Category {
     private Long id;
 
     @NotNull
-    @Column(length = 10)
+    @Column(length = 10, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "category")
     private List<Post> posts;
 
-    /* 카테고리 이름 업데이트 */
-    public void updateCategoryName(String newCategoryName) {
-        this.name = newCategoryName;
-    }
 }

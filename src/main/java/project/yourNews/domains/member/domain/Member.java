@@ -32,17 +32,18 @@ public class Member extends BaseTimeEntity {
     private Long id;
 
     @NotNull
-    @Column(length = 20)
+    @Column(length = 20, unique = true)
     private String username;
 
     @NotNull
     private String password;
 
     @NotNull
-    @Column(length = 10)
+    @Column(length = 10, unique = true)
     private String nickname;
 
     @NotNull
+    @Column(unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
