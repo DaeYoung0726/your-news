@@ -16,25 +16,13 @@ import project.yourNews.domains.post.domain.Post;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-@Entity
-public class Category {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull
-    @Column(length = 10)
-    private String name;
-
-    @OneToMany(mappedBy = "category")
-    private List<Post> posts;
-
-    /* 카테고리 이름 업데이트 */
-    public void updateCategoryName(String newCategoryName) {
-        this.name = newCategoryName;
-    }
+public class Person {
+    private final String firstName;
+    private final String lastName;
+    private int age;
+    private String email;
 }
+
+// 사용 예시
+
