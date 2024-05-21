@@ -1,4 +1,4 @@
-package com.project.tableforyou.auth.dto;
+package project.yourNews.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
