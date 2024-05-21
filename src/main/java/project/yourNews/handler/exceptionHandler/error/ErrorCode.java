@@ -11,6 +11,12 @@ public enum ErrorCode {
     INVALID_USERNAME_PATTERN(400, "아이디는 특수문자를 제외한 4~20자리여야 합니다."),
     INVALID_NICKNAME_PATTERN(400, "닉네임은 특수문자를 제외한 2~10자리여야 합니다."),
 
+    // 인증이 되어 있지 않을 때.
+    UNAUTHORIZED(401, "접근 권한이 없습니다."),
+    ACCESS_TOKEN_EXPIRED(401, "Access Token이 만료되었습니다."),
+    INVALID_ACCESS_TOKEN(401, "Access Token이 잘못되었습니다."),
+
+
     // 존재하지 않는 값을 보낼 때.
     MEMBER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
     POST_NOT_FOUND(404, "존재하지 않는 글입니다."),
