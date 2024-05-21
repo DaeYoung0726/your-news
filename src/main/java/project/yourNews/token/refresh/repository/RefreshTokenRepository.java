@@ -1,7 +1,7 @@
-package project.token.refresh.repository;
+package project.yourNews.token.refresh.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.token.refresh.entity.RefreshToken;
+import project.yourNews.token.refresh.entity.RefreshToken;
 
 import java.util.Optional;
 
