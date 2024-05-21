@@ -16,6 +16,9 @@ public enum ErrorCode {
     ACCESS_TOKEN_EXPIRED(401, "Access Token이 만료되었습니다."),
     INVALID_ACCESS_TOKEN(401, "Access Token이 잘못되었습니다."),
 
+    // RefreshToken 인증 중 오류
+    REFRESH_TOKEN_NOT_FOUND(404, "RefreshToken이 존재하지 않습니다."),
+    REFRESH_TOKEN_EXPIRED(404, "RefreshToken이 만료되었습니다."),
 
     // 존재하지 않는 값을 보낼 때.
     MEMBER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
