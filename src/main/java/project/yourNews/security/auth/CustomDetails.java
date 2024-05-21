@@ -1,16 +1,12 @@
 package project.yourNews.security.auth;
 
-import com.project.tableforyou.domain.user.entity.User;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import project.yourNews.domains.member.domain.Member;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
 @Getter
 public class CustomDetails implements UserDetails {
