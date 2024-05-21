@@ -1,4 +1,4 @@
-package com.project.tableforyou.handler.logoutHandler;
+package project.yourNews.handler.logoutHandler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
