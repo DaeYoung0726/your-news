@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 import project.yourNews.handler.logoutHandler.CustomLogoutHandler;
 import project.yourNews.handler.logoutHandler.SuccessLogoutHandler;
 import project.yourNews.jwt.filter.JwtAuthenticationFilter;
@@ -25,6 +26,7 @@ import project.yourNews.util.jwt.JwtUtil;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final CorsFilter corsFilter;
     private final ObjectMapper objectMapper;
     private final CustomLogoutHandler customLogoutHandler;
     private final SuccessLogoutHandler successLogoutHandler;
@@ -40,6 +42,8 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+
+                .addFilter(corsFilter)
 
                 .formLogin(AbstractHttpConfigurer::disable)
 

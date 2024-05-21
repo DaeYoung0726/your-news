@@ -1,4 +1,4 @@
-package com.project.tableforyou.config;
+package project.yourNews.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
