@@ -12,8 +12,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import project.yourNews.handler.logoutHandler.CustomLogoutHandler;
+import project.yourNews.handler.logoutHandler.SuccessLogoutHandler;
 import project.yourNews.jwt.filter.JwtAuthenticationFilter;
 import project.yourNews.jwt.filter.JwtExceptionFilter;
+import project.yourNews.token.tokenBlackList.service.TokenBlackListService;
 import project.yourNews.util.jwt.JwtUtil;
 
 @Configuration
@@ -23,6 +26,9 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
+    private final CustomLogoutHandler customLogoutHandler;
+    private final SuccessLogoutHandler successLogoutHandler;
+    private final TokenBlackListService tokenBlackListService;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -48,10 +54,15 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated())
 
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, objectMapper),
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, objectMapper, tokenBlackListService),
                         UsernamePasswordAuthenticationFilter.class)
 
-                .addFilterBefore(new JwtExceptionFilter(objectMapper), JwtAuthenticationFilter.class);
+                .addFilterBefore(new JwtExceptionFilter(objectMapper), JwtAuthenticationFilter.class)
+
+                .logout(logout ->
+                        logout
+                                .addLogoutHandler(customLogoutHandler)
+                                .logoutSuccessHandler(successLogoutHandler));
 
 
         return http.build();

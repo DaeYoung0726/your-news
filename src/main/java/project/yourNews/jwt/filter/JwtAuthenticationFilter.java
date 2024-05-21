@@ -17,6 +17,8 @@ import project.yourNews.domains.member.domain.Role;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.error.ErrorDto;
 import project.yourNews.security.auth.CustomDetails;
+import project.yourNews.token.tokenBlackList.entity.TokenBlackList;
+import project.yourNews.token.tokenBlackList.service.TokenBlackListService;
 import project.yourNews.util.jwt.JwtUtil;
 
 import java.io.IOException;
@@ -30,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
+    private final TokenBlackListService tokenBlackListService;
     private static final String SPECIAL_CHARACTERS_PATTERN = "[`':;|~!@#$%()^&*+=?/{}\\[\\]\\\"\\\\\"]+$";
 
 
@@ -52,6 +55,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = accessTokenGetHeader.substring(TOKEN_PREFIX.length()).trim();
 
         accessToken = accessToken.replaceAll(SPECIAL_CHARACTERS_PATTERN, "");   // 토큰 끝 특수문자 제거
+
+
+        if(tokenBlackListService.existsBlackListCheck(accessToken)) {       // AccessToken이 블랙리스트에 있는지.
+            handleExceptionToken(response, ErrorCode.BLACKLIST_ACCESS_TOKEN);
+            return;
+        }
 
         try {
             jwtUtil.isExpired(accessToken);      // 만료되었는지
