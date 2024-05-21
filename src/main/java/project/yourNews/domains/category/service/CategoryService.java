@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.category.domain.Category;
 import project.yourNews.domains.category.dto.CategoryRequestDto;
 import project.yourNews.domains.category.repository.CategoryRepository;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class CategoryService {
     public void deleteCategory(String categoryName) {
 
         Category findCategory = categoryRepository.findByName(categoryName).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 카테고리입니다.: " + categoryName));
+                new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
 
         categoryRepository.delete(findCategory);
     }

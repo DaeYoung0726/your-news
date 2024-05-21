@@ -8,6 +8,8 @@ import project.yourNews.domains.news.domain.News;
 import project.yourNews.domains.news.dto.NewsRequestDto;
 import project.yourNews.domains.news.dto.NewsResponseDto;
 import project.yourNews.domains.news.repository.NewsRepository;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class NewsService {
     public NewsResponseDto readNews(Long newsId) {
 
         News findNews = newsRepository.findById(newsId).orElseThrow(() ->
-                new IllegalArgumentException("해당 소식은 존재하지 않습니다."));
+                new CustomException(ErrorCode.NEWS_NOT_FOUND));
 
         return new NewsResponseDto(findNews);
     }
@@ -48,7 +50,7 @@ public class NewsService {
     public void deleteNews(Long newsId) {
 
         News findNews = newsRepository.findById(newsId).orElseThrow(() ->
-                new IllegalArgumentException("해당 소식은 존재하지 않습니다."));
+                new CustomException(ErrorCode.NEWS_NOT_FOUND));
         newsRepository.delete(findNews);
     }
 }

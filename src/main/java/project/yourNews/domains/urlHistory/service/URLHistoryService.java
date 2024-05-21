@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.urlHistory.domain.URLHistory;
 import project.yourNews.domains.urlHistory.dto.URLResponseDto;
 import project.yourNews.domains.urlHistory.repository.URLHistoryRepository;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class URLHistoryService {
     public void deleteURL(Long urlId) {
 
         URLHistory url = urlHistoryRepository.findById(urlId).orElseThrow(() ->
-                new IllegalArgumentException("해당하는 url이 없습니다"));
+                new CustomException(ErrorCode.URL_NOT_FOUND));
 
         urlHistoryRepository.delete(url);
     }

@@ -10,6 +10,8 @@ import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.domains.post.domain.Post;
 import project.yourNews.domains.post.repository.PostRepository;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,12 +27,12 @@ public class LikeService {
     public void likePost(String username, Long postId) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 회원입니다.: " + username));
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         Post findPost = postRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 글입니다.: " + postId));
+                new CustomException(ErrorCode.POST_NOT_FOUND));
 
         if (likeRepository.existsByMemberAndPost(findMember, findPost))
-            throw new RuntimeException("이미 해당 게시글에 좋아요를 눌렀습니다.");
+            throw new CustomException(ErrorCode.ALREADY_LIKE_POST);
 
         Like like = Like.builder()
                 .member(findMember)
@@ -45,12 +47,12 @@ public class LikeService {
     public void unLikePost(String username, Long postId) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 회원입니다.: " + username));
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         Post findPost = postRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 글입니다.: " + postId));
+                new CustomException(ErrorCode.POST_NOT_FOUND));
 
         Like findLike = likeRepository.findByMemberAndPost(findMember, findPost).orElseThrow(() ->
-                new IllegalArgumentException("해당 게시글을 좋아요 누른 적이 없습니다."));
+                new CustomException(ErrorCode.LIKE_NOT_FOUND));
 
         likeRepository.delete(findLike);
     }

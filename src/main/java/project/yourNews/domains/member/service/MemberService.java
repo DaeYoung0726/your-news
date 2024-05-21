@@ -10,6 +10,8 @@ import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.dto.MemberUpdateDto;
 import project.yourNews.domains.member.dto.SignUpDto;
 import project.yourNews.domains.member.repository.MemberRepository;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private static final String USERNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-z0-9-_]{4,20}$";
+    private static final String NICKNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$";
 
     /* 회원가입 메서드 */
     @Transactional
@@ -36,7 +40,7 @@ public class MemberService {
     public MemberResponseDto readMember(String username) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 회원입니다.: " + username));
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         return new MemberResponseDto(findMember);
     }
@@ -46,7 +50,7 @@ public class MemberService {
     public void updateMember(MemberUpdateDto memberUpdateDto, String username) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 회원입니다.: " + username));
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         findMember.updateInfo(passwordEncoder.encode(memberUpdateDto.getPassword()), memberUpdateDto.getNickname());
     }
 
@@ -55,7 +59,7 @@ public class MemberService {
     public void deleteMember(String username) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 회원입니다.: " + username));
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         memberRepository.delete(findMember);
     }
 
@@ -68,22 +72,19 @@ public class MemberService {
 
     /* 아이디 중복 확인 */
     public boolean existsUsernameCheck(String username) {
-        /*  글로벌 에러 처리할 때 바꾸기
-        if(!username.matches("^[ㄱ-ㅎ가-힣a-z0-9-_]{4,20}$")) {
-            return "아이디는 특수문자를 제외한 4~20자리여야 합니다.";
-        }
-        */
 
+        if(!username.matches(USERNAME_PATTERN)) {
+            throw new CustomException(ErrorCode.INVALID_USERNAME_PATTERN);
+        }
         return memberRepository.existsByUsername(username);
     }
 
     /* 닉네임 중복 확인 */
     public boolean existsNicknameCheck(String nickname) {
-        /*  글로벌 에러 처리할 때 바꾸기
-        if (!nickname.matches("^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$")) {
-            return "닉네임은 특수문자를 제외한 2~10자리여야 합니다.";
+
+        if (!nickname.matches(NICKNAME_PATTERN)) {
+            throw new CustomException(ErrorCode.INVALID_NICKNAME_PATTERN);
         }
-         */
         return memberRepository.existsByNickname(nickname);
     }
 }

@@ -14,6 +14,8 @@ import project.yourNews.domains.post.domain.Post;
 import project.yourNews.domains.post.dto.PostRequestDto;
 import project.yourNews.domains.post.dto.PostResponseDto;
 import project.yourNews.domains.post.repository.PostRepository;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,10 +31,10 @@ public class PostService {
     public void savePost(PostRequestDto postDto, String username, String categoryName) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 회원입니다.: " + username));
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         Category findCategory = categoryRepository.findByName(categoryName).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 카테고리입니다.: " + categoryName));
+                new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
 
         postDto.setWriter(findMember);
         postDto.setCategory(findCategory);
@@ -45,7 +47,7 @@ public class PostService {
     public PostResponseDto readPost(Long postId) {
 
         Post findPost = postRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 글입니다.: " + postId));
+                new CustomException(ErrorCode.POST_NOT_FOUND));
 
         return new PostResponseDto(findPost);
     }
@@ -55,7 +57,7 @@ public class PostService {
     public Page<PostResponseDto> readPostsByCategory(String categoryName, Pageable pageable) {
 
         Category findCategory = categoryRepository.findByName(categoryName).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 카테고리입니다.: " + categoryName));
+                new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
 
         Page<Post> posts = postRepository.findByCategory(findCategory, pageable);
 
@@ -67,7 +69,7 @@ public class PostService {
     public void updatePost(PostRequestDto postDto, Long postId) {
 
         Post findPost = postRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 글입니다.: " + postId));
+                new CustomException(ErrorCode.POST_NOT_FOUND));
 
         findPost.updatePost(postDto.getTitle(), postDto.getContent());
     }
@@ -77,7 +79,7 @@ public class PostService {
     public void deletePost(Long postId) {
 
         Post findPost = postRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 글입니다.: " + postId));
+                new CustomException(ErrorCode.POST_NOT_FOUND));
 
         postRepository.delete(findPost);
     }

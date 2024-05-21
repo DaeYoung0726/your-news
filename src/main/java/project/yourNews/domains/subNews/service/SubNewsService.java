@@ -10,6 +10,8 @@ import project.yourNews.domains.news.domain.News;
 import project.yourNews.domains.news.repository.NewsRepository;
 import project.yourNews.domains.subNews.domain.SubNews;
 import project.yourNews.domains.subNews.repository.SubNewsRepository;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
 import java.util.List;
 
@@ -27,10 +29,10 @@ public class SubNewsService {
     public void saveSubNews(String username, String newsName) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 회원입니다.: " + username));
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         News findNews = newsRepository.findByNewsName(newsName).orElseThrow(() ->
-                new IllegalArgumentException("해당 소식은 존재하지 않습니다."));
+                new CustomException(ErrorCode.NEWS_NOT_FOUND));
 
         SubNews subNews = SubNews.builder()
                 .member(findMember)
@@ -45,7 +47,7 @@ public class SubNewsService {
     public void deleteAllSubNewsByMember(String username) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 회원입니다.: " + username));
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         List<SubNews> MemberSubNews = subNewsRepository.findByMember(findMember);
 
