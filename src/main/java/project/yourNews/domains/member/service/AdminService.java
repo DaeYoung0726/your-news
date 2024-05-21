@@ -13,7 +13,7 @@ import project.yourNews.domains.member.repository.MemberRepository;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AuthService {
+public class AdminService {
 
     private final MemberRepository memberRepository;
 
