@@ -1,13 +1,6 @@
-package com.project.tableforyou.jwt.filter;
+package project.yourNews.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.tableforyou.domain.user.entity.Role;
-import com.project.tableforyou.domain.user.entity.User;
-import com.project.tableforyou.handler.exceptionHandler.error.ErrorCode;
-import com.project.tableforyou.handler.exceptionHandler.error.ErrorDto;
-import com.project.tableforyou.security.auth.PrincipalDetails;
-import com.project.tableforyou.token.service.TokenBlackListService;
-import com.project.tableforyou.utils.jwt.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,11 +12,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import project.yourNews.domains.member.domain.Member;
+import project.yourNews.domains.member.domain.Role;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.error.ErrorDto;
+import project.yourNews.security.auth.CustomDetails;
+import project.yourNews.util.jwt.JwtUtil;
 
 import java.io.IOException;
 
-import static com.project.tableforyou.utils.jwt.JwtProperties.ACCESS_HEADER_VALUE;
-import static com.project.tableforyou.utils.jwt.JwtProperties.TOKEN_PREFIX;
+import static project.yourNews.util.jwt.JwtProperties.ACCESS_HEADER_VALUE;
+import static project.yourNews.util.jwt.JwtProperties.TOKEN_PREFIX;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -31,7 +30,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
-    private final TokenBlackListService tokenBlackListService;
     private static final String SPECIAL_CHARACTERS_PATTERN = "[`':;|~!@#$%()^&*+=?/{}\\[\\]\\\"\\\\\"]+$";
 
 
@@ -54,11 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = accessTokenGetHeader.substring(TOKEN_PREFIX.length()).trim();
 
         accessToken = accessToken.replaceAll(SPECIAL_CHARACTERS_PATTERN, "");   // 토큰 끝 특수문자 제거
-
-        if(tokenBlackListService.existsById(accessToken)) {       // AccessToken이 블랙리스트에 있는지.
-            handleExceptionToken(response, ErrorCode.BLACKLIST_ACCESS_TOKEN);
-            return;
-        }
 
         try {
             jwtUtil.isExpired(accessToken);      // 만료되었는지
@@ -84,14 +77,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
 
-        User userEntity = User.builder()
+        Member memberEntity = Member.builder()
                 .username(username)
                 .role(Role.valueOf(role))
                 .build();
 
-        PrincipalDetails principalDetails = new PrincipalDetails(userEntity);
+        CustomDetails customDetails = new CustomDetails(memberEntity);
 
-        return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(customDetails, null, customDetails.getAuthorities());
     }
 
     /* 예외 처리 */

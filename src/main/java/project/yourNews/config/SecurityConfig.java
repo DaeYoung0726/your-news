@@ -1,5 +1,7 @@
 package project.yourNews.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,10 +11,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import project.yourNews.jwt.filter.JwtAuthenticationFilter;
+import project.yourNews.jwt.filter.JwtExceptionFilter;
+import project.yourNews.util.jwt.JwtUtil;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -36,7 +46,13 @@ public class SecurityConfig {
                         authorize
                                 .requestMatchers("/", "/index.html", "/api/**").permitAll()
                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN")
-                                .anyRequest().authenticated());
+                                .anyRequest().authenticated())
+
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, objectMapper),
+                        UsernamePasswordAuthenticationFilter.class)
+
+                .addFilterBefore(new JwtExceptionFilter(objectMapper), JwtAuthenticationFilter.class);
+
 
         return http.build();
     }

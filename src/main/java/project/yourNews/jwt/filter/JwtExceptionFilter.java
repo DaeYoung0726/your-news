@@ -1,8 +1,6 @@
-package com.project.tableforyou.jwt.filter;
+package project.yourNews.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.tableforyou.handler.exceptionHandler.error.ErrorCode;
-import com.project.tableforyou.handler.exceptionHandler.error.ErrorDto;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.error.ErrorDto;
 
 import java.io.IOException;
 
