@@ -23,6 +23,9 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(404, "RefreshToken이 존재하지 않습니다."),
     REFRESH_TOKEN_EXPIRED(404, "RefreshToken이 만료되었습니다."),
 
+    // 로그인 과정 에러.
+    USER_INVALID_PASSWORD(404, "잘못된 비밀번호입니다."),
+
     // 존재하지 않는 값을 보낼 때.
     MEMBER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
     POST_NOT_FOUND(404, "존재하지 않는 글입니다."),
