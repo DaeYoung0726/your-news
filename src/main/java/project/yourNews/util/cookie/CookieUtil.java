@@ -1,4 +1,4 @@
-package com.project.tableforyou.utils.cookie;
+package project.yourNews.util.cookie;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
