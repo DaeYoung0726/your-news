@@ -18,8 +18,8 @@ public class MemberResponseDto {
     private final String nickname;
     private final String email;
     private final Role role;
-    private final List<SubNewsResponseDto> subNews;    // SubNewsResponseDto로 바꾸기
-    private final List<PostResponseDto> posts;         // PostResponseDto로 바꾸기
+    private final List<SubNewsResponseDto> subNews;
+    private final List<PostResponseDto> posts;
 
     public MemberResponseDto(Member member) {
         this.id = member.getId();
