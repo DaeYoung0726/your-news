@@ -25,7 +25,7 @@ public class ReissueTempPassService {
 
     /* 임시 비밀번호 설정 후 메일로 보내기 */
     @Transactional
-    public void sendPassToMain(String username, String email) {
+    public void sendPassToMail(String username, String email) {
 
         Member member = memberRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));

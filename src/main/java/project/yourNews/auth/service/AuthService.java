@@ -10,6 +10,7 @@ import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
+import project.yourNews.mail.service.ReissueTempPassService;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ import project.yourNews.handler.exceptionHandler.exception.CustomException;
 public class AuthService {
 
     private final MemberRepository memberRepository;
+    private final ReissueTempPassService reissueTempPassService;
     private final PasswordEncoder passwordEncoder;
 
     /* 로그인 메서드 */
@@ -43,15 +45,15 @@ public class AuthService {
         return findMember.getUsername();
     }
 
-//    /* 비밀번호 찾기 */
-//    @Transactional
-//    public void reissueTempPassword(String username, String email) {
-//
-//        if (!userRepository.existsByUsernameAndEmail(username, email))
-//            throw new CustomException(ErrorCode.INVALID_USER_INFO);
-//
-//        findPassService.sendPassToMail(username, email);
-//    }
+    /* 임시 비밀번호 발급 */
+    @Transactional
+    public void reissueTempPassword(String username, String email) {
+
+        if (!memberRepository.existsByUsernameAndEmail(username, email))
+            throw new CustomException(ErrorCode.INVALID_USER_INFO);
+
+        reissueTempPassService.sendPassToMail(username, email);
+    }
 
     /* 비밀번호 확인 */
     private boolean checkPassword(String actual, String expect) {

@@ -25,6 +25,7 @@ public enum ErrorCode {
 
     // 로그인 과정 에러.
     USER_INVALID_PASSWORD(404, "잘못된 비밀번호입니다."),
+    INVALID_USER_INFO(404, "정보를 정확히 입력해주세요."),
 
     // 존재하지 않는 값을 보낼 때.
     MEMBER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
