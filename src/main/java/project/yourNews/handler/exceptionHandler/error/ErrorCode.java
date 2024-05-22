@@ -34,8 +34,18 @@ public enum ErrorCode {
     URL_NOT_FOUND(404, "해당하는 URL이 없습니다"),
     LIKE_NOT_FOUND(404, "해당 게시글을 좋아요 누른 적이 없습니다."),
 
+    // 인증 메일 관련 오류.
+    ALREADY_MAIL_REQUEST(429, "1분 후 재전송 해주세요."),
+    INVALID_MAIL_ADDRESS(404, "잘못된 이메일입니다."),
+    CODE_EXPIRED(410, "유효시간이 지났습니다."),
+    INVALID_CODE(400, "인증번호가 일치하지 않습니다."),
+
     // 이미 존재하는 값을 보냈을 때.
-    ALREADY_LIKE_POST(409, "이미 해당 게시글에 좋아요를 눌렀습니다.");
+    ALREADY_LIKE_POST(409, "이미 해당 게시글에 좋아요를 눌렀습니다."),
+    ALREADY_EXISTS_MAIL(409, "이미 존재하는 이메일입니다."),
+
+    // 서버 에러
+    INTERNAL_SERVER_ERROR(500, "서버 에러입니다. 서버 팀에 연락주세요.");
 
     private final int status;
     private final String message;
