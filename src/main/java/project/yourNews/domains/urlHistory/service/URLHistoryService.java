@@ -10,6 +10,7 @@ import project.yourNews.domains.urlHistory.repository.URLHistoryRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -40,17 +41,27 @@ public class URLHistoryService {
 
     /* 저장된 url 삭제하기 */
     @Transactional
-    public void deleteURL(Long urlId) {
+    public boolean deleteURL(String dispatchedURL) {
 
-        URLHistory url = urlHistoryRepository.findById(urlId).orElseThrow(() ->
+        URLHistory url = urlHistoryRepository.findByDispatchedURL(dispatchedURL).orElseThrow(() ->
                 new CustomException(ErrorCode.URL_NOT_FOUND));
 
-        urlHistoryRepository.delete(url);
+        if (url.getCreatedDate().plusDays(7).isAfter(LocalDateTime.now())) {
+            urlHistoryRepository.delete(url);
+            return false;
+        }
+
+        return true;
     }
 
     /* 이미 보낸 소식인지 확인 */
+    @Transactional
     public boolean existsURLCheck(String url) {
 
-        return urlHistoryRepository.existsByDispatchedURL(url);
+        if (urlHistoryRepository.existsByDispatchedURL(url)) {
+            return this.deleteURL(url);
+        } else {
+            return false;
+        }
     }
 }
