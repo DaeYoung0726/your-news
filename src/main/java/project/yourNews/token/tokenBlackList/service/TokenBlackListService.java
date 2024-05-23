@@ -26,7 +26,7 @@ public class TokenBlackListService {
     }
 
     /* Token 블랙리스트 존재 확인 */
-    @Transactional(readOnly = true)
+    @Transactional
     public boolean existsBlackListCheck(String accessToken) {
 
         TokenBlackList findBlackList = tokenBlackListRepository.findByTokenBlackList(accessToken).orElse(null);
