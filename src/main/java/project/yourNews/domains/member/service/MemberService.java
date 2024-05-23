@@ -65,9 +65,9 @@ public class MemberService {
 
     /* 특정 소식 구독한 사용자 가져오기 */
     @Transactional(readOnly = true)
-    public List<Member> getMembersSubscribedToNews(Long newsId) {
+    public List<Member> getMembersSubscribedToNews(String newsURL) {
 
-        return memberRepository.findBySubNews_NewsId(newsId);
+        return memberRepository.findBySubNews_News_NewsURL(newsURL);
     }
 
     /* 아이디 중복 확인 */
