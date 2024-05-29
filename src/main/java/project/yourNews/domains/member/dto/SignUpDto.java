@@ -32,7 +32,7 @@ public class SignUpDto {
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
     private String email;
 
-    private List<SubNews> subNews;
+    private List<String> subNewsNames;
 
     public Member toMemberEntity() {
         return Member.builder()
@@ -41,7 +41,6 @@ public class SignUpDto {
                 .nickname(nickname)
                 .email(email)
                 .role(Role.USER)
-                .subNews(subNews)
                 .build();
     }
 
