@@ -6,11 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.yourNews.aop.annotation.VerifyAuthentication;
 import project.yourNews.domains.category.domain.Category;
 import project.yourNews.domains.category.repository.CategoryRepository;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.domains.post.domain.Post;
+import project.yourNews.domains.post.dto.PostInfoDto;
 import project.yourNews.domains.post.dto.PostRequestDto;
 import project.yourNews.domains.post.dto.PostResponseDto;
 import project.yourNews.domains.post.repository.PostRepository;
@@ -54,18 +56,19 @@ public class PostService {
 
     /* 카테고리 게시글 전체 들고오기 */
     @Transactional(readOnly = true)
-    public Page<PostResponseDto> readPostsByCategory(String categoryName, Pageable pageable) {
+    public Page<PostInfoDto> readPostsByCategory(String categoryName, Pageable pageable) {
 
         Category findCategory = categoryRepository.findByName(categoryName).orElseThrow(() ->
                 new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
 
         Page<Post> posts = postRepository.findByCategory(findCategory, pageable);
 
-        return posts.map(PostResponseDto::new);
+        return posts.map(PostInfoDto::new);
     }
 
     /* 게시글 업데이트 */
     @Transactional
+    @VerifyAuthentication
     public void updatePost(PostRequestDto postDto, Long postId) {
 
         Post findPost = postRepository.findById(postId).orElseThrow(() ->
@@ -76,6 +79,7 @@ public class PostService {
 
     /* 게시글 삭제하기 */
     @Transactional
+    @VerifyAuthentication
     public void deletePost(Long postId) {
 
         Post findPost = postRepository.findById(postId).orElseThrow(() ->
