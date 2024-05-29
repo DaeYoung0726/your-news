@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.service.MemberService;
-import project.yourNews.domains.news.dto.NewsResponseDto;
+import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
 import project.yourNews.domains.urlHistory.service.URLHistoryService;
 import project.yourNews.mail.MailType;
@@ -31,8 +31,8 @@ public class CrawlingService {
     @Transactional
     public void startCrawling() throws IOException {
 
-        List<NewsResponseDto> news = newsService.readAllNews();
-        for (NewsResponseDto readNews: news) {
+        List<NewsInfoDto> news = newsService.readAllNews();
+        for (NewsInfoDto readNews: news) {
             analyzeWeb(readNews.getNewsURL());
         }
     }
