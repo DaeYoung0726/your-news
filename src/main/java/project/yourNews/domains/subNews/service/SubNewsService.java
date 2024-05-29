@@ -42,15 +42,26 @@ public class SubNewsService {
         subNewsRepository.save(subNews);
     }
 
-    /* 사용자가 구독 소식 전체 삭제하기 - 사용자 소식 업데이트 과정에서 사용 */
+    /* 사용자 소식 업데이트 */
     @Transactional
-    public void deleteAllSubNewsByMember(String username) {
-
-        Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
+    public void updateUserSubNews(String username, List<String> newsNames) {
+        Member member = memberRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        List<SubNews> MemberSubNews = subNewsRepository.findByMember(findMember);
+        // 사용자가 구독한 소식 삭제
+        subNewsRepository.deleteAllByMember(member);
 
-        subNewsRepository.deleteAll(MemberSubNews);
+        // 소식 구독하기
+        for (String newsName : newsNames) {
+            News news = newsRepository.findByNewsName(newsName).orElseThrow(() ->
+                    new CustomException(ErrorCode.NEWS_NOT_FOUND));
+
+            SubNews subNews = SubNews.builder()
+                    .member(member)
+                    .news(news)
+                    .build();
+
+            subNewsRepository.save(subNews);
+        }
     }
 }

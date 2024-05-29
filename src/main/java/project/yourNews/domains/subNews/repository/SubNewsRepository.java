@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface SubNewsRepository extends JpaRepository<SubNews, Long> {
 
-    List<SubNews> findByMember(Member member);
+    void deleteAllByMember(Member member);
+
 }
