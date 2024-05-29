@@ -10,6 +10,8 @@ import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.dto.MemberUpdateDto;
 import project.yourNews.domains.member.dto.SignUpDto;
 import project.yourNews.domains.member.repository.MemberRepository;
+import project.yourNews.domains.subNews.domain.SubNews;
+import project.yourNews.domains.subNews.service.SubNewsService;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
@@ -22,6 +24,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SubNewsService subNewsService;
     private static final String USERNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-z0-9-_]{4,20}$";
     private static final String NICKNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$";
 
@@ -33,6 +36,10 @@ public class MemberService {
         Member member = signUpDto.toMemberEntity();
 
         memberRepository.save(member);
+
+        for (String subNews: signUpDto.getSubNewsNames()) {     // 소식 구독하기
+            subNewsService.saveSubNews(signUpDto.getUsername(), subNews);
+        }
     }
 
     /* 멤버 정보 불러오기 */
