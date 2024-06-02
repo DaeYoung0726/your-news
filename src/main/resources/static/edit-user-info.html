@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Member Info</title>
+    <title>Your News</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -28,6 +28,8 @@
                 <div class="field-group">
                     <label for="nickname">닉네임:</label>
                     <input type="text" id="nickname">
+                    <button id="checkNicknameButton">닉네임 중복 확인</button>
+                    <div id="nicknameError" class="error-message"></div>
                 </div>
                 <div class="field-group">
                     <label for="currentPassword">현재 비밀번호:</label>
@@ -47,6 +49,7 @@
         </div>
     </main>
 </div>
+<script src="/js/auth.js"></script>
 <script src="/js/edit-user-info.js"></script>
 </body>
 </html>
