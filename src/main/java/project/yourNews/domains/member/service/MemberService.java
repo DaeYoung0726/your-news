@@ -37,8 +37,10 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        for (String subNews: signUpDto.getSubNewsNames()) {     // 소식 구독하기
-            subNewsService.saveSubNews(signUpDto.getUsername(), subNews);
+        if (signUpDto.getSubNewsNames() != null) {
+            for (String subNews : signUpDto.getSubNewsNames()) {     // 소식 구독하기
+                subNewsService.saveSubNews(signUpDto.getUsername(), subNews);
+            }
         }
     }
 
@@ -58,7 +60,12 @@ public class MemberService {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-        findMember.updateInfo(passwordEncoder.encode(memberUpdateDto.getPassword()), memberUpdateDto.getNickname());
+
+        if (!passwordEncoder.matches(memberUpdateDto.getCurrentPassword(), findMember.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_CURRENT_PASSWORD);
+        }
+
+        findMember.updateInfo(passwordEncoder.encode(memberUpdateDto.getNewPassword()), memberUpdateDto.getNickname());
     }
 
     /* 멤버 삭제하기 */
