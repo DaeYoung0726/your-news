@@ -46,7 +46,7 @@ public class URLHistoryService {
         URLHistory url = urlHistoryRepository.findByDispatchedURL(dispatchedURL).orElseThrow(() ->
                 new CustomException(ErrorCode.URL_NOT_FOUND));
 
-        if (url.getCreatedDate().plusDays(7).isAfter(LocalDateTime.now())) {
+        if (url.getCreatedDate().plusDays(7).isBefore(LocalDateTime.now())) {
             urlHistoryRepository.delete(url);
             return false;
         }
