@@ -30,7 +30,7 @@ public class PostService {
 
     /* 게시글 저장 */
     @Transactional
-    public void savePost(PostRequestDto postDto, String username, String categoryName) {
+    public Long savePost(PostRequestDto postDto, String username, String categoryName) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -41,7 +41,8 @@ public class PostService {
         postDto.setWriter(findMember);
         postDto.setCategory(findCategory);
 
-        postRepository.save(postDto.toPostEntity());
+        Post createdPost = postRepository.save(postDto.toPostEntity());
+        return createdPost.getId();
     }
 
     /* 게시글 불러오기 */

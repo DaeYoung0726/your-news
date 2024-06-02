@@ -22,6 +22,9 @@ import project.yourNews.domains.post.dto.PostRequestDto;
 import project.yourNews.domains.post.dto.PostResponseDto;
 import project.yourNews.domains.post.service.PostService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1")
@@ -31,19 +34,28 @@ public class PostController {
 
     /* 게시글 작성 */
     @PostMapping("/{categoryName}/posts")
-    public ResponseEntity<String> savePost(@Valid @RequestBody PostRequestDto postRequestDto,
+    public ResponseEntity<Long> savePost(@Valid @RequestBody PostRequestDto postRequestDto,
                                            @PathVariable String categoryName,
                                            @AuthenticationPrincipal UserDetails userDetails) {
 
-        postService.savePost(postRequestDto, userDetails.getUsername(), categoryName);
-        return ResponseEntity.ok("게시글 작성 성공.");
+        return ResponseEntity.ok(postService.savePost(postRequestDto, userDetails.getUsername(), categoryName));
     }
 
     /* 게시글 불러오기 */
     @GetMapping("/posts/{postId}")
-    public PostResponseDto readPost(@PathVariable Long postId) {
+    public ResponseEntity<Map<String, Object>> readPost(@PathVariable Long postId,
+                                                        @AuthenticationPrincipal UserDetails userDetails) {
+        PostResponseDto postResponse = postService.readPost(postId);
+        boolean isAuthor = false;
 
-        return postService.readPost(postId);
+        if (userDetails != null)
+            isAuthor = postResponse.getWriterUsername().equals(userDetails.getUsername());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("post", postResponse);
+        response.put("isAuthor", isAuthor);
+
+        return ResponseEntity.ok(response);
     }
 
     /* 카테고리 게시글 전체 불러오기 */
