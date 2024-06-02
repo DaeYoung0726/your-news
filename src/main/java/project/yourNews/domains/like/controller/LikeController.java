@@ -18,21 +18,21 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    /* 가게 좋아요 증가 */
+    /* 게시글 좋아요 증가 */
     @PostMapping("/{postId}/like")
     public ResponseEntity<String> likePost(@PathVariable Long postId,
                                                  @AuthenticationPrincipal UserDetails userDetails) {
 
         likeService.likePost(userDetails.getUsername(), postId);
-        return ResponseEntity.ok("가게 좋아요 증가.");
+        return ResponseEntity.ok("게시글 좋아요 증가.");
     }
 
-    /* 가게 좋아요 감소 */
+    /* 게시글 좋아요 감소 */
     @DeleteMapping("/{postId}/un-like")
     public ResponseEntity<String> unLikePost(@PathVariable Long postId,
                                              @AuthenticationPrincipal UserDetails userDetails) {
 
         likeService.unLikePost(userDetails.getUsername(), postId);
-        return ResponseEntity.ok("가게 좋아요 감소.");
+        return ResponseEntity.ok("게시글 좋아요 감소.");
     }
 }
