@@ -10,15 +10,17 @@ public class PostResponseDto {
 
     private final String title;
     private final String content;
-    private final Member writer;
-    private final Category category;
+    private final String writerUsername;
+    private final String writerNickname;
+    private final String category;
     private final int likeCount;
 
     public PostResponseDto(Post post) {
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.writer = post.getWriter();
-        this.category = post.getCategory();
+        this.writerUsername = post.getWriter().getUsername();
+        this.writerNickname = post.getWriter().getNickname();
+        this.category = post.getCategory().getName();
         this.likeCount = post.getLikes().size();
     }
 }

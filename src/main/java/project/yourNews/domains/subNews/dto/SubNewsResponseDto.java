@@ -7,9 +7,9 @@ import project.yourNews.domains.subNews.domain.SubNews;
 @Getter
 public class SubNewsResponseDto {
 
-    private final News news;
+    private final String news;
 
     public SubNewsResponseDto(SubNews subNews) {
-        this.news = subNews.getNews();
+        this.news = subNews.getNews().getNewsName();
     }
 }
