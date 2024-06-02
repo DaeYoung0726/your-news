@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.dto.MemberInfoDto;
+import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
@@ -26,6 +27,26 @@ public class AdminService {
         Page<Member> members = memberRepository.findAll(pageable);
 
         return members.map(MemberInfoDto::new);
+    }
+
+    /* id로 특정 사용자 불러오기 */
+    @Transactional(readOnly = true)
+    public MemberResponseDto readMemberById(Long memberId) {
+
+        Member foundMember = memberRepository.findById(memberId).orElseThrow(() ->
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return new MemberResponseDto(foundMember);
+    }
+
+    /* nickname으로 특정 사용자 불러오기 */
+    @Transactional(readOnly = true)
+    public MemberResponseDto readMemberByNickname(String nickname) {
+
+        Member foundMember = memberRepository.findByNickname(nickname).orElseThrow(() ->
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return new MemberResponseDto(foundMember);
     }
 
     /* 사용자 탈퇴 */

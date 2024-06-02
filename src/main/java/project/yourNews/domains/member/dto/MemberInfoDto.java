@@ -9,11 +9,11 @@ public class MemberInfoDto {
 
     private final Long id;
     private final String nickname;
-    private final Role role;
+    private final String email;
 
     public MemberInfoDto(Member member) {
         this.id = member.getId();
         this.nickname = member.getNickname();
-        this.role = member.getRole();
+        this.email = member.getEmail();
     }
 }
