@@ -59,7 +59,7 @@ public class RefreshTokenService {
         String username = jwtUtil.getUsername(refreshToken);
         String role = jwtUtil.getRole(refreshToken);
 
-        return jwtUtil.generateAccessToken(username, role);
+        return jwtUtil.generateAccessToken(role, username);
     }
 
     /* Refresh token rotation(RTR) 사용 */
