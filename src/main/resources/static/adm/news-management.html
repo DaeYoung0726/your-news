@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Management</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <button id="mainPageButton">메인화면 돌아가기</button>
+        <button id="newsManagementButton" class="active">소식 관리</button>
+        <button id="userManagementButton">사용자 관리</button>
+        <button id="fetchInfoButton">정보 불러오기</button>
+        <button id="logoutButton">로그아웃</button>
+    </header>
+    <main>
+        <section class="management">
+            <button id="addNewsButton">소식 추가하기</button>
+            <button id="deleteNewsButton">소식 삭제하기</button>
+        </section>
+    </main>
+</div>
+<script src="/js/auth.js"></script>
+<script src="/js/admin/news-management.js"></script>
+</body>
+</html>

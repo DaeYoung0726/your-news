@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <div id="adminButtons" class="admin-buttons">
+            <button onclick="location.href='news-management.html'">소식 관리</button>
+            <button onclick="location.href='user-management.html'">사용자 관리</button>
+        </div>
+        <button id="createPostButton">글 작성하기</button>
+        <button id="fetchInfoButton">정보 불러오기</button>
+        <button id="logoutButton">로그아웃</button>
+    </header>
+    <main>
+        <section class="welcome-message">
+            <h1>당신을 위한 맞춤 소식 서비스, 니 소식</h1>
+        </section>
+        <section class="tabs">
+            <button id="noticeButton" class="active">공지사항</button>
+            <button id="newsRequestButton">소식 추가 요청</button>
+        </section>
+        <section class="posts">
+            <div id="noticePosts" class="post-list">
+                <h2>공지사항</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>좋아요</th>
+                    </tr>
+                    </thead>
+                    <tbody id="noticePostsContainer">
+                    <!-- 공지사항 게시물 -->
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button id="noticePrevButton">이전</button>
+                    <button id="noticeNextButton">다음</button>
+                </div>
+            </div>
+            <div id="newsRequestPosts" class="post-list hidden">
+                <h2>소식 추가 요청</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>좋아요</th>
+                    </tr>
+                    </thead>
+                    <tbody id="newsRequestPostsContainer">
+                    <!-- 소식 추가 요청 게시물 -->
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button id="newsRequestPrevButton">이전</button>
+                    <button id="newsRequestNextButton">다음</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="/js/main.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>
