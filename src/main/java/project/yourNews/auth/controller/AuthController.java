@@ -9,10 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.auth.dto.LoginDto;
+import project.yourNews.auth.dto.UserRoleDto;
 import project.yourNews.auth.service.AuthService;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
@@ -75,7 +77,10 @@ public class AuthController {
             throw new CustomException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
 
-        String accessTokenReIssue = refreshTokenService.accessTokenReIssue(refreshToken);
+        String accessTokenReIssue = TOKEN_PREFIX + refreshTokenService.accessTokenReIssue(refreshToken);
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("newAccessToken", accessTokenReIssue);
 
         // Refresh token rotation(RTR) 사용
         String refreshTokenReIssue = refreshTokenService.refreshTokenReIssue(refreshToken);
@@ -83,7 +88,7 @@ public class AuthController {
         response.addHeader("Set-Cookie", cookieUtil.createCookie(REFRESH_COOKIE_VALUE, refreshTokenReIssue).toString());         // 쿠키에 refresh Token값 저장.
         response.setStatus(HttpServletResponse.SC_OK);
 
-        return ResponseEntity.ok(TOKEN_PREFIX + accessTokenReIssue);
+        return ResponseEntity.ok(responseData);
     }
 
     /* 아이디 찾기 */
@@ -101,5 +106,12 @@ public class AuthController {
 
         authService.reissueTempPassword(username, email);
         return ResponseEntity.ok("잠시 후 등록하신 메일로 임시 비밀번호가 도착합니다.");
+    }
+
+    /* 사용자 권한 확인 */
+    @GetMapping("/user-role")
+    public ResponseEntity<UserRoleDto> getUserRole(@RequestHeader("Authorization") String token) {
+
+        return ResponseEntity.ok(authService.findUserRoleByToken(token));
     }
 }

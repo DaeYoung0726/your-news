@@ -6,11 +6,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.auth.dto.LoginDto;
+import project.yourNews.auth.dto.UserRoleDto;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.mail.service.ReissueTempPassService;
+import project.yourNews.util.jwt.JwtUtil;
+
+import static project.yourNews.util.jwt.JwtProperties.TOKEN_PREFIX;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +24,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final ReissueTempPassService reissueTempPassService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     /* 로그인 메서드 */
     public Member login(LoginDto loginDto) {
@@ -59,5 +64,14 @@ public class AuthService {
     private boolean checkPassword(String actual, String expect) {
 
         return passwordEncoder.matches(actual, expect);
+    }
+
+    /* 사용자 권한 찾기 */
+    public UserRoleDto findUserRoleByToken(String accessToken) {
+
+        String splitToken = accessToken.substring(TOKEN_PREFIX.length()).trim();
+
+        String role = jwtUtil.getRole(splitToken);
+        return new UserRoleDto(role);
     }
 }
