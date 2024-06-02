@@ -5,7 +5,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.service.MemberService;
@@ -19,6 +21,8 @@ import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Service
+@EnableScheduling
 public class CrawlingService {
 
     private final NewsService newsService;
