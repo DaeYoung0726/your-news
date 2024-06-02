@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.domain.Role;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class SignUpDto {
 

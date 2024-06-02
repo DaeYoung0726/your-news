@@ -2,10 +2,12 @@ package project.yourNews.domains.news.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import project.yourNews.domains.news.domain.News;
 
 @Getter @Setter
+@NoArgsConstructor
 public class NewsRequestDto {
 
     @NotBlank(message = "소식 이름은 필수 입력 값입니다.")

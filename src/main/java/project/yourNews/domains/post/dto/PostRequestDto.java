@@ -2,12 +2,14 @@ package project.yourNews.domains.post.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import project.yourNews.domains.category.domain.Category;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.post.domain.Post;
 
 @Getter @Setter
+@NoArgsConstructor
 public class PostRequestDto {
 
     @NotBlank(message = "제목은 필수 입력입니다.")
