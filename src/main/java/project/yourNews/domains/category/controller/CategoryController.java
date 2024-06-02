@@ -14,7 +14,7 @@ import project.yourNews.domains.category.service.CategoryService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/categorys")
+@RequestMapping("/v1/category")
 public class CategoryController {
 
     private final CategoryService categoryService;
