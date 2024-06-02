@@ -19,8 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CodeService {
 
-    private MailService mailService;
-    private MemberRepository memberRepository;
+    private final MailService mailService;
+    private final MemberRepository memberRepository;
     private final Map<String, CodeDto> codeMap = new ConcurrentHashMap<>();
     private static final int VERIFICATION_EXPIRATION_MINUTES = 3; // 이메일 인증 유효 시간 3분
     private static final int RESEND_VALIDITY_MINUTES = 1; // 이메일 재전송 유효 시간 1분

@@ -19,7 +19,7 @@ import static project.yourNews.mail.util.MailProperties.*;
 @Service
 public class MailService {
 
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String emailUsername;
