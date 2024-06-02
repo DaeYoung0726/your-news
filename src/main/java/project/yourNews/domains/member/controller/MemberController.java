@@ -59,14 +59,14 @@ public class MemberController {
 
     /* 아이디 중복 확인 */
     @GetMapping("/check-username")
-    public Boolean existsUsernameCheck(@RequestParam String username) {
+    public Boolean existsUsernameCheck(@RequestParam("username") String username) {
 
         return memberService.existsUsernameCheck(username);
     }
 
     /* 닉네임 중복 확인 */
     @GetMapping("/check-nickname")
-    public Boolean existsNicknameCheck(@RequestParam String nickname) {
+    public Boolean existsNicknameCheck(@RequestParam("nickname") String nickname) {
 
         return memberService.existsNicknameCheck(nickname);
     }
