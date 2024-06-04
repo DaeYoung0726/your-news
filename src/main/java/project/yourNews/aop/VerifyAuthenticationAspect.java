@@ -32,7 +32,7 @@ public class VerifyAuthenticationAspect {
             if (arg instanceof Long) {
                 Long postId = (Long) arg;
                 postVerifyAuthentication(expectedUsername, postId);
-                break;      // 파라미터가 순서대로 들어가므로 MenuService의 update같이 타입이 같은게 있을 경우를 대비해 retaurantId만 받고 break한다.
+                break;
             }
         }
         return joinPoint.proceed();
