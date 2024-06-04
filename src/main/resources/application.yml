@@ -16,8 +16,17 @@ spring:
         default_batch_fetch_size: 1000
         dialect: org.hibernate.dialect.MySQLDialect
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASS}
+
   jwt:
     secret: ${JWT_KEY}
+    access-expiration: ${JWT_ACCESS_EXPIRATION}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION}
+    issuer: ${JWT_ISSUER}
 
   mail:
     host: smtp.naver.com
@@ -36,3 +45,7 @@ spring:
           ssl:
             enable: true
             trust: smtp.naver.com
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: debug
