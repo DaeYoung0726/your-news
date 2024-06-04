@@ -1,4 +1,4 @@
-package project.yourNews.util.jwt;
+package project.yourNews.utils.jwt;
 
 public interface JwtProperties {
     Long ACCESS_EXPIRATION_TIME = 60*60*1000L;  // 60분

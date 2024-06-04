@@ -1,4 +1,4 @@
-package project.yourNews.util.jwt;
+package project.yourNews.utils.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,16 +11,25 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static project.yourNews.util.jwt.JwtProperties.ACCESS_EXPIRATION_TIME;
-import static project.yourNews.util.jwt.JwtProperties.REFRESH_EXPIRATION_TIME;
+import static project.yourNews.utils.jwt.JwtProperties.ACCESS_EXPIRATION_TIME;
+import static project.yourNews.utils.jwt.JwtProperties.REFRESH_EXPIRATION_TIME;
 
 @Component
 public class JwtUtil {
 
     private final SecretKey secretKey;
+    private final long accessExpiration;
+    private final long refreshExpiration;
+    private final String issuer;
 
-    public JwtUtil(@Value("${spring.jwt.secret}") String SECRET_KEY) {
-        secretKey = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+    public JwtUtil(@Value("${spring.jwt.secret}") String SECRET_KEY,
+                   @Value("${spring.jwt.access-expiration}") long accessExpiration,
+                   @Value("${spring.jwt.refresh-expiration}") long refreshExpiration,
+                   @Value("${spring.jwt.issuer") String issuer) {
+        this.secretKey = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.accessExpiration = accessExpiration;
+        this.refreshExpiration = refreshExpiration;
+        this.issuer = issuer;
     }
 
     /* 토큰(claim)에서 username 가져오기 */
@@ -50,7 +59,7 @@ public class JwtUtil {
         claims.put("category", "access");
         claims.put("role", role);
 
-        return createJwt(claims, username, ACCESS_EXPIRATION_TIME);
+        return createJwt(claims, username, accessExpiration);
     }
 
     /* refresh Token 발급 */
@@ -60,7 +69,7 @@ public class JwtUtil {
         claims.put("category", "refresh");
         claims.put("role", role);
 
-        return createJwt(claims, username, REFRESH_EXPIRATION_TIME);
+        return createJwt(claims, username, refreshExpiration);
     }
 
     /* 토큰 생성 */
@@ -69,6 +78,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .subject(subject)
                 .claims(claims)
+                .issuer(issuer)
                 .issuedAt(new Date(System.currentTimeMillis()))     // JWT의 발행 시간을 설정
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))  // 만료 시간 설정.
                 .signWith(secretKey)        //  JWT에 서명을 추가. JWT의 무결성을 보장하기 위해 사용.
