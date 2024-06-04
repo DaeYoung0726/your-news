@@ -6,24 +6,24 @@ import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.mail.MailType;
-import project.yourNews.mail.dto.CodeDto;
+import project.yourNews.utils.redis.RedisUtil;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
+import static project.yourNews.utils.redis.RedisProperties.CODE_EXPIRATION_TIME;
+import static project.yourNews.utils.redis.RedisProperties.CODE_KEY_PREFIX;
 
 @RequiredArgsConstructor
 @Service
 public class CodeService {
 
-    private final MailService mailService;
     private final MemberRepository memberRepository;
-    private final Map<String, CodeDto> codeMap = new ConcurrentHashMap<>();
-    private static final int VERIFICATION_EXPIRATION_MINUTES = 3; // 이메일 인증 유효 시간 3분
-    private static final int RESEND_VALIDITY_MINUTES = 1; // 이메일 재전송 유효 시간 1분
+    private final MailService mailService;
+    private final RedisUtil redisUtil;
+    private static final int RESEND_THRESHOLD_SECONDS = 2 * 60; // 2분을 초로 환산
 
     /* 회원가입 인증번호 확인 메서드. */
     public void sendCodeToMail(String email) {
@@ -40,7 +40,9 @@ public class CodeService {
 
         mailService.sendMail(email, authCode, MailType.CODE);
 
-        codeMap.put(email, new CodeDto(authCode, LocalDateTime.now()));
+        String key = CODE_KEY_PREFIX + email;
+        redisUtil.set(key, authCode);
+        redisUtil.expire(key, CODE_EXPIRATION_TIME);
     }
 
     /* 이메일 검증 */
@@ -51,21 +53,13 @@ public class CodeService {
     /* 인증번호 재전송 시간 확인 */
     private boolean checkRetryEmail(String email) {
 
-        CodeDto storedData = codeMap.get(email);
-        if (storedData != null) {
-            LocalDateTime currentTime = LocalDateTime.now();
-            LocalDateTime expirationTime = storedData.getCreateTime().plusMinutes(RESEND_VALIDITY_MINUTES); // 이전에 보낸 메일로부터 1분이 지났는지 확인
-
-            if (currentTime.isBefore(expirationTime)) {
-                // 이전에 보낸 메일로부터 1분이 지나지 않았으면 메일을 보낼 수 없음
-                return false;
-            } else {
-                // 이전에 보낸 메일로부터 1분이 지났으면 해당 데이터 삭제
-                codeMap.remove(email);
-            }
+        String key = CODE_KEY_PREFIX + email;
+        if(!redisUtil.setExisted(key)) {
+            return true;
+        } else {
+            long expireTime = redisUtil.getExpire(key, TimeUnit.SECONDS);
+            return expireTime <= RESEND_THRESHOLD_SECONDS;
         }
-
-        return true;
     }
 
     /* 인증번호 만드는 메서드. */
@@ -89,19 +83,17 @@ public class CodeService {
             throw new CustomException(ErrorCode.ALREADY_EXISTS_MAIL);
         }
 
-        CodeDto storedCode = codeMap.get(email);
-        if(storedCode != null && storedCode.getCode().equals(code)) {
-            LocalDateTime expirationTime = storedCode.getCreateTime().plusMinutes(VERIFICATION_EXPIRATION_MINUTES);
+        String key = CODE_KEY_PREFIX + email;
+        String storedCode = (String) redisUtil.get(key);
 
-            if (LocalDateTime.now().isBefore(expirationTime)) {     // 유효 시간이 지나지 않았다면
-                codeMap.remove(email);      // 인증코드가 맞다면 인증코드 삭제.
-                return true;
-            } else {
-                codeMap.remove(email); // 유효 기간이 지났으면 해당 데이터 삭제
-                throw new CustomException(ErrorCode.CODE_EXPIRED);
-            }
+        if(storedCode != null && storedCode.equals(code)) {     // 유효시간 지나지 않음 + 입력 코드 일치
+            redisUtil.del(key);
+            return true;
+        } else if(storedCode == null) {     // 유효시간 지나서 redis에 없음
+            throw new CustomException(ErrorCode.CODE_EXPIRED);
+        } else {                            // 코드 일치하지 않음
+            throw new CustomException(ErrorCode.INVALID_CODE);
         }
-        throw new CustomException(ErrorCode.INVALID_CODE);  // 인증번호 일치하지 않으면
     }
 
 }

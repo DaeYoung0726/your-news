@@ -6,13 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
-import project.yourNews.token.refresh.service.RefreshTokenService;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
-import project.yourNews.token.tokenBlackList.service.TokenBlackListService;
-import project.yourNews.util.cookie.CookieUtil;
+import project.yourNews.token.refresh.RefreshTokenService;
+import project.yourNews.token.tokenBlackList.TokenBlackListService;
+import project.yourNews.utils.cookie.CookieUtil;
 
-import static project.yourNews.util.jwt.JwtProperties.*;
+import static project.yourNews.utils.jwt.JwtProperties.*;
 
 @RequiredArgsConstructor
 @Component

@@ -12,9 +12,9 @@ import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.mail.service.ReissueTempPassService;
-import project.yourNews.util.jwt.JwtUtil;
+import project.yourNews.utils.jwt.JwtUtil;
 
-import static project.yourNews.util.jwt.JwtProperties.TOKEN_PREFIX;
+import static project.yourNews.utils.jwt.JwtProperties.TOKEN_PREFIX;
 
 @Service
 @RequiredArgsConstructor

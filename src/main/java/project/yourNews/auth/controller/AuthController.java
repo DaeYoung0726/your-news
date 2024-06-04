@@ -19,15 +19,15 @@ import project.yourNews.auth.service.AuthService;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
-import project.yourNews.token.refresh.service.RefreshTokenService;
-import project.yourNews.util.cookie.CookieUtil;
-import project.yourNews.util.jwt.JwtUtil;
+import project.yourNews.token.refresh.RefreshTokenService;
+import project.yourNews.utils.cookie.CookieUtil;
+import project.yourNews.utils.jwt.JwtUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static project.yourNews.util.jwt.JwtProperties.REFRESH_COOKIE_VALUE;
-import static project.yourNews.util.jwt.JwtProperties.TOKEN_PREFIX;
+import static project.yourNews.utils.jwt.JwtProperties.REFRESH_COOKIE_VALUE;
+import static project.yourNews.utils.jwt.JwtProperties.TOKEN_PREFIX;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,7 +50,7 @@ public class AuthController {
         String accessToken = TOKEN_PREFIX + jwtUtil.generateAccessToken(role, member.getUsername());
         String refreshToken = jwtUtil.generateRefreshToken(role, member.getUsername());
 
-        refreshTokenService.saveRefreshToken(refreshToken);
+        refreshTokenService.saveRefreshToken(member.getUsername(), refreshToken);
 
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("accessToken", accessToken);

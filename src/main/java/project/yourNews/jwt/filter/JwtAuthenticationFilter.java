@@ -17,14 +17,13 @@ import project.yourNews.domains.member.domain.Role;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.error.ErrorDto;
 import project.yourNews.security.auth.CustomDetails;
-import project.yourNews.token.tokenBlackList.entity.TokenBlackList;
-import project.yourNews.token.tokenBlackList.service.TokenBlackListService;
-import project.yourNews.util.jwt.JwtUtil;
+import project.yourNews.token.tokenBlackList.TokenBlackListService;
+import project.yourNews.utils.jwt.JwtUtil;
 
 import java.io.IOException;
 
-import static project.yourNews.util.jwt.JwtProperties.ACCESS_HEADER_VALUE;
-import static project.yourNews.util.jwt.JwtProperties.TOKEN_PREFIX;
+import static project.yourNews.utils.jwt.JwtProperties.ACCESS_HEADER_VALUE;
+import static project.yourNews.utils.jwt.JwtProperties.TOKEN_PREFIX;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -52,33 +51,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = accessTokenGetHeader.substring(TOKEN_PREFIX.length()).trim();
+        String accessToken = resolveAccessToken(response, accessTokenGetHeader);
 
-        accessToken = accessToken.replaceAll(SPECIAL_CHARACTERS_PATTERN, "");   // 토큰 끝 특수문자 제거
-
-
-        if(tokenBlackListService.existsBlackListCheck(accessToken)) {       // AccessToken이 블랙리스트에 있는지.
-            handleExceptionToken(response, ErrorCode.BLACKLIST_ACCESS_TOKEN);
+        if (accessToken == null)    // resolveAccessToken 메서드에 의해 accessToken에 문제가 있을 경우.
             return;
-        }
-
-        try {
-            jwtUtil.isExpired(accessToken);      // 만료되었는지
-        } catch (ExpiredJwtException e) {
-            handleExceptionToken(response, ErrorCode.ACCESS_TOKEN_EXPIRED);
-            return;
-        }
-
-        if (!"access".equals(jwtUtil.getCategory(accessToken))) {         // jwt에 담긴 category를 통해 access 가 맞는지 확인.
-            handleExceptionToken(response, ErrorCode.INVALID_ACCESS_TOKEN);
-            return;
-        }
 
         Authentication auth = getAuthentication(accessToken);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         filterChain.doFilter(request, response);
     }
+
+    /*
+     * @throws accessToken이 blackList에 저장되어 있거나, 만료되었거나, access 토큰이 아니거나.
+     */
+    private String resolveAccessToken(HttpServletResponse response, String accessTokenGetHeader) throws IOException {
+        String accessToken = accessTokenGetHeader.substring(TOKEN_PREFIX.length()).trim();
+
+        accessToken = accessToken.replaceAll(SPECIAL_CHARACTERS_PATTERN, "");   // 토큰 끝 특수문자 제거
+
+        if(tokenBlackListService.existsBlackListCheck(accessToken)) {       // AccessToken이 블랙리스트에 있는지.
+            handleExceptionToken(response, ErrorCode.BLACKLIST_ACCESS_TOKEN);
+            return null;
+        }
+
+        try {
+            jwtUtil.isExpired(accessToken);      // 만료되었는지
+        } catch (ExpiredJwtException e) {
+            handleExceptionToken(response, ErrorCode.ACCESS_TOKEN_EXPIRED);
+            return null;
+        }
+
+        if (!"access".equals(jwtUtil.getCategory(accessToken))) {         // jwt에 담긴 category를 통해 access 가 맞는지 확인.
+            handleExceptionToken(response, ErrorCode.INVALID_ACCESS_TOKEN);
+            return null;
+        }
+        return accessToken;
+    }
+
 
     /* Authentication 가져오기 */
     private Authentication getAuthentication(String token) {

@@ -19,8 +19,8 @@ import project.yourNews.handler.logoutHandler.CustomLogoutHandler;
 import project.yourNews.handler.logoutHandler.SuccessLogoutHandler;
 import project.yourNews.jwt.filter.JwtAuthenticationFilter;
 import project.yourNews.jwt.filter.JwtExceptionFilter;
-import project.yourNews.token.tokenBlackList.service.TokenBlackListService;
-import project.yourNews.util.jwt.JwtUtil;
+import project.yourNews.token.tokenBlackList.TokenBlackListService;
+import project.yourNews.utils.jwt.JwtUtil;
 
 @Configuration
 @EnableWebSecurity

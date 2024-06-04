@@ -1,4 +1,4 @@
-package project.yourNews.util.cookie;
+package project.yourNews.utils.cookie;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
