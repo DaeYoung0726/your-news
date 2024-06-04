@@ -5,6 +5,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @EnableScheduling
+@EnableAsync
 public class CrawlingService {
 
     private final NewsService newsService;
@@ -32,6 +35,7 @@ public class CrawlingService {
     private static final String SCHEDULED_TIME = "0 0 8-19 * * *";  // 1시간마다 크롤링
 
     @Scheduled(cron = SCHEDULED_TIME, zone = "Asia/Seoul") // 오전 8시부터 오후 7시까지
+    @Async
     @Transactional
     public void startCrawling() throws IOException {
 
