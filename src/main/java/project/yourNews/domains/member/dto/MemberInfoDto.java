@@ -1,15 +1,17 @@
 package project.yourNews.domains.member.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.yourNews.domains.member.domain.Member;
-import project.yourNews.domains.member.domain.Role;
 
 @Getter
+@NoArgsConstructor
 public class MemberInfoDto {
 
-    private final Long id;
-    private final String nickname;
-    private final String email;
+    private Long id;
+    private String nickname;
+    private String email;
+
 
     public MemberInfoDto(Member member) {
         this.id = member.getId();
