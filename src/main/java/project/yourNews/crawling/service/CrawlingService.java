@@ -47,6 +47,8 @@ public class CrawlingService {
 
     /* 페이지 크롤링 */
     private void analyzeWeb(String newsURL) throws IOException {
+        // 해당 소식 구독한 회원 불러오기
+        List<MemberInfoDto> members = memberService.getMembersSubscribedToNews(newsURL);
 
         // 웹 페이지 가져오기
         Document doc = Jsoup.connect(newsURL).get();
@@ -65,7 +67,6 @@ public class CrawlingService {
 
                 // 새로운 게시글인 경우에만 출력
                 if (!urlHistoryService.existsURLCheck(postURL)) {
-                    List<MemberInfoDto> members = memberService.getMembersSubscribedToNewsCached(newsURL);
 
                     for (MemberInfoDto member: members) {
                         sendNewsToMember(member.getEmail(), postTitle, postURL);
