@@ -15,7 +15,6 @@ import static project.yourNews.mail.util.MailProperties.*;
 
 @RequiredArgsConstructor
 @Transactional
-@EnableAsync
 @Service
 public class MailService {
 

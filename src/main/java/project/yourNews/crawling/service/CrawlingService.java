@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.member.domain.Member;
+import project.yourNews.domains.member.dto.MemberInfoDto;
 import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
@@ -25,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @EnableScheduling
-@EnableAsync
 public class CrawlingService {
 
     private final NewsService newsService;
@@ -65,10 +65,9 @@ public class CrawlingService {
 
                 // 새로운 게시글인 경우에만 출력
                 if (!urlHistoryService.existsURLCheck(postURL)) {
-                    // 여기서 알림을 보내는 로직을 추가할 수 있습니다.
-                    List<Member> members = memberService.getMembersSubscribedToNews(newsURL);
+                    List<MemberInfoDto> members = memberService.getMembersSubscribedToNewsCached(newsURL);
 
-                    for (Member member: members) {
+                    for (MemberInfoDto member: members) {
                         sendNewsToMember(member.getEmail(), postTitle, postURL);
                     }
                     // 새로운 게시글 URL을 목록에 추가

@@ -54,7 +54,7 @@ public class CodeService {
     private boolean checkRetryEmail(String email) {
 
         String key = CODE_KEY_PREFIX + email;
-        if(!redisUtil.setExisted(key)) {
+        if(!redisUtil.existed(key)) {
             return true;
         } else {
             long expireTime = redisUtil.getExpire(key, TimeUnit.SECONDS);
