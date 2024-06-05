@@ -1,4 +1,4 @@
-package project.yourNews.controller;
+package project.yourNews.domains.common.controller;
 
 
 import org.springframework.stereotype.Controller;
