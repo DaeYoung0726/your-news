@@ -29,7 +29,7 @@ public class RedisUtil {
     }
 
     /* Redis 존재 확인. */
-    public boolean setExisted(String key) {
+    public boolean existed(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 

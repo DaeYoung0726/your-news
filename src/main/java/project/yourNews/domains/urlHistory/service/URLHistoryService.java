@@ -9,59 +9,42 @@ import project.yourNews.domains.urlHistory.dto.URLResponseDto;
 import project.yourNews.domains.urlHistory.repository.URLHistoryRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
+import project.yourNews.utils.redis.RedisUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static project.yourNews.utils.redis.RedisProperties.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class URLHistoryService {
 
-    private final URLHistoryRepository urlHistoryRepository;
+    private final RedisUtil redisUtil;
 
     /* 보낸 url 저장하기 */
     @Transactional
     public void saveURL(String url) {
 
-        URLHistory urlHistory = URLHistory.builder()
-                .dispatchedURL(url)
-                .build();
-
-        urlHistoryRepository.save(urlHistory);
-    }
-
-    /* 저장된 url 전체 불러오기 */
-    @Transactional(readOnly = true)
-    public List<URLResponseDto> readAllURL() {
-
-        List<URLHistory> urlHistories = urlHistoryRepository.findAll();
-        return urlHistories.stream().map(URLResponseDto::new).toList();
+        String key = URL_HISTORY_KEY_PREFIX + url;
+        redisUtil.set(key, url);
+        redisUtil.expire(key, URL_EXPIRATION_TIME);
     }
 
     /* 저장된 url 삭제하기 */
     @Transactional
-    public boolean deleteURL(String dispatchedURL) {
+    public void deleteURL(String dispatchedURL) {
 
-        URLHistory url = urlHistoryRepository.findByDispatchedURL(dispatchedURL).orElseThrow(() ->
-                new CustomException(ErrorCode.URL_NOT_FOUND));
+        String key = URL_HISTORY_KEY_PREFIX + dispatchedURL;
 
-        if (url.getCreatedDate().plusDays(7).isBefore(LocalDateTime.now())) {
-            urlHistoryRepository.delete(url);
-            return false;
-        }
-
-        return true;
+        redisUtil.del(key);
     }
 
     /* 이미 보낸 소식인지 확인 */
     @Transactional
     public boolean existsURLCheck(String url) {
 
-        if (urlHistoryRepository.existsByDispatchedURL(url)) {
-            return this.deleteURL(url);
-        } else {
-            return false;
-        }
+        return redisUtil.existed(URL_HISTORY_KEY_PREFIX + url);
     }
 }

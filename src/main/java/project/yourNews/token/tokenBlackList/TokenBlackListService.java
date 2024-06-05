@@ -23,7 +23,7 @@ public class TokenBlackListService {
 
     /* 블랙리스트 확인. */
     public boolean existsBlackListCheck(String accessToken) {
-        return redisUtil.setExisted(BLACKLIST_KEY_PREFIX + accessToken);
+        return redisUtil.existed(BLACKLIST_KEY_PREFIX + accessToken);
     }
 
 }
