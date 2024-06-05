@@ -11,9 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static project.yourNews.utils.jwt.JwtProperties.ACCESS_EXPIRATION_TIME;
-import static project.yourNews.utils.jwt.JwtProperties.REFRESH_EXPIRATION_TIME;
-
 @Component
 public class JwtUtil {
 
