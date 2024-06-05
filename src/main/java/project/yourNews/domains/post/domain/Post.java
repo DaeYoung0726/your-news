@@ -48,7 +48,7 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post")
     private List<Like> likes;
 
     /* 게시글 업데이트 */

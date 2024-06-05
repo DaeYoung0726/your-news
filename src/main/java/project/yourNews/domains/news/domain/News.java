@@ -35,7 +35,7 @@ public class News {
     @Column(unique = true)
     private String newsURL;
 
-    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "news")
     private List<SubNews> memberSubNews;
 
 

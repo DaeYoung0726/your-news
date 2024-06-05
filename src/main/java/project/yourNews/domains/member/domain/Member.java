@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.yourNews.domains.BaseTimeEntity;
+import project.yourNews.domains.like.domain.Like;
 import project.yourNews.domains.post.domain.Post;
 import project.yourNews.domains.subNews.domain.SubNews;
 
@@ -49,10 +50,13 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "writer")
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member")
+    private List<Like> likes;
+
+    @OneToMany(mappedBy = "member")
     private List<SubNews> subNews;
 
     /* 유저 정보 업데이트 */
