@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
 
     userManagementButton.addEventListener('click', () => {
-        window.location.href = '/user-management.html';
+        window.location.href = '/adm/user-management.html';
     });
 
     fetchInfoButton.addEventListener('click', () => {
