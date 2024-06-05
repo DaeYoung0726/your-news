@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.aop.annotation.VerifyAuthentication;
 import project.yourNews.domains.category.domain.Category;
 import project.yourNews.domains.category.repository.CategoryRepository;
+import project.yourNews.domains.common.service.AssociatedEntityService;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.domains.post.domain.Post;
@@ -27,6 +28,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final AssociatedEntityService associatedEntityService;
 
     /* 게시글 저장 */
     @Transactional
@@ -85,6 +87,8 @@ public class PostService {
 
         Post findPost = postRepository.findById(postId).orElseThrow(() ->
                 new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        associatedEntityService.deleteAllLikeByPost(findPost);  // 좋아요 연관관계 삭제
 
         postRepository.delete(findPost);
     }

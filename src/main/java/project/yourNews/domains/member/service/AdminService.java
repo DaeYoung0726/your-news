@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.yourNews.domains.common.service.AssociatedEntityService;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.dto.MemberInfoDto;
 import project.yourNews.domains.member.dto.MemberResponseDto;
@@ -19,6 +20,7 @@ import project.yourNews.handler.exceptionHandler.exception.CustomException;
 public class AdminService {
 
     private final MemberRepository memberRepository;
+    private final AssociatedEntityService associatedEntityService;
 
     /* 사용자 전체 불러오기 */
     @Transactional(readOnly = true)
@@ -55,6 +57,10 @@ public class AdminService {
 
         Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        associatedEntityService.deleteAllLikeByMember(findMember);      // 좋아요 연관관계 삭제
+        associatedEntityService.deleteAllPostByMember(findMember);      // 게시글 연관관계 삭제
+        associatedEntityService.deleteAllSubNewsByMember(findMember);   // 구독 소식 연관관계 삭제
 
         memberRepository.delete(findMember);
     }

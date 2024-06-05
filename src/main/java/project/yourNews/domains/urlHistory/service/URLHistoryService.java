@@ -4,17 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.yourNews.domains.urlHistory.domain.URLHistory;
-import project.yourNews.domains.urlHistory.dto.URLResponseDto;
-import project.yourNews.domains.urlHistory.repository.URLHistoryRepository;
-import project.yourNews.handler.exceptionHandler.error.ErrorCode;
-import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.utils.redis.RedisUtil;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static project.yourNews.utils.redis.RedisProperties.*;
+import static project.yourNews.utils.redis.RedisProperties.URL_EXPIRATION_TIME;
+import static project.yourNews.utils.redis.RedisProperties.URL_HISTORY_KEY_PREFIX;
 
 @Slf4j
 @RequiredArgsConstructor
