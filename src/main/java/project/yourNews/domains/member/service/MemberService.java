@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.common.service.AssociatedEntityService;
 import project.yourNews.domains.member.domain.Member;
-import project.yourNews.domains.member.dto.MemberInfoDto;
 import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.dto.MemberUpdateDto;
 import project.yourNews.domains.member.dto.SignUpDto;
@@ -87,10 +86,10 @@ public class MemberService {
 
     /* 특정 소식 구독한 사용자 가져오기 */
     @Transactional(readOnly = true)
-    public List<MemberInfoDto> getMembersSubscribedToNews(String newsURL) {
+    public List<String> getMembersSubscribedToNews(String newsURL) {
 
         List<Member> members = memberRepository.findBySubNews_News_NewsURL(newsURL);
-        return members.stream().map(MemberInfoDto::new).collect(Collectors.toList());
+        return members.stream().map(Member::getEmail).collect(Collectors.toList());
     }
 
     /* 아이디 중복 확인 */
