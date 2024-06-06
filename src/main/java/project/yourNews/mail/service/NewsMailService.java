@@ -5,16 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.yourNews.mail.MailType;
+import project.yourNews.crawling.dto.EmailRequest;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static project.yourNews.mail.util.MailProperties.*;
-import static project.yourNews.mail.util.MailProperties.NEWS_TEXT;
+import static project.yourNews.mail.util.MailProperties.NEWS_SUBJECT;
 
 @RequiredArgsConstructor
 @Transactional
@@ -27,10 +24,9 @@ public class NewsMailService {
     private String emailUsername;
 
     /* 메일 보내기 */
-    @Async
-    public void sendMail(List<String> email, String content) {
+    public void sendMail(EmailRequest emailRequest) {
 
-        SimpleMailMessage message = getNewsMessage(email, content);;
+        SimpleMailMessage message = getNewsMessage(emailRequest.getEmails(), emailRequest.getContent());
 
         try {
             javaMailSender.send(message);
@@ -42,9 +38,9 @@ public class NewsMailService {
     private SimpleMailMessage getNewsMessage(List<String> emails, String news) {
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(emails.toArray(new String[0]));
+        message.setBcc(emails.toArray(new String[0]));
         message.setSubject(NEWS_SUBJECT);
-        message.setText(NEWS_TEXT + news);
+        message.setText(news);
         message.setFrom(emailUsername);
 
         return message;
