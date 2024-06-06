@@ -28,6 +28,13 @@ spring:
     refresh-expiration: ${JWT_REFRESH_EXPIRATION}
     issuer: ${JWT_ISSUER}
 
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+
   mail:
     host: smtp.naver.com
     port: 465
@@ -45,6 +52,14 @@ spring:
           ssl:
             enable: true
             trust: smtp.naver.com
+
+rabbitmq:
+  queue:
+    name: ${RABBITMQ_QUEUE_NAME}
+  exchange:
+    name: ${RABBITMQ_EXCHANGE_NAME}
+  routing:
+    key: ${RABBITMQ_ROUTING_KEY}
 
 logging:
   level:
