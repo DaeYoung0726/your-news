@@ -21,7 +21,7 @@ public class NewsService {
     @Transactional(readOnly = true)
     public List<NewsInfoDto> readAllNews() {
 
-        List<News> news = newsRepository.findAll();
+        List<News> news = newsRepository.findAllByOrderByNewsNameAsc();
         return news.stream().map(NewsInfoDto::new).toList();
     }
 }
