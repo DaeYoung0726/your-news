@@ -6,17 +6,20 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.mail.MailType;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static project.yourNews.mail.util.MailProperties.*;
+import static project.yourNews.mail.util.MailProperties.NEWS_TEXT;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class MailService {
+public class NewsMailService {
 
     private final JavaMailSender javaMailSender;
 
@@ -25,14 +28,9 @@ public class MailService {
 
     /* 메일 보내기 */
     @Async
-    public void sendMail(String email, String content, MailType type) {
+    public void sendMail(List<String> email, String content) {
 
-        SimpleMailMessage message = null;
-
-        switch (type) {
-            case CODE -> message = getCodeMessage(email, content);
-            case PASS -> message = getPassMessage(email, content);
-        }
+        SimpleMailMessage message = getNewsMessage(email, content);;
 
         try {
             javaMailSender.send(message);
@@ -40,27 +38,16 @@ public class MailService {
         }
     }
 
-    /* 인증메일 보내기 */
-    private SimpleMailMessage getCodeMessage(String email, String code) {
+    /* 소식 보내기 */
+    private SimpleMailMessage getNewsMessage(List<String> emails, String news) {
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject(CODE_SUBJECT);
-        message.setText(CODE_TEXT + code);
+        message.setTo(emails.toArray(new String[0]));
+        message.setSubject(NEWS_SUBJECT);
+        message.setText(NEWS_TEXT + news);
         message.setFrom(emailUsername);
 
         return message;
     }
 
-    /* 임시 비밀번호 보내기 */
-    private SimpleMailMessage getPassMessage(String email, String pass) {
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject(PASS_SUBJECT);
-        message.setText(PASS_TEXT + pass);
-        message.setFrom(emailUsername);
-
-        return message;
-    }
 }

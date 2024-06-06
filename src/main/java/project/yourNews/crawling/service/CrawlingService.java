@@ -6,19 +6,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.yourNews.domains.member.domain.Member;
-import project.yourNews.domains.member.dto.MemberInfoDto;
 import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
 import project.yourNews.domains.urlHistory.service.URLHistoryService;
-import project.yourNews.mail.MailType;
-import project.yourNews.mail.service.MailService;
+import project.yourNews.mail.service.NewsMailService;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,7 +27,7 @@ public class CrawlingService {
     private final NewsService newsService;
     private final MemberService memberService;
     private final URLHistoryService urlHistoryService;
-    private final MailService mailService;
+    private final NewsMailService newsMailService;
     private static final String SCHEDULED_TIME = "0 0 8-19 * * *";  // 1시간마다 크롤링
 
     @Scheduled(cron = SCHEDULED_TIME, zone = "Asia/Seoul") // 오전 8시부터 오후 7시까지
@@ -47,8 +43,8 @@ public class CrawlingService {
 
     /* 페이지 크롤링 */
     private void analyzeWeb(String newsURL) throws IOException {
-        // 해당 소식 구독한 회원 불러오기
-        List<MemberInfoDto> members = memberService.getMembersSubscribedToNews(newsURL);
+        // 해당 소식 구독한 회원의 이메일 불러오기
+        List<String> memberEmails = memberService.getMembersSubscribedToNews(newsURL);
 
         // 웹 페이지 가져오기
         Document doc = Jsoup.connect(newsURL).get();
@@ -68,9 +64,7 @@ public class CrawlingService {
                 // 새로운 게시글인 경우에만 출력
                 if (!urlHistoryService.existsURLCheck(postURL)) {
 
-                    for (MemberInfoDto member: members) {
-                        sendNewsToMember(member.getEmail(), postTitle, postURL);
-                    }
+                    sendNewsToMember(memberEmails, postTitle, postURL);
                     // 새로운 게시글 URL을 목록에 추가
                     urlHistoryService.saveURL(postURL);
                 }
@@ -79,9 +73,9 @@ public class CrawlingService {
     }
 
     /* 소식 구독자에게 메일 보내기 */
-    private void sendNewsToMember(String memberEmail, String postTitle, String postURL) {
+    private void sendNewsToMember(List<String> memberEmails, String postTitle, String postURL) {
 
         String mailContent = postTitle + '\n' + postURL;
-        mailService.sendMail(memberEmail, mailContent, MailType.NEWS);
+        newsMailService.sendMail(memberEmails, mailContent);
     }
 }
