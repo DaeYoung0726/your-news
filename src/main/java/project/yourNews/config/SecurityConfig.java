@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,6 +28,7 @@ import project.yourNews.utils.jwt.JwtUtil;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
     private final CustomLogoutHandler customLogoutHandler;
@@ -65,7 +67,7 @@ public class SecurityConfig {
                                 .requestMatchers(ADMIN_ENDPOINTS).hasAnyRole(String.valueOf(Role.ADMIN))
                                 .anyRequest().authenticated())
 
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, objectMapper, tokenBlackListService),
+                .addFilterBefore(new JwtAuthenticationFilter(userDetailsService, jwtUtil, objectMapper, tokenBlackListService),
                         UsernamePasswordAuthenticationFilter.class)
 
                 .addFilterBefore(new JwtExceptionFilter(objectMapper), JwtAuthenticationFilter.class)

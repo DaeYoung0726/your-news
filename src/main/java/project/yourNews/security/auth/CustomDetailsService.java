@@ -1,6 +1,7 @@
 package project.yourNews.security.auth;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,17 +16,15 @@ public class CustomDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
+    @Cacheable(value = "users", key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if(username == null || username.equals("")) {
             throw new UsernameNotFoundException(username);
         }
 
-        Member memberEntity = memberRepository.findByUsername(username).orElse(null);
+        Member memberEntity = memberRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found with username: " + username));
 
-
-        if(memberEntity == null) {
-            throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
-        }
         return new CustomDetails(memberEntity);
     }
 }

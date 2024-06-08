@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.domain.Role;
@@ -29,6 +31,7 @@ import static project.yourNews.utils.jwt.JwtProperties.TOKEN_PREFIX;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
     private final TokenBlackListService tokenBlackListService;
@@ -94,16 +97,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private Authentication getAuthentication(String token) {
 
         String username = jwtUtil.getUsername(token);
-        String role = jwtUtil.getRole(token);
 
-        Member memberEntity = Member.builder()
-                .username(username)
-                .role(Role.valueOf(role))
-                .build();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        CustomDetails customDetails = new CustomDetails(memberEntity);
-
-        return new UsernamePasswordAuthenticationToken(customDetails, null, customDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     /* 예외 처리 */
