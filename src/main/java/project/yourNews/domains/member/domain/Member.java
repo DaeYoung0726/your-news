@@ -1,6 +1,6 @@
 package project.yourNews.domains.member.domain;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.yourNews.domains.BaseTimeEntity;
+import project.yourNews.domains.common.entity.BaseTimeEntity;
 import project.yourNews.domains.like.domain.Like;
 import project.yourNews.domains.post.domain.Post;
 import project.yourNews.domains.subNews.domain.SubNews;
@@ -50,12 +50,15 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "writer")
     private List<Post> posts;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Like> likes;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<SubNews> subNews;
 

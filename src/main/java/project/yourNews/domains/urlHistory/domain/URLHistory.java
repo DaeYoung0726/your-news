@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.yourNews.domains.BaseTimeEntity;
+import project.yourNews.domains.common.entity.BaseTimeEntity;
 
 @Getter
 @NoArgsConstructor

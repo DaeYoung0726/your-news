@@ -1,5 +1,6 @@
-package project.yourNews.domains;
+package project.yourNews.domains.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -17,8 +18,10 @@ public abstract class BaseTimeEntity {
 
     @CreatedDate
     @Column(updatable = false)
+    @JsonIgnore
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @JsonIgnore
     private LocalDateTime modifiedDate;
 }
