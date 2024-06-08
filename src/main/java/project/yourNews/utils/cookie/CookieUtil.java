@@ -17,7 +17,6 @@ public class CookieUtil {
                 .httpOnly(true)
                 .maxAge(24*60*60)
                 .secure(true)
-                .sameSite("None")
                 .build();
     }
 
@@ -29,7 +28,6 @@ public class CookieUtil {
                 .httpOnly(true)
                 .maxAge(0)
                 .secure(true)
-                .sameSite("None")
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());

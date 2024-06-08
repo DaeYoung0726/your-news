@@ -28,7 +28,6 @@ import project.yourNews.utils.jwt.JwtUtil;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final CorsFilter corsFilter;
     private final ObjectMapper objectMapper;
     private final CustomLogoutHandler customLogoutHandler;
     private final SuccessLogoutHandler successLogoutHandler;
@@ -51,8 +50,6 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-
-                .addFilter(corsFilter)
 
                 .formLogin(AbstractHttpConfigurer::disable)
 
