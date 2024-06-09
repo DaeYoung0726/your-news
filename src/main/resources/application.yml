@@ -61,6 +61,10 @@ rabbitmq:
   routing:
     key: ${RABBITMQ_ROUTING_KEY}
 
+mail:
+  admin:
+    email: ${ADMIN_EMAIL}
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: debug

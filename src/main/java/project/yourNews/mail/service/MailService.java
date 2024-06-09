@@ -23,6 +23,9 @@ public class MailService {
     @Value("${spring.mail.username}")
     private String emailUsername;
 
+    @Value("${mail.admin.email}")
+    private String adminEmail;
+
     /* 메일 보내기 */
     @Async
     public void sendMail(String email, String content, MailType type) {
@@ -32,6 +35,7 @@ public class MailService {
         switch (type) {
             case CODE -> message = getCodeMessage(email, content);
             case PASS -> message = getPassMessage(email, content);
+            case ASK -> message = getAskMessage(email, content);
         }
 
         try {
@@ -59,6 +63,18 @@ public class MailService {
         message.setTo(email);
         message.setSubject(PASS_SUBJECT);
         message.setText(PASS_TEXT + pass);
+        message.setFrom(emailUsername);
+
+        return message;
+    }
+
+    /* 관리자에게 문의하기 */
+    private SimpleMailMessage getAskMessage(String email, String askContent) {
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(adminEmail);
+        message.setSubject(ASK_SUBJECT);
+        message.setText(ASK_TEXT + email + '\n' + askContent);
         message.setFrom(emailUsername);
 
         return message;
