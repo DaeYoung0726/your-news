@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const logoutButton = document.getElementById('logoutButton');
+    const askToAdminButton = document.getElementById('askToAdminButton');
     const createPostButton = document.getElementById('createPostButton');
     const noticeButton = document.getElementById('noticeButton');
     const newsRequestButton = document.getElementById('newsRequestButton');
@@ -101,6 +102,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     fetchInfoButton.addEventListener('click', () => {
         window.location.href = '/user-info.html';
+    });
+
+    askToAdminButton.addEventListener('click', () => {
+        window.location.href = '/ask.html';
     });
 
     function loadPosts(category, page) {
