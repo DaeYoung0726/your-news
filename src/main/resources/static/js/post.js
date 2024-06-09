@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let userRole = ''; // 사용자 역할을 저장할 변수
     var currentLikeCount = 0;
+
     async function getUserRole() {
         try {
             const response = await fetchWithAuth('/v1/auth/user-role', {
@@ -60,17 +61,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 });
 
+                const result = await response.json();
                 if (response.ok) {
-                    alert('게시글 삭제 성공.');
+                    alert(result.response);
                     window.location.href = '/main.html';
                 } else {
-                    const result = await response.json();
-                    if (typeof result === 'object' && result !== null) {
-                        const errorMessages = Object.entries(result).map(([field, message]) => `${message}`).join('\n');
-                        alert(`Error:\n${errorMessages}`);
-                    } else {
-                        alert(`Error: 알 수 없는 오류가 발생했습니다.`);
-                    }
+                    alert(`Error: ${result.message}`);
                 }
             } catch (error) {
                 alert(`Error: ${error.message}`);
@@ -130,18 +126,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
 
+            const result = await response.json();
             if (response.ok) {
-                const result = await response.text();
-                alert(result);
-                postLikes.textContent = currentLikeCount+1;
+                alert(result.response);
+                postLikes.textContent = currentLikeCount + 1;
             } else {
-                const result = await response.json();
-                if (typeof result === 'object' && result !== null) {
-                    const errorMessages = Object.entries(result).map(([field, message]) => `${message}`).join('\n');
-                    alert(`Error:\n${errorMessages}`);
-                } else {
-                    alert(`Error: 알 수 없는 오류가 발생했습니다.`);
-                }
+                alert(`Error: ${result.message}`);
             }
         } catch (error) {
             alert(`Error: ${error.message}`);

@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Login form submission
+    // 로그인 폼 제출
     const loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();

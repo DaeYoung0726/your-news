@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             usernameInput.value = data.username;
             emailInput.value = data.email;
             nicknameInput.value = data.nickname;
-            subNewsInput.value = data.subNews.map(news => news.name).join(', ');
+            subNewsInput.value = data.subNews.map(news => news.news).join(', ');
         })
         .catch(error => console.error('Error fetching user info:', error));
 
@@ -93,17 +93,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 });
 
+                const result = await response.json();
                 if (response.ok) {
-                    alert('탈퇴 성공.');
+                    alert(result.response);
                     window.location.href = '/adm/user-management.html';
                 } else {
-                    const result = await response.json();
-                    if (typeof result === 'object' && result !== null) {
-                        const errorMessages = Object.entries(result).map(([field, message]) => `${message}`).join('\n');
-                        alert(`Error:\n${errorMessages}`);
-                    } else {
-                        alert(`Error: 알 수 없는 오류가 발생했습니다.`);
-                    }
+                    alert(result.message);
                 }
             } catch (error) {
                 alert(`Error: ${error.message}`);

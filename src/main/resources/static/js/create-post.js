@@ -55,18 +55,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
 
+            const result = await response.json();
             if (response.ok) {
-                const postId = await response.text();
                 alert('게시글 작성 성공.');
-                window.location.href = `/post.html?id=${postId}`;
+                window.location.href = `/post.html?id=${result.response}`;
             } else {
-                const result = await response.json();
-                if (typeof result === 'object' && result !== null) {
-                    const errorMessages = Object.entries(result).map(([field, message]) => `${message}`).join('\n');
-                    alert(`Error:\n${errorMessages}`);
-                } else {
-                    alert(`Error: 알 수 없는 오류가 발생했습니다.`);
-                }
+                alert(result.message);
             }
         } catch (error) {
             alert(`Error: ${error.message}`);

@@ -21,6 +21,7 @@ import project.yourNews.domains.post.dto.PostInfoDto;
 import project.yourNews.domains.post.dto.PostRequestDto;
 import project.yourNews.domains.post.dto.PostResponseDto;
 import project.yourNews.domains.post.service.PostService;
+import project.yourNews.utils.api.ApiUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,11 +35,11 @@ public class PostController {
 
     /* 게시글 작성 */
     @PostMapping("/{categoryName}/posts")
-    public ResponseEntity<Long> savePost(@Valid @RequestBody PostRequestDto postRequestDto,
+    public ResponseEntity<?> savePost(@Valid @RequestBody PostRequestDto postRequestDto,
                                            @PathVariable String categoryName,
                                            @AuthenticationPrincipal UserDetails userDetails) {
 
-        return ResponseEntity.ok(postService.savePost(postRequestDto, userDetails.getUsername(), categoryName));
+        return ResponseEntity.ok(ApiUtil.from(postService.savePost(postRequestDto, userDetails.getUsername(), categoryName)));
     }
 
     /* 게시글 불러오기 */
@@ -68,18 +69,18 @@ public class PostController {
 
     /* 게시글 업데이트 */
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<String> updatePost(@Valid @RequestBody PostRequestDto postRequestDto,
+    public ResponseEntity<?> updatePost(@Valid @RequestBody PostRequestDto postRequestDto,
                                              @PathVariable Long postId) {
 
         postService.updatePost(postRequestDto, postId);
-        return ResponseEntity.ok("게시글 업데이트 성공.");
+        return ResponseEntity.ok(ApiUtil.from("게시글 업데이트 성공."));
     }
 
     /* 게시글 삭제 */
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable Long postId) {
+    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
 
         postService.deletePost(postId);
-        return ResponseEntity.ok("게시글 삭제 성공.");
+        return ResponseEntity.ok(ApiUtil.from("게시글 삭제 성공."));
     }
 }

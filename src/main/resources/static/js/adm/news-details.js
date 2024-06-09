@@ -90,17 +90,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
 
+                const result = await response.json();
             if (response.ok) {
-                alert('소식 삭제 성공.');
+                alert(result.response);
                 window.location.href = '/adm/delete-news.html';
             } else {
-                const result = await response.json();
-                if (typeof result === 'object' && result !== null) {
-                    const errorMessages = Object.entries(result).map(([field, message]) => `${message}`).join('\n');
-                    alert(`Error:\n${errorMessages}`);
-                } else {
-                    alert(`Error: 알 수 없는 오류가 발생했습니다.`);
-                }
+                alert(result.message);
             }
         } catch (error) {
             alert('소식 삭제 중 오류가 발생했습니다: ' + error.message);

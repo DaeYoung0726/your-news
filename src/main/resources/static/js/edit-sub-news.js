@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/main.html';
     });
 
-    // Populate news options1
+    // 소식 불러오기
     fetchWithAuth('/v1/news')
         .then(response => response.json())
         .then(data => {
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching news options:', error));
 
-    // Handle update news
+    // 소식 구독 업데이트
     updateNewsButton.addEventListener('click', async () => {
         const selectedNews1 = news1Select.value;
         const selectedNews2 = news2Select.value;
@@ -80,17 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
 
+            const result = await response.json();
             if (response.ok) {
-                alert('소식 구독 업데이트 성공.');
+                alert(result.response);
                 window.location.href = '/user-info.html';
             } else {
-                const result = await response.json();
-                if (typeof result === 'object' && result !== null) {
-                    const errorMessages = Object.entries(result).map(([field, message]) => `${message}`).join('\n');
-                    alert(`Error:\n${errorMessages}`);
-                } else {
-                    alert(`Error: 알 수 없는 오류가 발생했습니다.`);
-                }
+                alert(result.message);
             }
         } catch (error) {
             responseMessage.textContent = `Error: ${error.message}`;

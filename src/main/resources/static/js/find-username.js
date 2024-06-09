@@ -15,12 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            const result = await response.json();
             if (response.ok) {
-                const username = await response.text();
-                responseMessage.textContent = `아이디는 ${username} 입니다.`;
+                responseMessage.textContent = `아이디는 ${result.response} 입니다.`;
             } else {
-                const error = await response.json();
-                responseMessage.textContent = `Error: ${error.message}`;
+                responseMessage.textContent = `Error: ${result.message}`;
             }
         } catch (error) {
             responseMessage.textContent = `Error: ${error.message}`;

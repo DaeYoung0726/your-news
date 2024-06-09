@@ -17,6 +17,7 @@ import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.dto.MemberUpdateDto;
 import project.yourNews.domains.member.dto.SignUpDto;
 import project.yourNews.domains.member.service.MemberService;
+import project.yourNews.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,10 +28,10 @@ public class MemberController {
 
     /* 회원가입 */
     @PostMapping
-    public ResponseEntity<String> signUp(@Valid @RequestBody SignUpDto signUpDto) {
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto signUpDto) {
 
         memberService.signUp(signUpDto);
-        return ResponseEntity.ok("회원가입 성공.");
+        return ResponseEntity.ok(ApiUtil.from("회원가입 성공."));
     }
 
     /* 회원 정보 불러오기 (개인정보) */
@@ -42,32 +43,32 @@ public class MemberController {
 
     /* 회원 정보 업데이트 */
     @PutMapping
-    public ResponseEntity<String> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto,
+    public ResponseEntity<?> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto,
                                                @AuthenticationPrincipal UserDetails userDetails) {
 
         memberService.updateMember(memberUpdateDto, userDetails.getUsername());
-        return ResponseEntity.ok("회원 정보 업데이트 성공.");
+        return ResponseEntity.ok(ApiUtil.from("회원 정보 업데이트 성공."));
     }
 
     /* 회원 정보 삭제 */
     @DeleteMapping
-    public ResponseEntity<String> deleteMember(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> deleteMember(@AuthenticationPrincipal UserDetails userDetails) {
 
         memberService.deleteMember(userDetails.getUsername());
-        return ResponseEntity.ok("회원 정보 삭제 성공.");
+        return ResponseEntity.ok(ApiUtil.from("회원 정보 삭제 성공."));
     }
 
     /* 아이디 중복 확인 */
     @GetMapping("/check-username")
-    public Boolean existsUsernameCheck(@RequestParam("username") String username) {
+    public ResponseEntity<?> existsUsernameCheck(@RequestParam("username") String username) {
 
-        return memberService.existsUsernameCheck(username);
+        return ResponseEntity.ok(ApiUtil.from(memberService.existsUsernameCheck(username)));
     }
 
     /* 닉네임 중복 확인 */
     @GetMapping("/check-nickname")
-    public Boolean existsNicknameCheck(@RequestParam("nickname") String nickname) {
+    public ResponseEntity<?> existsNicknameCheck(@RequestParam("nickname") String nickname) {
 
-        return memberService.existsNicknameCheck(nickname);
+        return ResponseEntity.ok(ApiUtil.from(memberService.existsNicknameCheck(nickname)));
     }
 }

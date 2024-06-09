@@ -16,12 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            const result = await response.json();
             if (response.ok) {
-                const message = await response.text();
-                responseMessage.textContent = message;
+                responseMessage.textContent = result.response;
             } else {
-                const error = await response.json();
-                responseMessage.textContent = `Error: ${error.message}`;
+                responseMessage.textContent = `Error: ${result.message}`;
             }
         } catch (error) {
             responseMessage.textContent = `Error: ${error.message}`;

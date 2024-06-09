@@ -82,17 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
 
+                const result = await response.json();
                 if (response.ok) {
-                    alert('탈퇴 성공.');
+                    alert(result.response);
                     window.location.href = '/';
                 } else {
-                    const result = await response.json();
-                    if (typeof result === 'object' && result !== null) {
-                        const errorMessages = Object.entries(result).map(([field, message]) => `${message}`).join('\n');
-                        alert(`Error: ${errorMessages}`);
-                    } else {
-                        alert(`Error: 알 수 없는 오류가 발생했습니다.`);
-                    }
+                    alert(`Error: ${result.message}`);
                 }
             } catch (error) {
                 alert(`Error: ${error.message}`);

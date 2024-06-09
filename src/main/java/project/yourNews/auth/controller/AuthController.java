@@ -20,6 +20,7 @@ import project.yourNews.domains.member.domain.Member;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.token.refresh.RefreshTokenService;
+import project.yourNews.utils.api.ApiUtil;
 import project.yourNews.utils.cookie.CookieUtil;
 import project.yourNews.utils.jwt.JwtUtil;
 
@@ -93,19 +94,19 @@ public class AuthController {
 
     /* 아이디 찾기 */
     @GetMapping("/find-username")
-    public ResponseEntity<String> findingId(@RequestParam("email") @Valid @Email String email) {
+    public ResponseEntity<?> findingId(@RequestParam("email") @Valid @Email String email) {
 
         String username = authService.findingUsername(email);
-        return ResponseEntity.ok(username);
+        return ResponseEntity.ok(ApiUtil.from(username));
     }
 
     /* 비밀번호 찾기 */
     @PostMapping("/find-pass")
-    public ResponseEntity<String> findPass(@RequestParam("email") @Valid @Email String email,
+    public ResponseEntity<?> findPass(@RequestParam("email") @Valid @Email String email,
                                            @RequestParam("username") String username) {
 
         authService.reissueTempPassword(username, email);
-        return ResponseEntity.ok("잠시 후 등록하신 메일로 임시 비밀번호가 도착합니다.");
+        return ResponseEntity.ok(ApiUtil.from("잠시 후 등록하신 메일로 임시 비밀번호가 도착합니다."));
     }
 
     /* 사용자 권한 확인 */

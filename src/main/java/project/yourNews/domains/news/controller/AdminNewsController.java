@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.domains.news.dto.NewsRequestDto;
 import project.yourNews.domains.news.dto.NewsResponseDto;
 import project.yourNews.domains.news.service.AdminNewsService;
+import project.yourNews.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,10 +24,10 @@ public class AdminNewsController {
 
     /* 소식 추가 */
     @PostMapping
-    public ResponseEntity<String> saveNews(@Valid @RequestBody NewsRequestDto newsRequestDto) {
+    public ResponseEntity<?> saveNews(@Valid @RequestBody NewsRequestDto newsRequestDto) {
 
         adminNewsService.saveNews(newsRequestDto);
-        return ResponseEntity.ok("소식 추가 성공.");
+        return ResponseEntity.ok(ApiUtil.from("소식 추가 성공."));
     }
 
     /* 특정 소식 불러오기 */
@@ -38,9 +39,9 @@ public class AdminNewsController {
 
     /* 소식 삭제하기 */
     @DeleteMapping("/{newsId}")
-    public ResponseEntity<String> deleteNews(@PathVariable Long newsId) {
+    public ResponseEntity<?> deleteNews(@PathVariable Long newsId) {
 
         adminNewsService.deleteNews(newsId);
-        return ResponseEntity.ok("소식 삭제 성공.");
+        return ResponseEntity.ok(ApiUtil.from("소식 삭제 성공."));
     }
 }

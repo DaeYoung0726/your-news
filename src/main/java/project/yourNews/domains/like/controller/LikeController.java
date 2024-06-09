@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.domains.like.service.LikeService;
+import project.yourNews.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,19 +21,19 @@ public class LikeController {
 
     /* 게시글 좋아요 증가 */
     @PostMapping("/{postId}/like")
-    public ResponseEntity<String> likePost(@PathVariable Long postId,
+    public ResponseEntity<?> likePost(@PathVariable Long postId,
                                                  @AuthenticationPrincipal UserDetails userDetails) {
 
         likeService.likePost(userDetails.getUsername(), postId);
-        return ResponseEntity.ok("게시글 좋아요 증가.");
+        return ResponseEntity.ok(ApiUtil.from("게시글 좋아요 증가."));
     }
 
     /* 게시글 좋아요 감소 */
     @DeleteMapping("/{postId}/un-like")
-    public ResponseEntity<String> unLikePost(@PathVariable Long postId,
+    public ResponseEntity<?> unLikePost(@PathVariable Long postId,
                                              @AuthenticationPrincipal UserDetails userDetails) {
 
         likeService.unLikePost(userDetails.getUsername(), postId);
-        return ResponseEntity.ok("게시글 좋아요 감소.");
+        return ResponseEntity.ok(ApiUtil.from("게시글 좋아요 감소."));
     }
 }

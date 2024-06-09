@@ -16,6 +16,7 @@ import project.yourNews.domains.member.dto.MemberInfoDto;
 import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.service.AdminService;
 import project.yourNews.domains.post.service.AdminPostService;
+import project.yourNews.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,17 +47,17 @@ public class AdminController {
 
     /* 사용자 탈퇴 */
     @DeleteMapping("/users/{memberId}")
-    public ResponseEntity<String> dropMember(@PathVariable Long memberId) {
+    public ResponseEntity<?> dropMember(@PathVariable Long memberId) {
 
         adminService.dropMember(memberId);
-        return ResponseEntity.ok("회원 탈퇴 성공.");
+        return ResponseEntity.ok(ApiUtil.from("회원 탈퇴 성공."));
     }
 
     /* 글 삭제 - 어드민 */
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<String> deletePostByAdmin(@PathVariable Long postId) {
+    public ResponseEntity<?> deletePostByAdmin(@PathVariable Long postId) {
 
         adminPostService.deletePostByAdmin(postId);
-        return ResponseEntity.ok("글 삭제 성공.");
+        return ResponseEntity.ok(ApiUtil.from("글 삭제 성공."));
     }
 }

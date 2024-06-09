@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isUsernameChecked = false;
     let isNicknameChecked = false;
 
-    // Populate news options
+    // 소식 불러오기
     fetch('/v1/news')
         .then(response => response.json())
         .then(data => {
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching news options:', error));
 
+    // 인증코드 보내기
     sendVerificationCodeButton.addEventListener('click', async () => {
         const email = document.getElementById('email').value;
 
@@ -40,22 +41,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({email})
             });
 
-            const result = await response.text(); // 응답을 텍스트로 처리
+            const result = await response.json();
 
             if (response.ok) {
-                emailError.textContent = result; // 텍스트 응답을 표시
+                emailError.textContent = result.response;
             } else {
-                emailError.textContent = `Error: ${result}`;
+                emailError.textContent = `Error: ${result.message}`;
             }
         } catch (error) {
             emailError.textContent = `Error: ${error.message}`;
         }
     });
 
-    // Verify the code
+    // 인증코드 확인하기
     verifyCodeButton.addEventListener('click', async () => {
         const email = document.getElementById('email').value;
         const code = document.getElementById('verificationCode').value;
@@ -67,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, code })
+                    body: JSON.stringify({email, code})
                 });
 
             const result = await response.json();
@@ -84,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Check username duplication
+    // 아이디 중복 확인
     checkUsernameButton.addEventListener('click', async () => {
         const username = document.getElementById('username').value;
 
@@ -93,10 +94,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'GET'
             });
 
-            if (response.ok) {
-                const result = await response.json();
+            const result = await response.json();
 
-                if (response.ok && !result) { // If result.available is false, it means the username is not taken
+            if (response.ok) {
+
+                if (response.ok && !result.response) { // If result.available is false, it means the username is not taken
                     isUsernameChecked = true;
                     usernameError.textContent = '사용 가능한 아이디입니다.';
                 } else {
@@ -104,9 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     usernameError.textContent = '사용 불가능한 아이디입니다.';
                 }
             } else {
-                const errorResult = await response.json();
                 isUsernameChecked = false;
-                usernameError.textContent = `Error: ${errorResult.message}`;
+                usernameError.textContent = `Error: ${result.message}`;
             }
         } catch (error) {
             isUsernameChecked = false;
@@ -114,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Check nickname duplication
+    // 닉네임 중복 확인
     checkNicknameButton.addEventListener('click', async () => {
         const nickname = document.getElementById('nickname').value;
 
@@ -123,10 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'GET'
             });
 
+            const result = await response.json();
             if (response.ok) {
-                const result = await response.json();
 
-                if (response.ok && !result) { // If result.available is false, it means the nickname is not taken
+                if (response.ok && !result.response) { // If result.available is false, it means the nickname is not taken
                     isNicknameChecked = true;
                     nicknameError.textContent = '사용 가능한 닉네임입니다.';
                 } else {
@@ -134,9 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     nicknameError.textContent = '사용 불가능한 닉네임입니다.';
                 }
             } else {
-                const errorResult = await response.json();
                 isNicknameChecked = false;
-                nicknameError.textContent = `Error: ${errorResult.message}`;
+                nicknameError.textContent = `Error: ${result.message}`;
             }
         } catch (error) {
             isNicknameChecked = false;
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return regex.test(password);
     };
 
-    // Handle form submission
+    // 회원가입 제출
     signupForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 

@@ -64,17 +64,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 body: JSON.stringify(data)
             });
 
+            const result = await response.json();
             if (response.ok) {
                 responseMessage.style.color = 'green';
                 responseMessage.textContent = '소식 추가 성공.';
             } else {
-                const result = await response.json();
-                if (typeof result === 'object' && result !== null) {
-                    const errorMessages = Object.entries(result).map(([field, message]) => `${message}`).join('\n');
-                    responseMessage.textContent = `Error:\n${errorMessages}`;
-                } else {
-                    responseMessage.textContent = `Error: 알 수 없는 오류가 발생했습니다.`;
-                }
+                responseMessage.textContent = `Error:\n${result.message}`;
             }
         } catch (error) {
             responseMessage.style.color = 'red';

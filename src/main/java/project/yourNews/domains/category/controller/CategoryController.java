@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.domains.category.dto.CategoryRequestDto;
 import project.yourNews.domains.category.service.CategoryService;
+import project.yourNews.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,17 +22,17 @@ public class CategoryController {
 
     /* 게시글 카테고리 생성 */
     @PostMapping
-    public ResponseEntity<String> saveCategory(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
 
         categoryService.saveCategory(categoryRequestDto);
-        return ResponseEntity.ok("카테고리 추가 성공.");
+        return ResponseEntity.ok(ApiUtil.from("카테고리 추가 성공."));
     }
 
     /* 게시글 카테고리 삭제 */
     @DeleteMapping("/{categoryName}")
-    public ResponseEntity<String> deleteCategory(@PathVariable String categoryName) {
+    public ResponseEntity<?> deleteCategory(@PathVariable String categoryName) {
 
         categoryService.deleteCategory(categoryName);
-        return ResponseEntity.ok("카테고리 삭제 성공.");
+        return ResponseEntity.ok(ApiUtil.from("카테고리 삭제 성공."));
     }
 }

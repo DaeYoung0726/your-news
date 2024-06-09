@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.domains.subNews.service.SubNewsService;
+import project.yourNews.utils.api.ApiUtil;
 
 import java.util.List;
 
@@ -20,10 +21,10 @@ public class SubNewsController {
     private final SubNewsService subNewsService;
 
     @PutMapping("/v1/users/update-sub-news")
-    public ResponseEntity<String> updateSubNews(@RequestBody List<String> newsNames,
+    public ResponseEntity<?> updateSubNews(@RequestBody List<String> newsNames,
                                                 @AuthenticationPrincipal UserDetails userDetails) {
 
         subNewsService.updateUserSubNews(userDetails.getUsername(), newsNames);
-        return ResponseEntity.ok("소식 구독 업데이트 성공.");
+        return ResponseEntity.ok(ApiUtil.from("소식 구독 업데이트 성공."));
     }
 }

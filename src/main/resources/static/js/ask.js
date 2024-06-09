@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return response.text();
             })
             .then(data => {
-                alert(data);
+                alert("문의하기 성공.");
                 window.location.href = '/main.html';
             })
             .catch(error => {

@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/main.html';
     });
 
-    // Fetch current member info
+    // 현재 정보 불러오기
     fetchWithAuth('/v1/users', {
         method: 'GET',
         headers: {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching member info:', error));
 
-    // Handle update info
+    // 업데이트 폼 제출
     updateInfoButton.addEventListener('click', async () => {
         const nickname = nicknameInput.value;
         const currentPassword = currentPasswordInput.value;
@@ -94,17 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(memberUpdateDto)
             });
 
+            const result = await response.json();
             if (response.ok) {
-                alert('회원 정보 업데이트 성공.');
+                alert(result.response);
                 window.location.href = '/user-info.html';
             } else {
-                const result = await response.json();
-                if (typeof result === 'object' && result !== null) {
-                    const errorMessages = Object.entries(result).map(([field, message]) => `${message}`).join('\n');
-                    responseMessage.textContent = `Error:\n${errorMessages}`;
-                } else {
-                    responseMessage.textContent = `Error: 알 수 없는 오류가 발생했습니다.`;
-                }
+                alert(`Error: ${result.message}`);
             }
         } catch (error) {
             responseMessage.textContent = `Error: ${error.message}`;
@@ -136,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 const isAvailable = await response.json();
-                if (!isAvailable) {
+                if (!isAvailable.response) {
                     nicknameError.textContent = '사용 가능한 닉네임입니다.';
                     nicknameError.style.color = 'green';
                 } else {

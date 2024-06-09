@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.mail.dto.AskDto;
 import project.yourNews.mail.service.AskService;
 import project.yourNews.mail.service.CodeService;
+import project.yourNews.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,25 +24,25 @@ public class MailController {
 
     /* 이메일 인증 번호 보내기 */
     @PostMapping("/verification-request")
-    public ResponseEntity<String> sendCodeToMail(@RequestParam("email") @Valid @Email String email) {
+    public ResponseEntity<?> sendCodeToMail(@RequestParam("email") @Valid @Email String email) {
 
         codeService.sendCodeToMail(email);
-        return ResponseEntity.ok("인증메일 보내기 성공.");
+        return ResponseEntity.ok(ApiUtil.from("인증메일 보내기 성공."));
     }
 
     /* 인증 번호 확인 */
     @PostMapping("/code-verification")
-    public Boolean verifyCode(@RequestParam(value = "email") @Valid @Email String email,
+    public ResponseEntity<?> verifyCode(@RequestParam(value = "email") @Valid @Email String email,
                              @RequestParam("code") String code) {
 
-        return codeService.verifiedCode(email, code);
+        return ResponseEntity.ok(ApiUtil.from(codeService.verifiedCode(email, code)));
     }
 
     /* 문의하기 */
     @PostMapping("/ask")
-    public ResponseEntity<String> askToAdmin(@RequestBody AskDto askDto) {
+    public ResponseEntity<?> askToAdmin(@RequestBody AskDto askDto) {
 
         askService.askToAdmin(askDto);
-        return ResponseEntity.ok("문의하기 성공.");
+        return ResponseEntity.ok(ApiUtil.from("문의하기 성공."));
     }
 }

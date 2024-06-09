@@ -1,4 +1,4 @@
-package com.project.tableforyou.utils.api;
+package project.yourNews.utils.api;
 
 import lombok.Builder;
 import lombok.Getter;
