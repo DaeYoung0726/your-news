@@ -4,11 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = document.getElementsByClassName('close')[0];
 
     document.getElementById('findIdLink').addEventListener('click', () => {
-        window.location.href = 'find-username.html';
+        window.open('find-username.html', 'findIdWindow', 'width=600,height=400');
     });
 
     document.getElementById('findPwLink').addEventListener('click', () => {
-        window.location.href = 'find-password.html';
+        window.open('find-password.html', 'findPwWindow', 'width=600,height=400');
     });
 
     document.getElementById('signupLink').addEventListener('click', () => {
