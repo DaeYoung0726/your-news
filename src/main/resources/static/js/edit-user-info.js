@@ -99,7 +99,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(result.response);
                 window.location.href = '/user-info.html';
             } else {
-                alert(`Error: ${result.message}`);
+                let errorMessages = '';
+                for (const [field, message] of Object.entries(result)) {
+                    errorMessages += `${message}\n`;
+                }
+                alert(`Error: ${errorMessages}`);
             }
         } catch (error) {
             responseMessage.textContent = `Error: ${error.message}`;

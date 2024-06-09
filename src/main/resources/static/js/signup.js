@@ -144,11 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 비밀번호 유효성 검사
-    const isPasswordValid = (password) => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        return regex.test(password);
-    };
 
     // 회원가입 제출
     signupForm.addEventListener('submit', async (event) => {
@@ -172,10 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
 
-        if (!isPasswordValid(password)) {
-            passwordError.textContent = '비밀번호는 최소 8자 이상, 하나 이상의 대문자, 소문자, 숫자 및 특수 문자를 포함해야 합니다.';
-            return;
-        } else if (password !== confirmPassword) {
+        if (password !== confirmPassword) {
             passwordError.textContent = '비밀번호가 일치하지 않습니다.';
             return;
         } else {
@@ -211,12 +203,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(formData)
             });
 
+            const result = await response.json();
             if (response.ok) {
                 alert('회원가입이 성공적으로 완료되었습니다.');
                 window.location.href = '/';
             } else {
-                const result = await response.json();
-                responseMessage.textContent = `Error: ${result.message}`;
+                let errorMessages = '';
+                for (const [field, message] of Object.entries(result)) {
+                    errorMessages += `${field}: ${message}\n`;
+                }
+                alert(`Error: ${errorMessages}`);
             }
         } catch (error) {
             responseMessage.textContent = `Error: ${error.message}`;
