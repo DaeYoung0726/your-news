@@ -60,12 +60,12 @@ public class AssociatedEntityService {
     @Transactional
     public void deleteAllSubNewsByMember(Member foundMember) {
 
-        List<Long> likeIds = foundMember.getLikes().stream()
-                .map(Like::getId)
+        List<Long> subNewsId = foundMember.getSubNews().stream()
+                .map(SubNews::getId)
                 .collect(Collectors.toList());
 
-        if (!likeIds.isEmpty()) {
-            likeRepository.deleteAllLikeByIdInQuery(likeIds);
+        if (!subNewsId.isEmpty()) {
+            subNewsRepository.deleteAllSubNewsByIdInQuery(subNewsId);
         }
     }
 
