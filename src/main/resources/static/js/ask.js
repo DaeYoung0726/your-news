@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const mainPageButton = document.getElementById('mainPageButton');
     const askForm = document.getElementById('askForm');
     const asker = document.getElementById('asker');
+    const confirmationCheckbox = document.getElementById('confirmationCheckbox');
+    const submitButton = document.getElementById('submitButton');
+    const errorMessage = document.getElementById('errorMessage');
 
     const accessToken = localStorage.getItem('accessToken');
 
@@ -24,6 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     askForm.addEventListener('submit', function(event) {
         event.preventDefault();
+
+        if (!confirmationCheckbox.checked) {
+            errorMessage.style.display = 'block';
+            return;
+        } else {
+            errorMessage.style.display = 'none';
+        }
 
         const content = document.getElementById('content').value;
 
