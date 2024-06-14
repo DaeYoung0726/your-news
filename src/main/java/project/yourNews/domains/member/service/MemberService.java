@@ -88,8 +88,18 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<String> getMembersSubscribedToNews(String newsURL) {
 
-        List<Member> members = memberRepository.findBySubNews_News_NewsURL(newsURL);
+        List<Member> members = memberRepository.findBySubStatusAndSubNews_News_NewsURL(true, newsURL);
         return members.stream().map(Member::getEmail).collect(Collectors.toList());
+    }
+
+    /* 정보 수신 상태 변경 */
+    @Transactional
+    public void updateSubStatus(String email, boolean status) {
+
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        findMember.updateSubStatus(status);
     }
 
     /* 아이디 중복 확인 */

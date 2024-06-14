@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,5 +71,14 @@ public class MemberController {
     public ResponseEntity<?> existsNicknameCheck(@RequestParam("nickname") String nickname) {
 
         return ResponseEntity.ok(ApiUtil.from(memberService.existsNicknameCheck(nickname)));
+    }
+
+    /* 소식 수신 수정 */
+    @PatchMapping("/subscribe")
+    public ResponseEntity<?> subscribe(@RequestParam("email") String email,
+                                       @RequestParam("value") boolean value) {
+
+        memberService.updateSubStatus(email, value);
+        return ResponseEntity.ok(ApiUtil.from("소식 수신 수정 완료."));
     }
 }

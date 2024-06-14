@@ -17,6 +17,7 @@ public class MemberResponseDto {
     private final String username;
     private final String nickname;
     private final String email;
+    private final boolean subStatus;
     private final Role role;
     private final List<SubNewsResponseDto> subNews;
     private final List<PostResponseDto> posts;
@@ -26,6 +27,7 @@ public class MemberResponseDto {
         this.username = member.getUsername();
         this.nickname = member.getNickname();
         this.email = member.getEmail();
+        this.subStatus = member.isSubStatus();
         this.role = member.getRole();
         this.subNews = member.getSubNews().stream().map(SubNewsResponseDto::new).toList();
         this.posts = member.getPosts().stream().map(PostResponseDto::new).toList();

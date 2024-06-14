@@ -47,6 +47,9 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true)
     private String email;
 
+    @NotNull
+    private boolean subStatus;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -71,5 +74,10 @@ public class Member extends BaseTimeEntity {
     /* 비밀번호 업데이트 */
     public void updatePass(String password) {
         this.password = password;
+    }
+
+    /* 구독 상태 업데이트 */
+    public void updateSubStatus(boolean status) {
+        this.subStatus = status;
     }
 }
