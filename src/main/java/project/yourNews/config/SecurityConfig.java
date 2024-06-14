@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.filter.CorsFilter;
 import project.yourNews.domains.member.domain.Role;
 import project.yourNews.handler.logoutHandler.CustomLogoutHandler;
@@ -36,8 +37,8 @@ public class SecurityConfig {
     private final TokenBlackListService tokenBlackListService;
 
     private static final String[] PUBLIC_ENDPOINTS = {"/js/**", "/css/**", "/",
-            "/v1/users/check-username", "/v1/news",
-            "/v1/email/**", "/v1/users/check-nickname", "/v1/auth/**",
+            "/v1/users/check-username", "/v1/news", "/v1/users/subscribe",
+            "/v1/email/**", "/v1/users/check-nickname", "/v1/auth/**", "/unsubscribe",
             "/v1/*/posts", "/*.html", "/adm/*.html"};
     private static final String[] ANONYMOUS_ENDPOINTS = {"/v1/users"};
     private static final String[] ADMIN_ENDPOINTS = {"/v1/admin/**"};
