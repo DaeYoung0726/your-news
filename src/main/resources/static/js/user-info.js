@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     subscribeButton.addEventListener('click', () => {
         const newStatus = !currentStatus;
-        const email = emailInput.value; // 이메일 값 가져오기
+        const username = usernameInput.value; // 이메일 값 가져오기
 
         fetch('/v1/users/subscribe', {
             method: 'PATCH',
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Authorization': accessToken,
             },
             body: new URLSearchParams({
-                email: email,
+                username: username,
                 value: newStatus
             })
         })

@@ -1,10 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Your News</title>
+    <link rel="stylesheet" href="/css/subscribe.css">
 </head>
 <body>
-$END$
+<div class="container">
+    <p>소식을 그만 받으시겠습니까?</p>
+    <form id="unsubscribeForm" onsubmit="return confirmUnsubscribe()">
+        <div class="form-group">
+            <label for="username">아이디:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <header>
+                <button id="unsubscribeButton" type="submit">그만받기</button>
+            </header>
+        </div>
+    </form>
+</div>
+
+<script src="/js/unsubscribe.js"></script>
 </body>
 </html>
