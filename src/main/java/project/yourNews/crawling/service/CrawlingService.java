@@ -37,7 +37,7 @@ public class CrawlingService {
 
     @Value("${rabbitmq.routing.key}")
     private String routingKey;
-    private static final String SCHEDULED_TIME = "0 0 8-19 * * *";  // 1시간마다 크롤링
+    private static final String SCHEDULED_TIME = "0 0 8-19 * * MON-FRI";  // 주말 제외, 평일에 1시간마다 크롤링
 
     @Scheduled(cron = SCHEDULED_TIME, zone = "Asia/Seoul") // 오전 8시부터 오후 7시까지
     @Async
@@ -84,7 +84,9 @@ public class CrawlingService {
     /* 소식 구독자에게 메일 보내기 */
     private void sendNewsToMember(List<String> memberEmails, String newsName, String postTitle, String postURL) {
 
-        String mailContent = "[" + newsName + "] " + postTitle + '\n' + postURL;
+        String mailContent = "[" + newsName + "]<br>" +
+                postTitle + "<br>" +
+                "<a href='" + postURL + "'>" + postURL + "</a>";
         int batchSize = 50;
 
         for (int i = 0; i < memberEmails.size(); i += batchSize) {
