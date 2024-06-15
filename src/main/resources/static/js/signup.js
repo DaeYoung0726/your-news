@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isNicknameChecked = false;
 
     viewTermsButton.addEventListener('click', () => {
-        window.open('https://www.narastat.kr/gps/contents/guidance/agreementPopup.do', '_blank');
+        window.open('privacy_agreement.html', '_blank');
     });
 
     // 소식 불러오기
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 isEmailVerified = true;
                 verificationCodeError.textContent = '인증이 완료되었습니다';
-                verifyCodeButton.disabled = true; // Disable the verify button
+                verifyCodeButton.disabled = true;
             } else {
                 verificationCodeError.textContent = `Error: ${result.message}`;
             }
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
 
-                if (response.ok && !result.response) { // If result.available is false, it means the username is not taken
+                if (response.ok && !result.response) {
                     isUsernameChecked = true;
                     usernameError.textContent = '사용 가능한 아이디입니다.';
                 } else {
