@@ -94,9 +94,9 @@ public class MemberService {
 
     /* 정보 수신 상태 변경 */
     @Transactional
-    public void updateSubStatus(String email, boolean status) {
+    public void updateSubStatus(String username, boolean status) {
 
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->
+        Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         findMember.updateSubStatus(status);
