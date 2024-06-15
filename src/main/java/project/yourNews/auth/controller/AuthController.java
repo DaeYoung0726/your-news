@@ -115,4 +115,12 @@ public class AuthController {
 
         return ResponseEntity.ok(authService.findUserRoleByToken(token));
     }
+
+    /* 계정 확인 */
+    @PostMapping("/check-account")
+    public ResponseEntity<?> checkAccount(@RequestBody LoginDto loginDto) {
+
+        boolean check = authService.login(loginDto) != null;
+        return ResponseEntity.ok(ApiUtil.from(check));
+    }
 }

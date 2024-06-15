@@ -75,10 +75,10 @@ public class MemberController {
 
     /* 소식 수신 수정 */
     @PatchMapping("/subscribe")
-    public ResponseEntity<?> subscribe(@RequestParam("email") String email,
+    public ResponseEntity<?> subscribe(@RequestParam("username") String username,
                                        @RequestParam("value") boolean value) {
 
-        memberService.updateSubStatus(email, value);
+        memberService.updateSubStatus(username, value);
         return ResponseEntity.ok(ApiUtil.from("소식 수신 수정 완료."));
     }
 }

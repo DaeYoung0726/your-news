@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class HomeController {
+public class CommonController {
 
     @GetMapping("/")
     public String home() {
@@ -13,8 +13,9 @@ public class HomeController {
     }
 
     @GetMapping("/unsubscribe")
-    public String showUnsubscribePage(@RequestParam String email, Model model) {
-        model.addAttribute("email", email);
-        return "unsubscribe"; // unsubscribe.html 템플릿을 반환
+    public String showUnsubscribePage() {
+
+        return "unsubscribe";
     }
+
 }
