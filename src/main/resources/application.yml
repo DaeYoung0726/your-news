@@ -1,4 +1,7 @@
 spring:
+  config:
+    import: application-mail.yml
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
@@ -28,30 +31,11 @@ spring:
     refresh-expiration: ${JWT_REFRESH_EXPIRATION}
     issuer: ${JWT_ISSUER}
 
-
   rabbitmq:
     host: ${RABBITMQ_HOST}
     port: ${RABBITMQ_PORT}
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
-
-  mail:
-    host: smtp.naver.com
-    port: 465
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
-    properties:
-      mail:
-        transport:
-          protocol: smtp
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          ssl:
-            enable: true
-            trust: smtp.naver.com
 
 rabbitmq:
   queue:
@@ -61,9 +45,10 @@ rabbitmq:
   routing:
     key: ${RABBITMQ_ROUTING_KEY}
 
-mail:
-  admin:
-    email: ${ADMIN_EMAIL}
+aws:
+  ses:
+    access-key: ${AWS_ACCESS}
+    secret-key: ${AWS_SECRET}
 
 logging:
   level:
