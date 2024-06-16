@@ -1,0 +1,11 @@
+mail:
+  admin:
+    email: ${ADMIN_EMAIL}
+
+  from-email: ${FROM_EMAIL}
+
+  unsubscribe:
+    link: ${UNSUB_LINK}
+
+  name: ${MAIL_NAME}
+
