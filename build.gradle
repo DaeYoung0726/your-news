@@ -45,7 +45,8 @@ dependencies {
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation 'com.amazonaws:aws-java-sdk-ses:1.12.3'
+	implementation 'com.amazonaws:aws-java-sdk-ses:1.12.530'
+	implementation 'com.amazonaws:aws-java-sdk-sns:1.12.530'
 }
 
 tasks.named('test') {
