@@ -81,16 +81,46 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = '/adm/news-management.html'
     })
 
-    deleteAccountButton.addEventListener('click', async () => {
+    const banModal = document.getElementById('banModal');
+    const closeModal = document.getElementsByClassName('close')[0];
+    const banEmail = document.getElementById('banEmail');
+    const banForm = document.getElementById('banForm');
+
+
+    deleteAccountButton.addEventListener('click', () => {
+        banEmail.value = emailInput.value; // 이메일을 읽기 전용으로 설정
+        banModal.style.display = 'block'; // 모달을 보여줌
+    });
+
+    // 모달 닫기 이벤트
+    closeModal.addEventListener('click', () => {
+        banModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == banModal) {
+            banModal.style.display = 'none';
+        }
+    });
+
+    banForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const banReason = document.getElementById('banReason').value;
+        const email = emailInput.value;
+
         const confirmed = confirm('정말 탈퇴시키겠습니까?');
         if (confirmed) {
             try {
-                const response = await fetchWithAuth(`/v1/admin/users/${memberId}`, {
+                const response = await fetchWithAuth('/v1/admin/users', {
                     method: 'DELETE',
                     headers: {
                         'Authorization': accessToken,
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        reason: banReason
+                    })
                 });
 
                 const result = await response.json();
@@ -104,6 +134,5 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert(`Error: ${error.message}`);
             }
         }
-    })
-
+    });
 });

@@ -41,6 +41,23 @@
         </div>
     </main>
 </div>
+
+<div id="banModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>회원 차단</h2>
+        <form id="banForm">
+            <label for="banEmail">Email:</label>
+            <input type="email" id="banEmail" name="banEmail" readonly>
+            <br>
+            <label for="banReason">Ban 사유:</label>
+            <textarea id="banReason" name="banReason" required></textarea>
+            <br>
+            <button type="submit">확인</button>
+        </form>
+    </div>
+</div>
+
 <script src="/js/adm/auth.js"></script>
 <script src="/js/adm/user-info.js"></script>
 </body>
