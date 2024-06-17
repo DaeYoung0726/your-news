@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import project.yourNews.domains.bannedEmail.service.BannedEmailService;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.mail.dto.AskDto;
 import project.yourNews.mail.service.AskService;
 import project.yourNews.mail.service.CodeService;
@@ -21,10 +24,14 @@ public class MailController {
 
     private final CodeService codeService;
     private final AskService askService;
+    private final BannedEmailService bannedEmailService;
 
     /* 이메일 인증 번호 보내기 */
     @PostMapping("/verification-request")
     public ResponseEntity<?> sendCodeToMail(@RequestParam("email") @Valid @Email String email) {
+
+        if (bannedEmailService.checkBannedEmail(email))
+            throw new CustomException(ErrorCode.BANNED_EMAIL);
 
         codeService.sendCodeToMail(email);
         return ResponseEntity.ok(ApiUtil.from("인증메일 보내기 성공."));

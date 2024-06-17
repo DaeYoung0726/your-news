@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.auth.dto.LoginDto;
 import project.yourNews.auth.dto.UserRoleDto;
 import project.yourNews.auth.service.AuthService;
+import project.yourNews.domains.bannedEmail.service.BannedEmailService;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
@@ -39,6 +40,7 @@ public class AuthController {
     private final CookieUtil cookieUtil;
     private final RefreshTokenService refreshTokenService;
     private final AuthService authService;
+    private final BannedEmailService bannedEmailService;
 
     /* 로그인 */
     @PostMapping("/login")
@@ -104,6 +106,9 @@ public class AuthController {
     @PostMapping("/find-pass")
     public ResponseEntity<?> findPass(@RequestParam("email") @Valid @Email String email,
                                            @RequestParam("username") String username) {
+
+        if (bannedEmailService.checkBannedEmail(email))
+            throw new CustomException(ErrorCode.BANNED_EMAIL);
 
         authService.reissueTempPassword(username, email);
         return ResponseEntity.ok(ApiUtil.from("잠시 후 등록하신 메일로 임시 비밀번호가 도착합니다."));
