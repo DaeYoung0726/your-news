@@ -19,7 +19,7 @@ public enum ErrorCode {
     INVALID_ACCESS_TOKEN(401, "Access Token이 잘못되었습니다."),
 
     // ban 되어있는 Email
-    BANNED_EMAIL(403, "해당 이메일로 가입할실 수 없습니다."),
+    BANNED_EMAIL(403, "해당 이메일로 가입하실 수 없습니다."),
 
     // AccessToken 관련 오류
     BLACKLIST_ACCESS_TOKEN(401, "접근 불가한 AccessToken입니다."),
