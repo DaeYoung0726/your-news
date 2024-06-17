@@ -39,7 +39,7 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ENDPOINTS = {"/js/**", "/css/**", "/",
             "/v1/users/check-username", "/v1/news", "/v1/users/subscribe",
             "/v1/email/**", "/v1/users/check-nickname", "/v1/auth/**", "/unsubscribe",
-            "/v1/*/posts", "/*.html", "/adm/*.html"};
+            "/v1/*/posts", "/sns/notifications", "/*.html", "/adm/*.html"};
     private static final String[] ANONYMOUS_ENDPOINTS = {"/v1/users"};
     private static final String[] ADMIN_ENDPOINTS = {"/v1/admin/**"};
 
