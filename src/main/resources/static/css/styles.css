@@ -86,34 +86,37 @@ a:hover {
 }
 
 .modal {
-    display: none;
+    display: none; /* 초기 상태에서는 모달을 숨깁니다 */
     position: fixed;
     z-index: 1;
-    left: 0;
-    top: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
     background-color: white;
-    padding: 20px;
-    border-radius: 5px;
+    padding: 15px;
+    border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
     position: relative;
-    margin: auto;
-    width: 80%;
-    max-width: 500px;
+    box-sizing: border-box;
 }
 
 .close {
     color: #aaa;
-    float: right;
+    position: absolute;
+    top: 10px;
+    right: 20px;
     font-size: 28px;
     font-weight: bold;
 }
@@ -181,5 +184,18 @@ a:hover {
     .container {
         margin-top: 20px;
         margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 500px) {
+    .container {
+        padding: 20px;
+        width: 95%;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-width: 350px;
+        padding: 10px;
     }
 }

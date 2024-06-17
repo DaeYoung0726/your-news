@@ -27,10 +27,36 @@
     </div>
 </div>
 
+<!-- 모달 창 -->
 <div id="modal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <div id="modalBody"></div>
+        <div id="modalBody">
+            <!-- 아이디 찾기 폼 -->
+            <div id="findIdFormContainer" class="modal-form">
+                <h2>아이디 찾기</h2>
+                <form id="findIdForm">
+                    <label for="findIdEmail">이메일을 입력하세요:</label>
+                    <input type="email" id="findIdEmail" name="email" required>
+                    <button type="submit">아이디 찾기</button>
+                </form>
+                <div id="findIdResponseMessage"></div>
+            </div>
+            <!-- 비밀번호 찾기 폼 -->
+            <div id="findPwFormContainer" class="modal-form">
+                <h2>비밀번호 찾기</h2>
+                <form id="findPasswordForm">
+                    <label for="findPwUsername">아이디를 입력하세요:</label>
+                    <input type="text" id="findPwUsername" name="username" required>
+                    <br>
+                    <label for="findPwEmail">이메일을 입력하세요:</label>
+                    <input type="email" id="findPwEmail" name="email" required>
+                    <br>
+                    <button type="submit">임시 비밀번호 발급</button>
+                </form>
+                <div id="findPwResponseMessage"></div>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -1,31 +1,99 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const findIdLink = document.getElementById('findIdLink');
+    const findPwLink = document.getElementById('findPwLink');
     const modal = document.getElementById('modal');
-    const modalBody = document.getElementById('modalBody');
     const closeModal = document.getElementsByClassName('close')[0];
+    const findIdFormContainer = document.getElementById('findIdFormContainer');
+    const findPwFormContainer = document.getElementById('findPwFormContainer');
 
-    document.getElementById('findIdLink').addEventListener('click', () => {
-        window.open('find-username.html', 'findIdWindow', 'width=600,height=400');
-    });
-
-    document.getElementById('findPwLink').addEventListener('click', () => {
-        window.open('find-password.html', 'findPwWindow', 'width=600,height=400');
-    });
+    modal.style.display = 'none';
 
     document.getElementById('signupLink').addEventListener('click', () => {
         window.location.href = 'signup.html';
     });
 
-    closeModal.onclick = function() {
-        modal.style.display = 'none';
-    };
+    // 모달 열기
+    function openModal(formContainer) {
+        findIdFormContainer.style.display = 'none';
+        findPwFormContainer.style.display = 'none';
+        formContainer.style.display = 'block';
+        modal.style.display = 'block';
+    }
 
-    window.onclick = function(event) {
+    // 모달 닫기
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
         if (event.target === modal) {
             modal.style.display = 'none';
         }
-    };
+    });
 
-    // 로그인 폼 제출
+    // 아이디 찾기
+    findIdLink.addEventListener('click', () => {
+        openModal(findIdFormContainer);
+    });
+
+    const findIdForm = document.getElementById('findIdForm');
+    findIdForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById('findIdEmail').value;
+        const responseMessage = document.getElementById('findIdResponseMessage');
+
+        try {
+            const response = await fetch(`/v1/auth/find-username?email=${encodeURIComponent(email)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                responseMessage.textContent = `아이디는 ${result.response} 입니다.`;
+            } else {
+                responseMessage.textContent = `Error: ${result.message}`;
+            }
+        } catch (error) {
+            responseMessage.textContent = `Error: ${error.message}`;
+        }
+    });
+
+    // 비밀번호 찾기
+    findPwLink.addEventListener('click', () => {
+        openModal(findPwFormContainer);
+    });
+
+    const findPasswordForm = document.getElementById('findPasswordForm');
+    findPasswordForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const username = document.getElementById('findPwUsername').value;
+        const email = document.getElementById('findPwEmail').value;
+        const responseMessage = document.getElementById('findPwResponseMessage');
+
+        try {
+            const response = await fetch(`/v1/auth/find-pass?email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                responseMessage.textContent = result.response;
+            } else {
+                responseMessage.textContent = `Error: ${result.message}`;
+            }
+        } catch (error) {
+            responseMessage.textContent = `Error: ${error.message}`;
+        }
+    });
+
     const loginForm = document.getElementById('loginForm');
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
