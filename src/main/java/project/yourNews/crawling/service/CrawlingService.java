@@ -85,8 +85,9 @@ public class CrawlingService {
     private void sendNewsToMember(List<String> memberEmails, String newsName, String postTitle, String postURL) {
 
         String mailContent = "[" + newsName + "]<br>" +
-                postTitle + "<br>" +
-                "<a href='" + postURL + "'>" + postURL + "</a>";
+                postTitle +
+                "<p><a href=" + postURL + ">게시글 링크</a></p>";
+
         int batchSize = 50;
 
         for (int i = 0; i < memberEmails.size(); i += batchSize) {
