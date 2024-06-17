@@ -9,9 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import project.yourNews.domains.bannedEmail.dto.BannedEmailRequestDto;
+import project.yourNews.domains.bannedEmail.service.BannedEmailService;
 import project.yourNews.domains.member.dto.MemberInfoDto;
 import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.service.AdminService;
@@ -25,6 +28,7 @@ public class AdminController {
 
     private final AdminService adminService;
     private final AdminPostService adminPostService;
+    private final BannedEmailService bannedEmailService;
 
     /* 사용자 전체 불러오기 */
     @GetMapping("/users")
@@ -46,10 +50,11 @@ public class AdminController {
     }
 
     /* 사용자 탈퇴 */
-    @DeleteMapping("/users/{memberId}")
-    public ResponseEntity<?> dropMember(@PathVariable Long memberId) {
+    @DeleteMapping("/users")
+    public ResponseEntity<?> dropMember(@RequestBody BannedEmailRequestDto bannedEmailDto) {
 
-        adminService.dropMember(memberId);
+        bannedEmailService.setBannedEmail(bannedEmailDto);
+        adminService.dropMember(bannedEmailDto.getEmail());
         return ResponseEntity.ok(ApiUtil.from("회원 탈퇴 성공."));
     }
 

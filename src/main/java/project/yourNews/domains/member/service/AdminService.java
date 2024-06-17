@@ -53,9 +53,9 @@ public class AdminService {
 
     /* 사용자 탈퇴 */
     @Transactional
-    public void dropMember(Long memberId) {
+    public void dropMember(String email) {
 
-        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
+        Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         associatedEntityService.deleteAllLikeByMember(findMember);      // 좋아요 연관관계 삭제
