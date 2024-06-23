@@ -50,6 +50,11 @@ public enum ErrorCode {
     ALREADY_LIKE_POST(409, "이미 해당 게시글에 좋아요를 눌렀습니다."),
     ALREADY_EXISTS_MAIL(409, "이미 존재하는 이메일입니다."),
 
+    // Stibee 메일 업체 api와 관련된 에러.
+    SUBSCRIPTION_FAILED(400, "메일 구독을 실패했습니다."),
+    UNSUBSCRIBE_FAILED(400, "메일 구독 취소를 실패했습니다."),
+    EMAIL_SENDING_FAILED(400, "이메일 전송을 실패했습니다."),
+
     // 서버 에러
     INTERNAL_SERVER_ERROR(500, "서버 에러입니다. 서버 팀에 연락주세요.");
 
