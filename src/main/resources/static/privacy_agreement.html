@@ -22,7 +22,7 @@
         <p>회원 탈퇴 시까지</p>
 
         <h4>4. 개인정보의 제3자 제공</h4>
-        <p>해당 사항 없음</p>
+        <p>수집된 이메일 정보는 서비스 제공을 위해 스티비(Stibee)에 제공될 수 있습니다. 스티비는 이메일 마케팅 및 뉴스레터 발송을 위한 플랫폼입니다.</p>
 
         <h4>5. 개인정보 처리 위탁</h4>
         <p>해당 사항 없음</p>
@@ -42,12 +42,23 @@
         <h4>10. 개인정보 보호 보안 조치</h4>
         <p>당사는 수집된 개인정보를 보호하기 위해 다양한 보안 조치를 시행하고 있습니다.</p>
     </div>
-    <button class="close-btn" onclick="closeAgreement()">닫기</button>
+    <div class="form-group-inline">
+        <input type="checkbox" id="termsCheckbox" name="termsCheckbox">
+        <label for="termsCheckbox">(필수)개인정보 이용 약관에 동의합니다.</label>
+    </div>
+    <button class="next-btn" id="nextButton" disabled onclick="goToSignup()">다음</button>
 </div>
 </body>
 <script>
-    function closeAgreement() {
-        window.close();
+    const termsCheckbox = document.getElementById('termsCheckbox');
+    const nextButton = document.getElementById('nextButton');
+
+    termsCheckbox.addEventListener('change', () => {
+        nextButton.disabled = !termsCheckbox.checked;
+    });
+
+    function goToSignup() {
+        window.location.href = 'signup.html';
     }
 </script>
 </html>

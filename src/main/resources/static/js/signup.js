@@ -11,16 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const verificationCodeError = document.getElementById('verificationCodeError');
     const usernameError = document.getElementById('usernameError');
     const nicknameError = document.getElementById('nicknameError');
-    const viewTermsButton = document.getElementById('viewTerms');
-    const termsCheckbox = document.getElementById('termsCheckbox');
-    const termsError = document.getElementById('termsError');
     let isEmailVerified = false;
     let isUsernameChecked = false;
     let isNicknameChecked = false;
-
-    viewTermsButton.addEventListener('click', () => {
-        window.open('privacy_agreement.html', '_blank');
-    });
 
     // 소식 불러오기
     fetch('/v1/news')
@@ -168,11 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!isNicknameChecked) {
             responseMessage.textContent = '닉네임 중복 확인을 해주세요.';
-            return;
-        }
-
-        if (!termsCheckbox.checked) {
-            termsError.textContent = '개인정보 이용 약관에 동의해주세요.';
             return;
         }
 

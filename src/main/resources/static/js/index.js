@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.style.display = 'none';
 
     document.getElementById('signupLink').addEventListener('click', () => {
-        window.location.href = 'signup.html';
+        window.location.href = 'privacy_agreement.html';
     });
 
     // 모달 열기

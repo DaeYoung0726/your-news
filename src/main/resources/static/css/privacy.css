@@ -40,7 +40,7 @@ h3 {
 p {
     line-height: 1.6;
 }
-.close-btn {
+.next-btn {
     display: inline-block;
     margin-top: 20px;
     padding: 10px 20px;
@@ -52,6 +52,6 @@ p {
     cursor: pointer;
     text-decoration: none;
 }
-.close-btn:hover {
+.next-btn:hover {
     background-color: #2980b9;
 }
