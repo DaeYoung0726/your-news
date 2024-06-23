@@ -15,9 +15,12 @@ import project.yourNews.domains.subNews.service.SubNewsService;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.stibee.service.StibeeService;
+import project.yourNews.utils.redis.RedisUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static project.yourNews.utils.redis.RedisProperties.CODE_KEY_PREFIX;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,12 +32,21 @@ public class MemberService {
     private final SubNewsService subNewsService;
     private final AssociatedEntityService associatedEntityService;
     private final StibeeService stibeeService;
+    private final RedisUtil redisUtil;
     private static final String USERNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-z0-9-_]{4,20}$";
     private static final String NICKNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$";
 
     /* 회원가입 메서드 */
     @Transactional
     public void signUp(SignUpDto signUpDto) {
+
+        String key = CODE_KEY_PREFIX + signUpDto.getEmail();
+
+        if (!signUpDto.getVerificationCode().equals(redisUtil.get(key))) {  // api 플랫폼 등을 통한 무분별한 가입을 막기 위한 메서드.
+            throw new CustomException(ErrorCode.INVALID_CODE);
+        }
+
+        redisUtil.del(key); // 인증번호 일치할 시, redis에 저장된 값 삭제
 
         signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
         Member member = signUpDto.toMemberEntity();

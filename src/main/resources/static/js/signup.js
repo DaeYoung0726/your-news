@@ -191,7 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
             nickname: document.getElementById('nickname').value,
             username: document.getElementById('username').value,
             password: password,
-            subNewsNames: subNewsNames
+            subNewsNames: subNewsNames,
+            verificationCode: document.getElementById('verificationCode').value
         };
 
         try {

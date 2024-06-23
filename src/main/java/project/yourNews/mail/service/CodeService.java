@@ -87,7 +87,7 @@ public class CodeService {
         String storedCode = (String) redisUtil.get(key);
 
         if(storedCode != null && storedCode.equals(code)) {     // 유효시간 지나지 않음 + 입력 코드 일치
-            redisUtil.del(key);
+            redisUtil.expire(key, CODE_EXPIRATION_TIME);    // 서버에서의 재검증을 위해 추가 유효시간 설정
             return true;
         } else if(storedCode == null) {     // 유효시간 지나서 redis에 없음
             throw new CustomException(ErrorCode.CODE_EXPIRED);
