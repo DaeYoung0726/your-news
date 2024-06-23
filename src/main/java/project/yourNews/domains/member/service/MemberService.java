@@ -14,6 +14,7 @@ import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.domains.subNews.service.SubNewsService;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
+import project.yourNews.stibee.service.StibeeService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final SubNewsService subNewsService;
     private final AssociatedEntityService associatedEntityService;
+    private final StibeeService stibeeService;
     private static final String USERNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-z0-9-_]{4,20}$";
     private static final String NICKNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$";
 
@@ -81,6 +83,8 @@ public class MemberService {
         associatedEntityService.deleteAllPostByMember(findMember);      // 게시글 연관관계 삭제
         associatedEntityService.deleteAllSubNewsByMember(findMember);   // 구독 소식 연관관계 삭제
 
+        stibeeService.deleteSubscriber(findMember.getEmail());  //  Stibee 구독 삭제
+
         memberRepository.delete(findMember);
     }
 
@@ -98,6 +102,14 @@ public class MemberService {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        String email = findMember.getEmail();
+
+        // Stibee 구독 처리 과정
+        if (status)         // 수신 허용
+            stibeeService.subscribe(email);
+        else                // 수신 거부
+            stibeeService.deleteSubscriber(email);
 
         findMember.updateSubStatus(status);
     }

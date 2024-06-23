@@ -15,6 +15,7 @@ import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.mail.dto.AskDto;
 import project.yourNews.mail.service.AskService;
 import project.yourNews.mail.service.CodeService;
+import project.yourNews.stibee.service.StibeeService;
 import project.yourNews.utils.api.ApiUtil;
 
 @RestController
@@ -25,6 +26,7 @@ public class MailController {
     private final CodeService codeService;
     private final AskService askService;
     private final BannedEmailService bannedEmailService;
+    private final StibeeService stibeeService;
 
     /* 이메일 인증 번호 보내기 */
     @PostMapping("/verification-request")
@@ -32,6 +34,8 @@ public class MailController {
 
         if (bannedEmailService.checkBannedEmail(email))
             throw new CustomException(ErrorCode.BANNED_EMAIL);
+
+        stibeeService.subscribe(email);     // Stibee에 메일 구독하기
 
         codeService.sendCodeToMail(email);
         return ResponseEntity.ok(ApiUtil.from("인증메일 보내기 성공."));

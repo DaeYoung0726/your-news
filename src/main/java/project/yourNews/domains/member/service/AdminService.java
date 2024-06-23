@@ -13,6 +13,7 @@ import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
+import project.yourNews.stibee.service.StibeeService;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class AdminService {
 
     private final MemberRepository memberRepository;
     private final AssociatedEntityService associatedEntityService;
+    private final StibeeService stibeeService;
 
     /* 사용자 전체 불러오기 */
     @Transactional(readOnly = true)
@@ -61,6 +63,8 @@ public class AdminService {
         associatedEntityService.deleteAllLikeByMember(findMember);      // 좋아요 연관관계 삭제
         associatedEntityService.deleteAllPostByMember(findMember);      // 게시글 연관관계 삭제
         associatedEntityService.deleteAllSubNewsByMember(findMember);   // 구독 소식 연관관계 삭제
+
+        stibeeService.deleteSubscriber(findMember.getEmail());  //  Stibee 구독 삭제
 
         memberRepository.delete(findMember);
     }
