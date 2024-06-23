@@ -6,8 +6,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Builder
-public class Subscribers {
+public class Subscriber {
 
     private String email;
-    private String name;
 }
