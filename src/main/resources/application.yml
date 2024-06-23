@@ -45,10 +45,6 @@ rabbitmq:
   routing:
     key: ${RABBITMQ_ROUTING_KEY}
 
-aws:
-  ses:
-    access-key: ${AWS_ACCESS}
-    secret-key: ${AWS_SECRET}
 
 logging:
   level:

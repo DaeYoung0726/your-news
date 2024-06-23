@@ -2,10 +2,11 @@ mail:
   admin:
     email: ${ADMIN_EMAIL}
 
-  from-email: ${FROM_EMAIL}
-
   unsubscribe:
     link: ${UNSUB_LINK}
 
-  name: ${MAIL_NAME}
-
+stibee:
+  key: ${STIBEE_KEY}
+  url: ${STIBEE_SEND_URL}
+  api:
+    url: ${STIBEE_API_URL}
