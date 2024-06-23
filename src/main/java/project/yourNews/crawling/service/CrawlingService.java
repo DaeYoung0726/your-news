@@ -38,7 +38,7 @@ public class CrawlingService {
 
     @Value("${rabbitmq.routing.key}")
     private String routingKey;
-    private static final String SCHEDULED_TIME = "10 40 8-19 * * *";  // 주말 제외, 평일에 1시간마다 크롤링
+    private static final String SCHEDULED_TIME = "0 0 8-19 * * MON-FRI";  // 주말 제외, 평일에 1시간마다 크롤링
 
     @Scheduled(cron = SCHEDULED_TIME, zone = "Asia/Seoul") // 오전 8시부터 오후 7시까지
     @Async
