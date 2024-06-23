@@ -17,6 +17,7 @@ import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
 import project.yourNews.domains.urlHistory.service.URLHistoryService;
+import project.yourNews.mail.util.MailProperties;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +38,7 @@ public class CrawlingService {
 
     @Value("${rabbitmq.routing.key}")
     private String routingKey;
-    private static final String SCHEDULED_TIME = "0 0 8-19 * * MON-FRI";  // 주말 제외, 평일에 1시간마다 크롤링
+    private static final String SCHEDULED_TIME = "10 40 8-19 * * *";  // 주말 제외, 평일에 1시간마다 크롤링
 
     @Scheduled(cron = SCHEDULED_TIME, zone = "Asia/Seoul") // 오전 8시부터 오후 7시까지
     @Async
@@ -45,7 +46,7 @@ public class CrawlingService {
     public void startCrawling() throws IOException {
 
         List<NewsInfoDto> news = newsService.readAllNews();
-        for (NewsInfoDto readNews: news) {
+        for (NewsInfoDto readNews : news) {
             analyzeWeb(readNews.getNewsName(), readNews.getNewsURL());
         }
     }
@@ -88,12 +89,8 @@ public class CrawlingService {
                 postTitle +
                 "<p><a href=" + postURL + ">게시글 링크</a></p>";
 
-        int batchSize = 50;
+        EmailRequest emailRequest = new EmailRequest(memberEmails, MailProperties.NEWS_SUBJECT, mailContent);
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, emailRequest);
 
-        for (int i = 0; i < memberEmails.size(); i += batchSize) {
-            List<String> batch = memberEmails.subList(i, Math.min(i + batchSize, memberEmails.size()));
-            EmailRequest emailRequest = new EmailRequest(batch, mailContent);
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, emailRequest);
-        }
     }
 }

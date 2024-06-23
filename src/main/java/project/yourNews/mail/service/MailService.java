@@ -1,19 +1,21 @@
 package project.yourNews.mail.service;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.model.Body;
-import com.amazonaws.services.simpleemail.model.Content;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.MessageRejectedException;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.mail.MailType;
+import project.yourNews.mail.dto.StibeeRequest;
 
 import static project.yourNews.mail.util.MailProperties.*;
 
@@ -23,67 +25,78 @@ import static project.yourNews.mail.util.MailProperties.*;
 @Service
 public class MailService {
 
-    private final AmazonSimpleEmailService amazonSimpleEmailService;
+    private final RestTemplate restTemplate;
 
     @Value("${mail.admin.email}")
     private String adminEmail;
 
-    @Value("${mail.from-email}")
-    private String fromEmail;
 
-    @Value("${mail.name}")
-    private String mailName;
+    @Value("${stibee.url}")
+    private String stibeeUrl;
 
     /* 메일 보내기 */
     @Async
     public void sendMail(String email, String content, MailType type) {
         try {
-            SendEmailRequest request = null;
-
             switch (type) {
-                case CODE -> request = getCodeMessage(email, content);
-                case PASS -> request = getPassMessage(email, content);
-                case ASK -> request = getAskMessage(email, content);
+                case CODE -> getCodeMessage(email, content);
+                case PASS -> getPassMessage(email, content);
+                case ASK -> getAskMessage(email, content);
             }
-            amazonSimpleEmailService.sendEmail(request);
-        } catch (MessageRejectedException e) {
-            log.error("발신 제한 초과 or 불법 콘텐츠 포함");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /* 인증메일 보내기 */
-    private SendEmailRequest getCodeMessage(String email, String code) {
+    private void getCodeMessage(String email, String code) {
 
-        String text = CODE_TEXT + code;
-        return getSendEmailRequest(email, CODE_SUBJECT, text);
+        String emailUsername = email.split("@")[0];
+        String emailContent = "사용자 : " + emailUsername + "<br>" + CODE_TEXT + code;
+
+        sendStibeeEmail(StibeeRequest.builder()
+                .subscriber(email)
+                .title(CODE_SUBJECT)
+                .content(emailContent)
+                .build()
+        );
     }
 
     /* 임시 비밀번호 보내기 */
-    private SendEmailRequest getPassMessage(String email, String pass) {
+    private void getPassMessage(String email, String pass) {
 
-        String text = PASS_TEXT + pass;
-        return getSendEmailRequest(email, PASS_SUBJECT, text);
+        String emailUsername = email.split("@")[0];
+        String emailContent = "사용자 : " + emailUsername + "<br>" + PASS_TEXT + pass;
+
+        sendStibeeEmail(StibeeRequest.builder()
+                .subscriber(email)
+                .title(PASS_SUBJECT)
+                .content(emailContent)
+                .build()
+        );
     }
 
     /* 관리자에게 문의하기 */
-    private SendEmailRequest getAskMessage(String email, String askContent) {
+    private void getAskMessage(String email, String askContent) {
 
-        String text = ASK_TEXT + email + "<br>" + askContent;
-        return getSendEmailRequest(adminEmail, ASK_SUBJECT, text);
+        String emailUsername = email.split("@")[0];
+        String emailContent = "사용자 : " + emailUsername + "<br>" + ASK_TEXT + email + "<br>" + askContent;
+
+        sendStibeeEmail(StibeeRequest.builder()
+                .subscriber(adminEmail)
+                .title(ASK_SUBJECT)
+                .content(emailContent)
+                .build()
+        );
     }
 
-    /* 메일 구성 */
-    private SendEmailRequest getSendEmailRequest(String email, String subject, String text) {
+    /* 스티비 API를 사용하여 이메일 보내기 */
+    private void sendStibeeEmail(StibeeRequest request) {
+        HttpEntity<StibeeRequest> entity = new HttpEntity<>(request);
+        ResponseEntity<String> response = restTemplate.postForEntity(stibeeUrl, entity, String.class);
 
-        String source = String.format("%s <%s>", mailName, fromEmail);
-
-        return new SendEmailRequest()
-                .withDestination(new Destination().withToAddresses(email))
-                .withMessage(new Message()
-                        .withSubject(new Content().withCharset("UTF-8").withData(subject))
-                        .withBody(new Body().withHtml(new Content().withCharset("UTF-8").withData(text))))
-                .withSource(source);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            throw new CustomException(ErrorCode.EMAIL_SENDING_FAILED);
+        }
     }
 }

@@ -1,22 +1,20 @@
 package project.yourNews.mail.service;
 
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.model.Body;
-import com.amazonaws.services.simpleemail.model.Content;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.MessageRejectedException;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import project.yourNews.crawling.dto.EmailRequest;
-
-import java.util.List;
-
-import static project.yourNews.mail.util.MailProperties.NEWS_SUBJECT;
+import project.yourNews.handler.exceptionHandler.error.ErrorCode;
+import project.yourNews.handler.exceptionHandler.exception.CustomException;
+import project.yourNews.mail.dto.StibeeRequest;
 
 @RequiredArgsConstructor
 @Transactional
@@ -24,13 +22,10 @@ import static project.yourNews.mail.util.MailProperties.NEWS_SUBJECT;
 @Service
 public class NewsMailService {
 
-    private final AmazonSimpleEmailService amazonSimpleEmailService;
+    private final RestTemplate restTemplate;
 
-    @Value("${mail.from-email}")
-    private String fromEmail;
-
-    @Value("${mail.name}")
-    private String mailName;
+    @Value("${stibee.url}")
+    private String stibeeUrl;
 
     @Value("${mail.unsubscribe.link}")
     private String unsubscribeLink;
@@ -38,33 +33,33 @@ public class NewsMailService {
     /* 메일 보내기 */
     public void sendMail(EmailRequest emailRequest) {
         try {
-            SendEmailRequest request = getNewsMessage(emailRequest.getEmails(), emailRequest.getContent());
-            amazonSimpleEmailService.sendEmail(request);
-        } catch (MessageRejectedException e) {
-            log.error("발신 제한 초과 or 불법 콘텐츠 포함");
+            for (String email : emailRequest.getSubscriber()) {
+                String emailUsername = email.split("@")[0];
+                String emailContent = "사용자 : " + emailUsername + "<br>" + emailRequest.getContent() +
+                        "<p>소식을 그만 받고 싶으신가요? <a href=\"" + unsubscribeLink + "\">구독 취소</a></p>";
+                sendStibeeEmail(
+                        StibeeRequest.builder()
+                        .subscriber(email)
+                        .title(emailRequest.getTitle())
+                        .content(emailContent)
+                        .build()
+                );
+            }
+
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to send email", e);
         }
     }
 
-    /* 소식 보내기 */
-    private SendEmailRequest getNewsMessage(List<String> emails, String news) {
 
-        String emailContent = news +
-                "<p>소식을 그만 받고 싶다면 클릭해주세요. <a href=\"" + unsubscribeLink + "\">구독 취소</a></p>";
+    /* 스티비 API를 사용하여 이메일 보내기 */
+    private void sendStibeeEmail(StibeeRequest request) {
+        HttpEntity<StibeeRequest> entity = new HttpEntity<>(request);
+        ResponseEntity<String> response = restTemplate.postForEntity(stibeeUrl, entity, String.class);
 
-        Destination destination = new Destination().withBccAddresses(emails);
-
-        Message message = new Message()
-                .withSubject(new Content().withCharset("UTF-8").withData(NEWS_SUBJECT))
-                .withBody(new Body().withHtml(new Content().withCharset("UTF-8").withData(emailContent)));
-
-        String source = String.format("%s <%s>", mailName, fromEmail);
-
-        return new SendEmailRequest()
-                .withDestination(destination)
-                .withMessage(message)
-                .withSource(source);
+        if (response.getStatusCode() != HttpStatus.OK) {
+            throw new CustomException(ErrorCode.EMAIL_SENDING_FAILED);
+        }
     }
 
 }
