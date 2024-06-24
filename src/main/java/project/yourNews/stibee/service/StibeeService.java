@@ -3,6 +3,7 @@ package project.yourNews.stibee.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StibeeService {
 
     private final RestTemplate restTemplate;
@@ -45,13 +47,15 @@ public class StibeeService {
             String requestJson = objectMapper.writeValueAsString(stibeeRequest);
             HttpEntity<String> request = new HttpEntity<>(requestJson);
 
+
             ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, request, String.class);
 
             if (response.getStatusCode() != HttpStatus.OK) {
+                log.error("Subscription failed. Status code: {}, Response body: {}", response.getStatusCode(), response.getBody());
                 throw new CustomException(ErrorCode.SUBSCRIPTION_FAILED);
             }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("Error processing JSON for subscription request", e);
         }
 
     }
@@ -67,10 +71,11 @@ public class StibeeService {
             ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.DELETE, request, String.class);
 
             if (response.getStatusCode() != HttpStatus.OK) {
+                log.error("Subscription failed. Status code: {}, Response body: {}", response.getStatusCode(), response.getBody());
                 throw new CustomException(ErrorCode.UNSUBSCRIBE_FAILED);
             }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("Error processing JSON for subscription request", e);
         }
     }
 }

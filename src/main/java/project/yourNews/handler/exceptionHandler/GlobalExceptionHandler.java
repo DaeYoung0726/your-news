@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 
         ErrorCode errorCode = ex.getErrorCode();
         ErrorDto errorDto = new ErrorDto(errorCode.getStatus(), errorCode.getMessage());
-
+        log.error("Error occurred : {}, Stack trace: {}", ex.getMessage(), getCustomStackTrace(ex));
         return new ResponseEntity(errorDto, HttpStatusCode.valueOf(errorDto.getStatus()));
     }
 
@@ -36,6 +36,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     protected ResponseEntity customServerException(Exception ex) {
         ErrorDto error = new ErrorDto(INTERNAL_SERVER_ERROR.getStatus(), INTERNAL_SERVER_ERROR.getMessage());
+        log.error("Error occurred : {}, Stack trace: {}", ex.getMessage(), getCustomStackTrace(ex));
         return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -46,6 +47,16 @@ public class GlobalExceptionHandler {
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
+        log.error("Error occurred : {}", errors);
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    public String getCustomStackTrace(Exception ex) {
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < Math.min(stackTrace.length, 5); i++) {
+            sb.append(stackTrace[i].toString()).append("\n");
+        }
+        return sb.toString();
     }
 }

@@ -1,6 +1,7 @@
 package project.yourNews.crawling.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,6 +18,7 @@ import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
 import project.yourNews.domains.urlHistory.service.URLHistoryService;
+import project.yourNews.handler.exceptionHandler.GlobalExceptionHandler;
 import project.yourNews.mail.util.MailProperties;
 
 import java.io.IOException;
@@ -25,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @EnableScheduling
+@Slf4j
 public class CrawlingService {
 
     private final NewsService newsService;
@@ -53,32 +56,36 @@ public class CrawlingService {
 
     /* 페이지 크롤링 */
     private void analyzeWeb(String newsName, String newsURL) throws IOException {
-        // 해당 소식 구독한 회원의 이메일 불러오기
-        List<String> memberEmails = memberService.getMembersSubscribedToNews(newsURL);
+        try {
+            // 해당 소식 구독한 회원의 이메일 불러오기
+            List<String> memberEmails = memberService.getMembersSubscribedToNews(newsURL);
 
-        // 웹 페이지 가져오기
-        Document doc = Jsoup.connect(newsURL).get();
+            // 웹 페이지 가져오기
+            Document doc = Jsoup.connect(newsURL).get();
 
-        // 게시글 요소 찾기
-        Elements postElements = doc.select("tr[class='']"); // class가 없는 경우
-        postElements.addAll(doc.select("tr.b-top-box")); // b-top-box 클래스를 포함하는 경우
+            // 게시글 요소 찾기
+            Elements postElements = doc.select("tr[class='']"); // class가 없는 경우
+            postElements.addAll(doc.select("tr.b-top-box")); // b-top-box 클래스를 포함하는 경우
 
-        // 게시글 제목과 URL 출력
-        for (Element postElement : postElements) {
-            Element newPostElement = postElement.selectFirst("p.b-new");
-            if (newPostElement != null) { // 새로운 게시글인 경우에만 처리
-                Element titleElement = postElement.selectFirst("div.b-title-box > a");
-                String postTitle = titleElement.text();
-                String postURL = titleElement.absUrl("href");
+            // 게시글 제목과 URL 출력
+            for (Element postElement : postElements) {
+                Element newPostElement = postElement.selectFirst("p.b-new");
+                if (newPostElement != null) { // 새로운 게시글인 경우에만 처리
+                    Element titleElement = postElement.selectFirst("div.b-title-box > a");
+                    String postTitle = titleElement.text();
+                    String postURL = titleElement.absUrl("href");
 
-                // 새로운 게시글인 경우에만 출력
-                if (!urlHistoryService.existsURLCheck(postURL)) {
+                    // 새로운 게시글인 경우에만 출력
+                    if (!urlHistoryService.existsURLCheck(postURL)) {
 
-                    sendNewsToMember(memberEmails, newsName, postTitle, postURL);
-                    // 새로운 게시글 URL을 목록에 추가
-                    urlHistoryService.saveURL(postURL);
+                        sendNewsToMember(memberEmails, newsName, postTitle, postURL);
+                        // 새로운 게시글 URL을 목록에 추가
+                        urlHistoryService.saveURL(postURL);
+                    }
                 }
             }
+        } catch (Exception e) {
+            log.error("An error occurred while processing news for URL: {}", newsURL);
         }
     }
 
@@ -90,7 +97,11 @@ public class CrawlingService {
                 "<p><a href=" + postURL + ">게시글 링크</a></p>";
 
         EmailRequest emailRequest = new EmailRequest(memberEmails, MailProperties.NEWS_SUBJECT, mailContent);
-        rabbitTemplate.convertAndSend(exchangeName, routingKey, emailRequest);
+        try {
+            rabbitTemplate.convertAndSend(exchangeName, routingKey, emailRequest);
+        } catch (Exception e) {
+            log.error("Failed to send email request to RabbitMQ: {}", emailRequest, e);
+        }
 
     }
 }

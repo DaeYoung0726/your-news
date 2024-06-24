@@ -48,4 +48,4 @@ rabbitmq:
 
 logging:
   level:
-    org.hibernate.orm.jdbc.bind: debug
+    org.hibernate.orm.jdbc.bind: info

@@ -58,6 +58,7 @@ public class NewsMailService {
         ResponseEntity<String> response = restTemplate.postForEntity(stibeeUrl, entity, String.class);
 
         if (response.getStatusCode() != HttpStatus.OK) {
+            log.error("Subscription failed. Status code: {}, Response body: {}", response.getStatusCode(), response.getBody());
             throw new CustomException(ErrorCode.EMAIL_SENDING_FAILED);
         }
     }

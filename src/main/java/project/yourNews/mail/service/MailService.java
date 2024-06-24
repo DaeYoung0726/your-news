@@ -44,7 +44,7 @@ public class MailService {
                 case ASK -> getAskMessage(email, content);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to send email", e);
         }
     }
 
@@ -96,6 +96,7 @@ public class MailService {
         ResponseEntity<String> response = restTemplate.postForEntity(stibeeUrl, entity, String.class);
 
         if (response.getStatusCode() != HttpStatus.OK) {
+            log.error("Subscription failed. Status code: {}, Response body: {}", response.getStatusCode(), response.getBody());
             throw new CustomException(ErrorCode.EMAIL_SENDING_FAILED);
         }
     }
