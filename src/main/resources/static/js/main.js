@@ -56,6 +56,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 페이지 로드 시 권한 확인
     await checkAuthorization();
 
+
+    document.getElementById('menuButton').addEventListener('click', function() {
+        document.getElementById('dropdownContent').classList.toggle('show');
+    });
+
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName('dropdown-content');
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    document.getElementById('openManualButton').addEventListener('click', function() {
+        document.getElementById('manualModal').style.display = 'block';
+        fetch('manual.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('manualContent').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading manual:', error));
+    });
+
+    document.querySelector('.modal .close').addEventListener('click', function() {
+        document.getElementById('manualModal').style.display = 'none';
+    });
+
     logoutButton.addEventListener('click', async () => {
         try {
             const response = await fetchWithAuth('/logout', {

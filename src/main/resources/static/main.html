@@ -13,10 +13,16 @@
             <button id="newsManagementButton">소식 관리</button>
             <button id="userManagementButton">사용자 관리</button>
         </div>
-        <button id="askToAdminButton">문의하기</button>
+        <button id="openManualButton">사용 설명서</button>
         <button id="createPostButton">글 작성하기</button>
-        <button id="fetchInfoButton">정보 불러오기</button>
-        <button id="logoutButton">로그아웃</button>
+        <div class="dropdown">
+            <button id="menuButton" class="dropbtn">메뉴</button>
+            <div id="dropdownContent" class="dropdown-content">
+                <button id="fetchInfoButton">정보 불러오기</button>
+                <button id="askToAdminButton">문의하기</button>
+                <button id="logoutButton">로그아웃</button>
+            </div>
+        </div>
     </header>
     <main>
         <section class="welcome-message">
@@ -64,6 +70,14 @@
         </section>
     </main>
 </div>
+
+<div id="manualModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="manualContent"></div>
+    </div>
+</div>
+
 <script src="/js/auth.js"></script>
 <script src="/js/main.js"></script>
 </body>
