@@ -174,7 +174,18 @@ a:hover {
     background-color: #CC0000;
 }
 
-/* Adjustments for mobile responsiveness */
+.notification-info {
+    background-color: #e0e0e0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    color: #333;
+    line-height: 1.5;
+}
+
+
 @media (max-height: 700px) {
     body {
         align-items: flex-start;
