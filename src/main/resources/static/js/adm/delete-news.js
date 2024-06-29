@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const fetchInfoButton = document.getElementById('fetchInfoButton');
     const newsList = document.getElementById('newsList');
     const accessToken = localStorage.getItem('accessToken');
-
+    let currentPage = 0;
+    const pageSize = 10;
 
     logoutButton.addEventListener('click', async () => {
         try {
@@ -44,13 +45,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = '/user-info.html';
     });
 
-    async function fetchNews() {
-        const response = await fetchWithAuth('/v1/news', {
-            method: 'GET'
+    async function fetchNews(page) {
+        const response = await fetchWithAuth(`/v1/admin/news?page=${page}&size=${pageSize}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': accessToken,
+                'Content-Type': 'application/json'
+            }
         });
 
-        const newsData = await response.json();
-        displayNews(newsData);
+        if (response.ok) {
+            const data = await response.json();
+            displayNews(data.content);
+            displayPagination(data);
+        } else {
+            alert('소식 목록을 불러오는 데 실패했습니다.');
+        }
     }
 
     function displayNews(newsData) {
@@ -65,5 +75,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    fetchNews();
+    function displayPagination(data) {
+        pagination.innerHTML = '';
+        for (let i = 0; i < data.totalPages; i++) {
+            const pageSpan = document.createElement('span');
+            pageSpan.textContent = i + 1;
+            pageSpan.classList.add('page');
+            if (i === currentPage) {
+                pageSpan.classList.add('active');
+            }
+            pageSpan.addEventListener('click', () => {
+                currentPage = i;
+                fetchNews(currentPage);
+            });
+            pagination.appendChild(pageSpan);
+        }
+    }
+
+    fetchNews(currentPage);
 });

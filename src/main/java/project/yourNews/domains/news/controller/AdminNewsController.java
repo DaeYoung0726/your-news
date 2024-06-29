@@ -2,6 +2,10 @@ package project.yourNews.domains.news.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.dto.NewsRequestDto;
 import project.yourNews.domains.news.dto.NewsResponseDto;
 import project.yourNews.domains.news.service.AdminNewsService;
 import project.yourNews.utils.api.ApiUtil;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +28,14 @@ import project.yourNews.utils.api.ApiUtil;
 public class AdminNewsController {
 
     private final AdminNewsService adminNewsService;
+
+    /* 페이징 처리 후 소식 불러오기 */
+    @GetMapping
+    public Page<NewsInfoDto> readAllNews(@PageableDefault(sort = "newsName", direction = Sort.Direction.ASC)
+                                             Pageable pageable) {
+
+        return adminNewsService.readAllNews(pageable);
+    }
 
     /* 소식 추가 */
     @PostMapping
