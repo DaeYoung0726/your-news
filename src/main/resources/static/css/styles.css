@@ -1,11 +1,9 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     margin: 0;
+    padding: 50px 0;
+    box-sizing: border-box;
 }
 
 .container {
@@ -15,7 +13,7 @@ body {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 500px;
-    margin-top: 300px;
+    margin: 0 auto;
     box-sizing: border-box;
 }
 
@@ -86,7 +84,7 @@ a:hover {
 }
 
 .modal {
-    display: none; /* 초기 상태에서는 모달을 숨깁니다 */
+    display: none;
     position: fixed;
     z-index: 1;
     left: 50%;
@@ -185,10 +183,8 @@ a:hover {
     line-height: 1.5;
 }
 
-
 @media (max-height: 700px) {
     body {
-        align-items: flex-start;
         padding: 20px 0;
     }
 

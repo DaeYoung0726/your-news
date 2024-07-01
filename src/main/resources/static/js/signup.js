@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const responseMessage = document.getElementById('responseMessage');
     const news1Select = document.getElementById('news1');
     const news2Select = document.getElementById('news2');
+    const news3Select = document.getElementById('news3');
     const sendVerificationCodeButton = document.getElementById('sendVerificationCode');
     const verifyCodeButton = document.getElementById('verifyCode');
     const checkUsernameButton = document.getElementById('checkUsername');
@@ -27,6 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 let option2 = document.createElement('option');
                 option2.text = news.newsName;
                 news2Select.add(option2);
+
+                let option3 = document.createElement('option');
+                option3.text = news.newsName;
+                news3Select.add(option3);
             });
         })
         .catch(error => console.error('Error fetching news options:', error));
@@ -177,7 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 최소 하나의 뉴스 선택 확인
         const news1 = document.getElementById('news1').value;
         const news2 = document.getElementById('news2').value;
-        if (!news1 && !news2) {
+        const news3 = document.getElementById('news3').value;
+        if (!news1 && !news2 && !news3) {
             responseMessage.textContent = '적어도 하나의 소식을 선택해주세요.';
             return;
         }
@@ -185,6 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const subNewsNames = [];
         if (news1) subNewsNames.push(news1);
         if (news2) subNewsNames.push(news2);
+        if (news3) subNewsNames.push(news3);
 
         const formData = {
             email: document.getElementById('email').value,

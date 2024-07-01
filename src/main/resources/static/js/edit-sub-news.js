@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainPageButton = document.getElementById('mainPageButton');
     const news1Select = document.getElementById('news1');
     const news2Select = document.getElementById('news2');
+    const news3Select = document.getElementById('news3');
     const updateNewsButton = document.getElementById('updateNewsButton');
     const responseMessage = document.createElement('div');
     const accessToken = localStorage.getItem('accessToken');
@@ -56,6 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 let option2 = document.createElement('option');
                 option2.text = news.newsName;
                 news2Select.add(option2);
+
+                let option3 = document.createElement('option');
+                option3.text = news.newsName;
+                news3Select.add(option3);
             });
         })
         .catch(error => console.error('Error fetching news options:', error));
@@ -64,10 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNewsButton.addEventListener('click', async () => {
         const selectedNews1 = news1Select.value;
         const selectedNews2 = news2Select.value;
+        const selectedNews3 = news3Select.value;
 
         const newsNames = [];
         if (selectedNews1) newsNames.push(selectedNews1);
         if (selectedNews2) newsNames.push(selectedNews2);
+        if (selectedNews3) newsNames.push(selectedNews3);
 
         try {
             const response = await fetchWithAuth('/v1/users/update-sub-news', {
