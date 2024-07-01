@@ -46,7 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(result.response);
                 window.location.href = `/post.html?id=${postId}`;
             } else {
-                alert(result.message);
+                let errorMessages = '';
+                for (const [field, message] of Object.entries(result)) {
+                    errorMessages += `${field}: ${message}\n`;
+                }
+                alert(`Error: ${errorMessages}`);
             }
         } catch (error) {
             alert(`Error: ${error.message}`);

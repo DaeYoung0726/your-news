@@ -60,7 +60,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert('게시글 작성 성공.');
                 window.location.href = `/post.html?id=${result.response}`;
             } else {
-                alert(result.message);
+                let errorMessages = '';
+                for (const [field, message] of Object.entries(result)) {
+                    errorMessages += `${field}: ${message}\n`;
+                }
+                alert(`Error: ${errorMessages}`);
             }
         } catch (error) {
             alert(`Error: ${error.message}`);
