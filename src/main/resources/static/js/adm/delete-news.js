@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const accessToken = localStorage.getItem('accessToken');
     let currentPage = 0;
     const pageSize = 10;
+    const pagesPerBlock = 10;
 
     logoutButton.addEventListener('click', async () => {
         try {
@@ -77,7 +78,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function displayPagination(data) {
         pagination.innerHTML = '';
-        for (let i = 0; i < data.totalPages; i++) {
+        const totalBlocks = Math.ceil(data.totalPages / pagesPerBlock);
+        const currentBlock = Math.floor(currentPage / pagesPerBlock);
+
+        // 이전 블록 버튼
+        if (currentBlock > 0) {
+            const prevBlockButton = document.createElement('span');
+            prevBlockButton.textContent = '<';
+            prevBlockButton.classList.add('page');
+            prevBlockButton.addEventListener('click', () => {
+                currentPage = (currentBlock - 1) * pagesPerBlock;
+                fetchNews(currentPage);
+            });
+            pagination.appendChild(prevBlockButton);
+        }
+
+        // 현재 블록의 페이지 버튼
+        const startPage = currentBlock * pagesPerBlock;
+        const endPage = Math.min(startPage + pagesPerBlock, data.totalPages);
+        for (let i = startPage; i < endPage; i++) {
             const pageSpan = document.createElement('span');
             pageSpan.textContent = i + 1;
             pageSpan.classList.add('page');
@@ -89,6 +108,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 fetchNews(currentPage);
             });
             pagination.appendChild(pageSpan);
+        }
+
+        // 다음 블록 버튼
+        if (currentBlock < totalBlocks - 1) {
+            const nextBlockButton = document.createElement('span');
+            nextBlockButton.textContent = '>';
+            nextBlockButton.classList.add('page');
+            nextBlockButton.addEventListener('click', () => {
+                currentPage = (currentBlock + 1) * pagesPerBlock;
+                fetchNews(currentPage);
+            });
+            pagination.appendChild(nextBlockButton);
         }
     }
 

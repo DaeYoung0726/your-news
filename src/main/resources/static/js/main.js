@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const accessToken = localStorage.getItem('accessToken');
     let currentPage = 0;
     let totalPages = 0;
+    const pagesPerBlock = 10;
     let currentCategory = 'notice'; // 현재 선택된 카테고리
     let userRole = ''; // 사용자 역할
 
@@ -186,7 +187,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function displayPagination(paginationContainer, totalPages, category) {
         paginationContainer.innerHTML = '';
-        for (let i = 0; i < totalPages; i++) {
+        const totalBlocks = Math.ceil(totalPages / pagesPerBlock);
+        const currentBlock = Math.floor(currentPage / pagesPerBlock);
+
+        // 이전 블록 버튼
+        if (currentBlock > 0) {
+            const prevBlockButton = document.createElement('span');
+            prevBlockButton.textContent = '<';
+            prevBlockButton.classList.add('page');
+            prevBlockButton.classList.add('prev');
+            prevBlockButton.addEventListener('click', () => {
+                currentPage = (currentBlock - 1) * pagesPerBlock;
+                loadPosts(category, currentPage);
+            });
+            paginationContainer.appendChild(prevBlockButton);
+        }
+
+        // 현재 블록의 페이지 버튼
+        const startPage = currentBlock * pagesPerBlock;
+        const endPage = Math.min(startPage + pagesPerBlock, totalPages);
+        for (let i = startPage; i < endPage; i++) {
             const pageSpan = document.createElement('span');
             pageSpan.textContent = i + 1;
             pageSpan.classList.add('page');
@@ -198,6 +218,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 loadPosts(category, currentPage);
             });
             paginationContainer.appendChild(pageSpan);
+        }
+
+        // 다음 블록 버튼
+        if (currentBlock < totalBlocks - 1) {
+            const nextBlockButton = document.createElement('span');
+            nextBlockButton.textContent = '>';
+            nextBlockButton.classList.add('page');
+            nextBlockButton.classList.add('next');
+            nextBlockButton.addEventListener('click', () => {
+                currentPage = (currentBlock + 1) * pagesPerBlock;
+                loadPosts(category, currentPage);
+            });
+            paginationContainer.appendChild(nextBlockButton);
         }
     }
 
