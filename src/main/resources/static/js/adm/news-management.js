@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mainPageButton = document.getElementById('mainPageButton');
     const userManagementButton = document.getElementById('userManagementButton');
     const fetchInfoButton = document.getElementById('fetchInfoButton');
+    const accessToken = localStorage.getItem('accessToken');
 
     // 소식 추가하기 버튼 클릭 이벤트
     addNewsButton.addEventListener('click', () => {
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     logoutButton.addEventListener('click', async () => {
         try {
-            const response = await fetchWithAuth('/logout', {
+            const response = await fetchWithAuth('/v1/auth/logout', {
                 method: 'POST',
                 headers: {
                     'Authorization': accessToken,

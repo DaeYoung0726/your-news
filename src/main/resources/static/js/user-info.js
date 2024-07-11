@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     logoutButton.addEventListener('click', async () => {
         try {
-            const response = await fetch('/logout', {
+            const response = await fetch('/v1/auth/logout', {
                 method: 'POST',
                 headers: {
                     'Authorization': accessToken,
