@@ -21,6 +21,7 @@ import project.yourNews.domains.member.domain.Member;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.token.refresh.RefreshTokenService;
+import project.yourNews.token.tokenBlackList.TokenBlackListService;
 import project.yourNews.utils.api.ApiUtil;
 import project.yourNews.utils.cookie.CookieUtil;
 import project.yourNews.utils.jwt.JwtUtil;
@@ -28,8 +29,7 @@ import project.yourNews.utils.jwt.JwtUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-import static project.yourNews.utils.jwt.JwtProperties.REFRESH_COOKIE_VALUE;
-import static project.yourNews.utils.jwt.JwtProperties.TOKEN_PREFIX;
+import static project.yourNews.utils.jwt.JwtProperties.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,6 +39,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
     private final RefreshTokenService refreshTokenService;
+    private final TokenBlackListService tokenBlackListService;
     private final AuthService authService;
     private final BannedEmailService bannedEmailService;
 
@@ -62,6 +63,25 @@ public class AuthController {
         response.setStatus(HttpServletResponse.SC_OK);
 
         return ResponseEntity.ok(responseData);
+    }
+
+    /* 로그아웃 */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+
+        String refreshToken = cookieUtil.getCookie(REFRESH_COOKIE_VALUE, request);
+        String accessToken = request.getHeader(ACCESS_HEADER_VALUE).substring(TOKEN_PREFIX.length()).trim();
+
+        if (refreshToken == null) {
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        }
+
+        cookieUtil.deleteCookie(REFRESH_COOKIE_VALUE, response);    // 쿠키값 삭제
+
+        tokenBlackListService.saveBlackList(accessToken);
+        refreshTokenService.deleteRefreshToken(refreshToken);       // 로그아웃 시 redis에서 refreshToken 삭제
+
+        return ResponseEntity.ok(ApiUtil.from("로그아웃 되었습니다."));
     }
 
     /* accessToken 재발급 */
