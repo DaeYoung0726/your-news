@@ -70,15 +70,17 @@ public class AuthController {
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
 
         String refreshToken = cookieUtil.getCookie(REFRESH_COOKIE_VALUE, request);
-        String accessToken = request.getHeader(ACCESS_HEADER_VALUE).substring(TOKEN_PREFIX.length()).trim();
+        String accessTokenHeader = request.getHeader(ACCESS_HEADER_VALUE);
 
-        if (refreshToken == null) {
-            throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        if (accessTokenHeader == null || refreshToken == null) {
+            throw new CustomException(ErrorCode.TOKEN_NOT_FOUND);
         }
+
+        String accessToken = accessTokenHeader.substring(TOKEN_PREFIX.length()).trim();
 
         cookieUtil.deleteCookie(REFRESH_COOKIE_VALUE, response);    // 쿠키값 삭제
 
-        tokenBlackListService.saveBlackList(accessToken);
+        tokenBlackListService.saveBlackList(accessToken);           // accessToken 블랙리스트에 담기
         refreshTokenService.deleteRefreshToken(refreshToken);       // 로그아웃 시 redis에서 refreshToken 삭제
 
         return ResponseEntity.ok(ApiUtil.from("로그아웃 되었습니다."));
