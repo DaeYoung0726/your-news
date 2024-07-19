@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.auth.dto.LoginDto;
+import project.yourNews.auth.dto.TokenDto;
 import project.yourNews.auth.dto.UserRoleDto;
 import project.yourNews.auth.service.AuthService;
 import project.yourNews.domains.bannedEmail.service.BannedEmailService;
-import project.yourNews.domains.member.domain.Member;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.token.refresh.RefreshTokenService;
 import project.yourNews.token.tokenBlackList.TokenBlackListService;
 import project.yourNews.utils.api.ApiUtil;
 import project.yourNews.utils.cookie.CookieUtil;
-import project.yourNews.utils.jwt.JwtUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +35,6 @@ import static project.yourNews.utils.jwt.JwtProperties.*;
 @RequestMapping("/v1/auth")
 public class AuthController {
 
-    private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
     private final RefreshTokenService refreshTokenService;
     private final TokenBlackListService tokenBlackListService;
@@ -47,19 +45,14 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
 
-        Member member = authService.login(loginDto);
-
-        String role = String.valueOf(member.getRole());
-
-        String accessToken = TOKEN_PREFIX + jwtUtil.generateAccessToken(role, member.getUsername());
-        String refreshToken = jwtUtil.generateRefreshToken(role, member.getUsername());
-
-        refreshTokenService.saveRefreshToken(member.getUsername(), refreshToken);
+        TokenDto tokenDto = authService.login(loginDto);
 
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("accessToken", accessToken);
+        responseData.put("accessToken", tokenDto.getAccessToken());
 
-        response.addHeader("Set-Cookie", cookieUtil.createCookie(REFRESH_COOKIE_VALUE, refreshToken).toString());         // 쿠키에 refresh Token값 저장.
+        // 쿠키에 refresh Token값 저장.
+        response.addHeader("Set-Cookie",
+                cookieUtil.createCookie(REFRESH_COOKIE_VALUE, tokenDto.getRefreshToken()).toString());
         response.setStatus(HttpServletResponse.SC_OK);
 
         return ResponseEntity.ok(responseData);
@@ -96,21 +89,14 @@ public class AuthController {
             throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
 
-        String refreshToken = refreshTokenService.findRefreshToken(refreshTokenInCookie);
-
-        if (jwtUtil.isExpired(refreshToken)) {    // refresh token 만료
-            throw new CustomException(ErrorCode.REFRESH_TOKEN_EXPIRED);
-        }
-
-        String accessTokenReIssue = TOKEN_PREFIX + refreshTokenService.accessTokenReIssue(refreshToken);
+        TokenDto tokenDto = authService.reissueAccessToken(refreshTokenInCookie);
 
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("newAccessToken", accessTokenReIssue);
+        responseData.put("newAccessToken", tokenDto.getAccessToken());
 
-        // Refresh token rotation(RTR) 사용
-        String refreshTokenReIssue = refreshTokenService.refreshTokenReIssue(refreshToken);
-
-        response.addHeader("Set-Cookie", cookieUtil.createCookie(REFRESH_COOKIE_VALUE, refreshTokenReIssue).toString());         // 쿠키에 refresh Token값 저장.
+        // 쿠키에 refresh Token값 저장.
+        response.addHeader("Set-Cookie",
+                cookieUtil.createCookie(REFRESH_COOKIE_VALUE, tokenDto.getRefreshToken()).toString());
         response.setStatus(HttpServletResponse.SC_OK);
 
         return ResponseEntity.ok(responseData);
