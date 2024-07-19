@@ -13,6 +13,8 @@ import project.yourNews.domains.post.repository.PostRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 
+import java.util.UUID;
+
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -41,10 +43,12 @@ public class VerifyAuthenticationAspect {
     /* 게시글에 대한 권환 확인 메서드 */
     private void postVerifyAuthentication(String expectedUsername, Long postId) {
 
-        Post post = postRepository.findById(postId).orElseThrow(() ->
-                new CustomException(ErrorCode.POST_NOT_FOUND));
+        String actualUsername = postRepository.findWriterUsernameByPostId(postId);
+        if (actualUsername == null) {
+            throw new CustomException(ErrorCode.POST_NOT_FOUND);
+        }
 
-        if (!expectedUsername.equals(post.getWriter().getUsername()))
+        if (!expectedUsername.equals(actualUsername))
             throw new CustomException(ErrorCode.UNAUTHORIZED);
     }
 }

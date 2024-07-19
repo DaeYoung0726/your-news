@@ -11,6 +11,7 @@ import project.yourNews.domains.category.domain.Category;
 import project.yourNews.domains.post.domain.Post;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
@@ -20,4 +21,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Modifying
     @Query("delete from Post p where p.id in :ids")
     void deleteAllPostByIdInQuery(@Param("ids") List<Long> ids);
+
+    @Query("SELECT p.writer.username FROM Post p WHERE p.id = :postId")
+    String findWriterUsernameByPostId(@Param("postId") Long postId);
 }
