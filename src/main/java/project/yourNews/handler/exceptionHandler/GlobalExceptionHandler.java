@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.error.ErrorDto;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
@@ -19,25 +19,25 @@ import static project.yourNews.handler.exceptionHandler.error.ErrorCode.INTERNAL
 
 
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /* CustomHandler 에러 처리 */
     @ExceptionHandler(CustomException.class)
-    protected ResponseEntity customExceptionHandler(CustomException ex) {
+    protected ResponseEntity<?> customExceptionHandler(CustomException ex) {
 
         ErrorCode errorCode = ex.getErrorCode();
         ErrorDto errorDto = new ErrorDto(errorCode.getStatus(), errorCode.getMessage());
         log.error("Error occurred : {}, Stack trace: {}", ex.getMessage(), getCustomStackTrace(ex));
-        return new ResponseEntity(errorDto, HttpStatusCode.valueOf(errorDto.getStatus()));
+        return new ResponseEntity<>(errorDto, HttpStatusCode.valueOf(errorDto.getStatus()));
     }
 
     /* 일반 예외 처리 */
     @ExceptionHandler
-    protected ResponseEntity customServerException(Exception ex) {
+    protected ResponseEntity<?> customServerException(Exception ex) {
         ErrorDto error = new ErrorDto(INTERNAL_SERVER_ERROR.getStatus(), INTERNAL_SERVER_ERROR.getMessage());
         log.error("Error occurred : {}, Stack trace: {}", ex.getMessage(), getCustomStackTrace(ex));
-        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /* MethodArgumentNotValidException 처리 */
