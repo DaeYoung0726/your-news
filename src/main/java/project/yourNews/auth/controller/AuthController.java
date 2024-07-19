@@ -16,12 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.auth.dto.LoginDto;
 import project.yourNews.auth.dto.TokenDto;
 import project.yourNews.auth.dto.UserRoleDto;
+import project.yourNews.auth.service.AccountService;
 import project.yourNews.auth.service.AuthService;
 import project.yourNews.domains.bannedEmail.service.BannedEmailService;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
-import project.yourNews.token.refresh.RefreshTokenService;
-import project.yourNews.token.tokenBlackList.TokenBlackListService;
 import project.yourNews.utils.api.ApiUtil;
 import project.yourNews.utils.cookie.CookieUtil;
 
@@ -36,9 +35,8 @@ import static project.yourNews.utils.jwt.JwtProperties.*;
 public class AuthController {
 
     private final CookieUtil cookieUtil;
-    private final RefreshTokenService refreshTokenService;
-    private final TokenBlackListService tokenBlackListService;
     private final AuthService authService;
+    private final AccountService accountService;
     private final BannedEmailService bannedEmailService;
 
     /* 로그인 */
@@ -63,18 +61,13 @@ public class AuthController {
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
 
         String refreshToken = cookieUtil.getCookie(REFRESH_COOKIE_VALUE, request);
-        String accessTokenHeader = request.getHeader(ACCESS_HEADER_VALUE);
+        String accessToken = request.getHeader(ACCESS_HEADER_VALUE);
 
-        if (accessTokenHeader == null || refreshToken == null) {
+        if (accessToken == null || refreshToken == null) {
             throw new CustomException(ErrorCode.TOKEN_NOT_FOUND);
         }
 
-        String accessToken = accessTokenHeader.substring(TOKEN_PREFIX.length()).trim();
-
-        cookieUtil.deleteCookie(REFRESH_COOKIE_VALUE, response);    // 쿠키값 삭제
-
-        tokenBlackListService.saveBlackList(accessToken);           // accessToken 블랙리스트에 담기
-        refreshTokenService.deleteRefreshToken(refreshToken);       // 로그아웃 시 redis에서 refreshToken 삭제
+        authService.logout(accessToken, refreshToken, response);
 
         return ResponseEntity.ok(ApiUtil.from("로그아웃 되었습니다."));
     }
@@ -106,7 +99,7 @@ public class AuthController {
     @GetMapping("/find-username")
     public ResponseEntity<?> findingId(@RequestParam("email") @Valid @Email String email) {
 
-        String username = authService.findingUsername(email);
+        String username = accountService.findingUsername(email);
         return ResponseEntity.ok(ApiUtil.from(username));
     }
 
@@ -118,7 +111,7 @@ public class AuthController {
         if (bannedEmailService.checkBannedEmail(email))
             throw new CustomException(ErrorCode.BANNED_EMAIL);
 
-        authService.reissueTempPassword(username, email);
+        accountService.reissueTempPassword(username, email);
         return ResponseEntity.ok(ApiUtil.from("잠시 후 등록하신 메일로 임시 비밀번호가 도착합니다."));
     }
 

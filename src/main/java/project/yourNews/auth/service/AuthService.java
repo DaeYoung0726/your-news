@@ -1,10 +1,10 @@
 package project.yourNews.auth.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.auth.dto.LoginDto;
 import project.yourNews.auth.dto.TokenDto;
 import project.yourNews.auth.dto.UserRoleDto;
@@ -12,10 +12,12 @@ import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
-import project.yourNews.mail.service.ReissueTempPassService;
 import project.yourNews.token.refresh.RefreshTokenService;
+import project.yourNews.token.tokenBlackList.TokenBlackListService;
+import project.yourNews.utils.cookie.CookieUtil;
 import project.yourNews.utils.jwt.JwtUtil;
 
+import static project.yourNews.utils.jwt.JwtProperties.REFRESH_COOKIE_VALUE;
 import static project.yourNews.utils.jwt.JwtProperties.TOKEN_PREFIX;
 
 @Service
@@ -25,9 +27,10 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final RefreshTokenService refreshTokenService;
-    private final ReissueTempPassService reissueTempPassService;
+    private final TokenBlackListService tokenBlackListService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
     /* 로그인 메서드 */
     public TokenDto login(LoginDto loginDto) {
@@ -50,6 +53,16 @@ public class AuthService {
         return new TokenDto(accessToken, refreshToken);
     }
 
+    /* 로그아웃 메서드 */
+    public void logout(String accessTokenHeader, String refreshToken, HttpServletResponse response) {
+        String accessToken = accessTokenHeader.substring(TOKEN_PREFIX.length()).trim();
+
+        cookieUtil.deleteCookie(REFRESH_COOKIE_VALUE, response);    // 쿠키값 삭제
+
+        tokenBlackListService.saveBlackList(accessToken);           // accessToken 블랙리스트에 담기
+        refreshTokenService.deleteRefreshToken(refreshToken);       // 로그아웃 시 redis에서 refreshToken 삭제
+    }
+
     /* access 토큰 재발급 */
     public TokenDto reissueAccessToken(String refreshTokenInCookie) {
 
@@ -60,26 +73,6 @@ public class AuthService {
         String refreshTokenReIssue = refreshTokenService.refreshTokenReIssue(refreshToken);
 
         return new TokenDto(accessTokenReIssue, refreshTokenReIssue);
-    }
-
-    /* 아이디 찾기 메서드 */
-    @Transactional(readOnly = true)
-    public String findingUsername(String email) {
-
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->
-                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        return findMember.getUsername();
-    }
-
-    /* 임시 비밀번호 발급 */
-    @Transactional
-    public void reissueTempPassword(String username, String email) {
-
-        if (!memberRepository.existsByUsernameAndEmail(username, email))
-            throw new CustomException(ErrorCode.INVALID_USER_INFO);
-
-        reissueTempPassService.sendPassToMail(username, email);
     }
 
     /* 비밀번호 확인 */
