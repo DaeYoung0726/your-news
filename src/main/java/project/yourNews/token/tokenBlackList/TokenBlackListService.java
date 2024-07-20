@@ -1,10 +1,10 @@
 package project.yourNews.token.tokenBlackList;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import project.yourNews.utils.redis.RedisUtil;
 
-import static project.yourNews.utils.redis.RedisProperties.BLACKLIST_EXPIRATION_TIME;
 import static project.yourNews.utils.redis.RedisProperties.BLACKLIST_KEY_PREFIX;
 
 @Service
@@ -12,6 +12,9 @@ import static project.yourNews.utils.redis.RedisProperties.BLACKLIST_KEY_PREFIX;
 public class TokenBlackListService {
 
     private final RedisUtil redisUtil;
+
+    @Value("${token.blacklist.in-redis}")
+    private long BLACKLIST_EXPIRATION_TIME;
 
     /* redis에 저장 */
     public void saveBlackList(String accessToken) {

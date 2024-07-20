@@ -1,13 +1,13 @@
 package project.yourNews.token.refresh;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import project.yourNews.handler.exceptionHandler.error.ErrorCode;
 import project.yourNews.handler.exceptionHandler.exception.CustomException;
 import project.yourNews.utils.jwt.JwtUtil;
 import project.yourNews.utils.redis.RedisUtil;
 
-import static project.yourNews.utils.redis.RedisProperties.REFRESH_EXPIRATION_TIME_IN_REDIS;
 import static project.yourNews.utils.redis.RedisProperties.REFRESH_TOKEN_KEY_PREFIX;
 
 @Service
@@ -17,12 +17,15 @@ public class RefreshTokenService {
     private final RedisUtil redisUtil;
     private final JwtUtil jwtUtil;
 
+    @Value("${token.refresh.in-redis}")
+    private long REDIS_REFRESH_EXPIRATION;
+
     /* redis에 저장 */
     public void saveRefreshToken(String username, String refreshToken) {
 
         String key = REFRESH_TOKEN_KEY_PREFIX + username;
         redisUtil.set(key, refreshToken);
-        redisUtil.expire(key, REFRESH_EXPIRATION_TIME_IN_REDIS);
+        redisUtil.expire(key, REDIS_REFRESH_EXPIRATION);
     }
 
     /* refreshToken으로 redis에서 불러오기 */

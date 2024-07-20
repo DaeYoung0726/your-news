@@ -37,6 +37,13 @@ spring:
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
 
+token:
+  refresh:
+    in-cookie: ${COOKIE_REFRESH_EXPIRATION}
+    in-redis: ${REDIS_REFRESH_EXPIRATION}
+  blacklist:
+    in-redis: ${REDIS_BLACKLIST_EXPIRATION}
+
 rabbitmq:
   queue:
     name: ${RABBITMQ_QUEUE_NAME}
