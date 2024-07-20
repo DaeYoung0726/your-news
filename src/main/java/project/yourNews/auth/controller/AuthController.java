@@ -53,9 +53,8 @@ public class AuthController {
     /* 로그아웃 */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@CookieValue("RefreshToken") String refreshToken,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        String accessToken = request.getHeader(ACCESS_HEADER_VALUE);
+                                    @RequestHeader("Authorization") String accessToken,
+                                    HttpServletResponse response) {
 
         if (accessToken == null || refreshToken == null) {
             throw new CustomException(ErrorCode.TOKEN_NOT_FOUND);
