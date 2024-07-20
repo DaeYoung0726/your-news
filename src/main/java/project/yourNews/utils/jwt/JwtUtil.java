@@ -22,7 +22,7 @@ public class JwtUtil {
     public JwtUtil(@Value("${spring.jwt.secret}") String SECRET_KEY,
                    @Value("${spring.jwt.access-expiration}") long accessExpiration,
                    @Value("${spring.jwt.refresh-expiration}") long refreshExpiration,
-                   @Value("${spring.jwt.issuer") String issuer) {
+                   @Value("${spring.jwt.issuer}") String issuer) {
         this.secretKey = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
         this.accessExpiration = accessExpiration;
         this.refreshExpiration = refreshExpiration;
