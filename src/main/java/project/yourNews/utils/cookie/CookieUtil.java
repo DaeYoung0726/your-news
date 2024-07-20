@@ -39,18 +39,4 @@ public class CookieUtil {
         response.addHeader("Set-Cookie", cookie.toString());
 
     }
-
-    /* 쿠키 값 가져오기 */
-    public String getCookie(String key, HttpServletRequest request) {
-        String cookieValue = null;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-
-            if (cookie.getName().equals(key)) {
-
-                cookieValue = cookie.getValue();
-            }
-        }
-        return cookieValue;
-    }
 }
