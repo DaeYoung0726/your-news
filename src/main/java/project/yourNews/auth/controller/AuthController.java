@@ -6,13 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.yourNews.auth.dto.LoginDto;
 import project.yourNews.auth.dto.TokenDto;
 import project.yourNews.auth.dto.UserRoleDto;
@@ -58,9 +52,9 @@ public class AuthController {
 
     /* 로그아웃 */
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> logout(@CookieValue("RefreshToken") String refreshToken,
+            HttpServletRequest request, HttpServletResponse response) {
 
-        String refreshToken = cookieUtil.getCookie(REFRESH_COOKIE_VALUE, request);
         String accessToken = request.getHeader(ACCESS_HEADER_VALUE);
 
         if (accessToken == null || refreshToken == null) {
@@ -74,15 +68,13 @@ public class AuthController {
 
     /* accessToken 재발급 */
     @PostMapping("/reissue")
-    public ResponseEntity<?> accessTokenReissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> accessTokenReissue(@CookieValue("RefreshToken") String refreshToken, HttpServletResponse response) {
 
-        String refreshTokenInCookie = cookieUtil.getCookie(REFRESH_COOKIE_VALUE, request);
-
-        if (refreshTokenInCookie == null) {     // 쿠키에 Refresh Token이 없다면
+        if (refreshToken == null) {     // 쿠키에 Refresh Token이 없다면
             throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
 
-        TokenDto tokenDto = authService.reissueAccessToken(refreshTokenInCookie);
+        TokenDto tokenDto = authService.reissueAccessToken(refreshToken);
 
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("newAccessToken", tokenDto.getAccessToken());
