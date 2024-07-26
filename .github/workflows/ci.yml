@@ -53,11 +53,19 @@ jobs:
           touch ./application-mail.yml
           echo "${{ secrets.APPLICATION_MAIL }}" > ./application-mail.yml
 
-      # 4. Gradlew 실행 권한 설정
+      # 4. 테스트를 위한 DB 설정
+      - name: Setup MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql database: ${{ secrets.MYSQL_TEST_DATABASE }}
+          mysql user: ${{ secrets.MYSQL_TEST_USER }}
+          mysql password: ${{ secrets.MYSQL_TEST_PASSWORD }}
+
+      # 5. Gradlew 실행 권한 설정
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew
 
-      # 5. Gradle Test 실행
+      # 6. Gradle Test 실행
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
         with:
