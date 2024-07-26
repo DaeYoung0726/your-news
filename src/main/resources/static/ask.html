@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your News</title>
+    <link rel="stylesheet" href="/css/create.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <button id="mainPageButton">메인페이지</button>
+    </header>
+    <main>
+        <form id="askForm">
+            <div class="form-group">
+                <label for="asker">문의자:</label>
+                <input type="text" id="asker" name="asker" disabled>
+            </div>
+            <div class="form-group">
+                <label for="content">내용:</label>
+                <textarea id="content" name="content" rows="10" required></textarea>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="confirmationCheckbox" name="confirmationCheckbox">
+                <label for="confirmationCheckbox">부적절한 문의 내용은 제재 대상이 될 수 있습니다.</label>
+                <div class="form-group">
+                    <p id="errorMessage" style="color:red; display:none;">체크박스를 선택해주세요.</p>
+                </div>
+            </div>
+            <button type="submit" id="submitButton">문의 메일 보내기</button>
+        </form>
+    </main>
+</div>
+<script src="/js/ask.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>
