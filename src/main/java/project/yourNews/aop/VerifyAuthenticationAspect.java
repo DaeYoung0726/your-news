@@ -52,4 +52,3 @@ public class VerifyAuthenticationAspect {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
     }
 }
-
