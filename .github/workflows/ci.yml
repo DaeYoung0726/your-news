@@ -51,14 +51,13 @@ jobs:
           touch ./application.yml
           echo "${{ secrets.APPLICATION }}" > ./application.yml
           touch ./application-mail.yml
-          echo "${{ secrets.APPLICATION_MAIL }}" > ./application.yml
-      
+          echo "${{ secrets.APPLICATION_MAIL }}" > ./application-mail.yml
 
-      # 3. Gradlew 실행 권한 설정
+      # 4. Gradlew 실행 권한 설정
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew
 
-      # 4. Gradle Test 실행
+      # 5. Gradle Test 실행
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
         with:
