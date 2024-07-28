@@ -49,9 +49,9 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application.yml
-          echo "${{ secrets.APPLICATION_CI }}" > ./application.yml
+          echo "${{ secrets.APPLICATION }}" > ./application.yml
           touch ./application-mail.yml
-          echo "${{ secrets.APPLICATION_MAIL_CI }}" > ./application-mail.yml
+          echo "${{ secrets.APPLICATION_MAIL }}" > ./application-mail.yml
 
       # 4. 테스트를 위한 DB 설정
       - name: Setup MySQL
