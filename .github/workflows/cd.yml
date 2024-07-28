@@ -22,23 +22,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Spring 환경 변수 설정
-      - name: Set up application.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.APPLICATION }}" > ./application.yml
-          touch ./application-mail.yml
-          echo "${{ secrets.APPLICATION_MAIL }}" > ./application-mail.yml
-
-      # 4. Docker 이미지 build 및 push
+      # 3. Docker 이미지 build 및 push
       - name: docker build and push
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/your-news:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/your-news:latest
 
-      # 5. ec2 pull
+      # 4. ec2 pull
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:

@@ -38,7 +38,3 @@ out/
 
 .env
 /log
-
-# Application Properties
-/src/main/resources/application.yml
-/src/main/resources/application-mail.yml

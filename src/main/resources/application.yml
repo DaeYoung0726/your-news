@@ -1,0 +1,58 @@
+spring:
+  config:
+    import: application-mail.yml
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:your-news}
+    username: ${DATABASE_USER:root}
+    password: ${DATABASE_PASSWORD:password}
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASS:}
+
+  jwt:
+    secret: ${JWT_KEY:exampleSecretKeyForYourNewsSystemAccessSecretKeyTestForPadding}
+    access-expiration: ${JWT_ACCESS_EXPIRATION:1800000}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:86400000}
+    issuer: ${JWT_ISSUER:your-news}
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:root}
+    password: ${RABBITMQ_PASSWORD:}
+
+token:
+  refresh:
+    in-cookie: ${COOKIE_REFRESH_EXPIRATION:648000}
+    in-redis: ${REDIS_REFRESH_EXPIRATION:648000}
+  blacklist:
+    in-redis: ${REDIS_BLACKLIST_EXPIRATION:1800}
+
+rabbitmq:
+  queue:
+    name: ${RABBITMQ_QUEUE_NAME:queue}
+  exchange:
+    name: ${RABBITMQ_EXCHANGE_NAME:exchange}
+  routing:
+    key: ${RABBITMQ_ROUTING_KEY:key}
+
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: info

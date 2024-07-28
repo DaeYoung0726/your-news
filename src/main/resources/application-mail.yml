@@ -1,0 +1,12 @@
+mail:
+  admin:
+    email: ${ADMIN_EMAIL:admin@gmail.com}
+
+  unsubscribe:
+    link: ${UNSUB_LINK:http://localhost:8080/unsubscribe}
+
+stibee:
+  key: ${STIBEE_KEY:stibee_key}
+  url: ${STIBEE_SEND_URL:https://stibee.com}
+  api:
+    url: ${STIBEE_API_URL:https://stibee.com}
