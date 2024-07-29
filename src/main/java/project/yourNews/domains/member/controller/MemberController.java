@@ -44,9 +44,9 @@ public class MemberController {
 
     /* 회원 정보 불러오기 (개인정보) */
     @GetMapping
-    public MemberResponseDto readMember(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> readMember(@AuthenticationPrincipal UserDetails userDetails) {
 
-        return memberService.readMember(userDetails.getUsername());
+        return ResponseEntity.ok(memberService.readMember(userDetails.getUsername()));
     }
 
     /* 회원 정보 업데이트 */

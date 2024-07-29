@@ -44,7 +44,7 @@ public class PostController {
 
     /* 게시글 불러오기 */
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<Map<String, Object>> readPost(@PathVariable Long postId,
+    public ResponseEntity<?> readPost(@PathVariable Long postId,
                                                         @AuthenticationPrincipal UserDetails userDetails) {
         PostResponseDto postResponse = postService.readPost(postId);
         boolean isAuthor = false;
@@ -61,10 +61,10 @@ public class PostController {
 
     /* 카테고리 게시글 전체 불러오기 */
     @GetMapping("/{categoryName}/posts")
-    public Page<PostInfoDto> readPostsByCategory(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+    public ResponseEntity<?> readPostsByCategory(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                                  @PathVariable String categoryName) {
 
-        return postService.readPostsByCategory(categoryName, pageable);
+        return ResponseEntity.ok(postService.readPostsByCategory(categoryName, pageable));
     }
 
     /* 게시글 업데이트 */

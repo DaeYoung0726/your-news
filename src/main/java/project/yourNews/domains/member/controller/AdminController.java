@@ -32,21 +32,21 @@ public class AdminController {
 
     /* 사용자 전체 불러오기 */
     @GetMapping("/users")
-    public Page<MemberInfoDto> findAllMembers(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<?> findAllMembers(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        return adminService.findAllMembers(pageable);
+        return ResponseEntity.ok(adminService.findAllMembers(pageable));
     }
 
     /* 특정 사용자 불러오기 */
     @GetMapping("/users/{memberId}")
-    public MemberResponseDto getMemberById(@PathVariable Long memberId) {
-        return adminService.readMemberById(memberId);
+    public ResponseEntity<?> getMemberById(@PathVariable Long memberId) {
+        return ResponseEntity.ok(adminService.readMemberById(memberId));
     }
 
     /* 닉네임으로 사용자 불러오기 */
     @GetMapping("/users/by-nickname")
-    public MemberResponseDto getMemberByNickname(@RequestParam String nickname) {
-        return adminService.readMemberByNickname(nickname);
+    public ResponseEntity<?> getMemberByNickname(@RequestParam String nickname) {
+        return ResponseEntity.ok(adminService.readMemberByNickname(nickname));
     }
 
     /* 사용자 탈퇴 */

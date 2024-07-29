@@ -31,10 +31,10 @@ public class AdminNewsController {
 
     /* 페이징 처리 후 소식 불러오기 */
     @GetMapping
-    public Page<NewsInfoDto> readAllNews(@PageableDefault(sort = "newsName", direction = Sort.Direction.ASC)
+    public ResponseEntity<?> readAllNews(@PageableDefault(sort = "newsName", direction = Sort.Direction.ASC)
                                              Pageable pageable) {
 
-        return adminNewsService.readAllNews(pageable);
+        return ResponseEntity.ok(adminNewsService.readAllNews(pageable));
     }
 
     /* 소식 추가 */
@@ -47,9 +47,9 @@ public class AdminNewsController {
 
     /* 특정 소식 불러오기 */
     @GetMapping("/{newsId}")
-    public NewsResponseDto readNews(@PathVariable Long newsId) {
+    public ResponseEntity<?> readNews(@PathVariable Long newsId) {
 
-        return adminNewsService.readNews(newsId);
+        return ResponseEntity.ok(adminNewsService.readNews(newsId));
     }
 
     /* 소식 삭제하기 */

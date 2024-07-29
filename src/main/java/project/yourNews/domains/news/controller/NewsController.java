@@ -1,6 +1,7 @@
 package project.yourNews.domains.news.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.domains.news.dto.NewsInfoDto;
@@ -16,8 +17,8 @@ public class NewsController {
 
     /* 전체 소식 불러오기 */
     @GetMapping("/v1/news")
-    public List<NewsInfoDto> readAllNews() {
+    public ResponseEntity<?> readAllNews() {
 
-        return newsService.readAllNews();
+        return ResponseEntity.ok(newsService.readAllNews());
     }
 }
