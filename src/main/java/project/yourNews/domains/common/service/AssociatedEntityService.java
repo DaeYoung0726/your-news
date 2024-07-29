@@ -24,7 +24,6 @@ public class AssociatedEntityService {
     private final LikeRepository likeRepository;
 
     /* 회원과 관계 매핑된 좋아요 삭제(회원이 좋아요한 것) */
-    @Transactional
     public void deleteAllLikeByMember(Member foundMember) {
 
         List<Long> likeIds = foundMember.getLikes().stream()
@@ -37,7 +36,6 @@ public class AssociatedEntityService {
     }
 
     /* 회원과 관계 매핑된 게시글 삭제 (회원의 게시글) */
-    @Transactional
     public void deleteAllPostByMember(Member foundMember) {
 
         List<Post> posts = foundMember.getPosts();
@@ -57,7 +55,6 @@ public class AssociatedEntityService {
 
 
     /* 회원과 관계 매핑된 소식 구독 삭제(회원이 구독한 소식) */
-    @Transactional
     public void deleteAllSubNewsByMember(Member foundMember) {
 
         List<Long> subNewsId = foundMember.getSubNews().stream()
@@ -70,7 +67,6 @@ public class AssociatedEntityService {
     }
 
     /* 게시글과 관계 매핑된 좋아요 삭제(게시글의 좋아요) */
-    @Transactional
     public void deleteAllLikeByPost(Post foundPost) {
 
         List<Long> likeIds = foundPost.getLikes().stream()
@@ -83,7 +79,6 @@ public class AssociatedEntityService {
     }
 
     /* 소식과 관계 매핑된 구독 소식 삭제 (소식을 구독한 내용) */
-    @Transactional
     public void deleteAllSubNewsByNews(News foundNews) {
         List<Long> subNewsIds = foundNews.getMemberSubNews().stream()
                 .map(SubNews::getId)

@@ -14,7 +14,6 @@ public interface SubNewsRepository extends JpaRepository<SubNews, Long> {
 
     void deleteAllByMember(Member member);
 
-    @Transactional
     @Modifying
     @Query("delete from SubNews s where s.id in :ids")
     void deleteAllSubNewsByIdInQuery(@Param("ids") List<Long> ids);

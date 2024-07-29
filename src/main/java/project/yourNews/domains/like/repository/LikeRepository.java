@@ -17,7 +17,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     Optional<Like> findByMemberAndPost(Member member, Post post);
     boolean existsByMemberAndPost(Member member, Post post);
 
-    @Transactional
     @Modifying
     @Query("delete from Likes l where l.id in :ids")
     void deleteAllLikeByIdInQuery(@Param("ids") List<Long> ids);

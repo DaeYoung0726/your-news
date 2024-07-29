@@ -17,7 +17,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByCategory(Category category, Pageable pageable);
 
-    @Transactional
     @Modifying
     @Query("delete from Post p where p.id in :ids")
     void deleteAllPostByIdInQuery(@Param("ids") List<Long> ids);
