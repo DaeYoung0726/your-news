@@ -1,5 +1,6 @@
 package project.yourNews.utils.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,44 +30,24 @@ public class JwtUtil {
         this.issuer = issuer;
     }
 
-    /* 토큰(claim)에서 username 가져오기 */
-    public String getUsername(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getSubject();
-    }
-
-    /* 토큰(claim)에서 권한(role) 가져오기 */
-    public String getRole(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
-    }
-
-    /* 토큰(claim)에 저장된 category가 refresh, access인지 확인 */
-    public String getCategory(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
-    }
-
-    /* 토큰에 지정한 만료 시간 확인*/
-    public boolean isExpired(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
-    }
-
     /* access Token 발급 */
     public String generateAccessToken(String role, String username) {
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("category", "access");
-        claims.put("role", role);
-
-        return createJwt(claims, username, accessExpiration);
+        return createJwt(createClaims(role, "access"), username, accessExpiration);
     }
 
     /* refresh Token 발급 */
     public String generateRefreshToken(String role, String username) {
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("category", "refresh");
-        claims.put("role", role);
+        return createJwt(createClaims(role, "refresh"), username, refreshExpiration);
+    }
 
-        return createJwt(claims, username, refreshExpiration);
+    /* claims 생성 */
+    private Map<String, Object> createClaims(String role, String category) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        claims.put("category", category);
+        return claims;
     }
 
     /* 토큰 생성 */
@@ -82,4 +63,32 @@ public class JwtUtil {
                 .compact();     // 설정된 정보를 기반으로 JWT를 생성하고 문자열로 직렬화.
     }
 
+    /* 토큰 정보 불러오기 */
+    private Claims parseClaims(String token){
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    /* 토큰(claim)에서 username 가져오기 */
+    public String getUsername(String token) {
+        return parseClaims(token).getSubject();
+    }
+
+    /* 토큰(claim)에서 권한(role) 가져오기 */
+    public String getRole(String token) {
+        return parseClaims(token).get("role", String.class);
+    }
+
+    /* 토큰(claim)에 저장된 category가 refresh, access인지 확인 */
+    public String getCategory(String token) {
+        return parseClaims(token).get("category", String.class);
+    }
+
+    /* 토큰에 지정한 만료 시간 확인*/
+    public boolean isExpired(String token) {
+        return parseClaims(token).getExpiration().before(new Date());
+    }
 }
