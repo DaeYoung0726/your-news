@@ -1,9 +1,10 @@
 ## ✉️ Your News
 영남대학교 공지사항 및 학과 공지사항에 대하여 새로운 글을 이메일로 보내주는 서비스입니다.
 
-### 🚀 Stacks
+### 🚀 Tech Stacks
  - Language: Java
- - Frameworks and Libraries: Spring Boot, Spring Data JPA, Spring Security
+ - Build tool: Gradle
+ - Frameworks and Libraries: JDK 17, Spring Boot 3.2.3, Spring Data JPA, Spring Security, Lombok, jjwt 0.12.3
  - Databases and Caching: MySQL, Redis
  - Messaging: RabbitMQ
  - DevOps and Cloud: GitHub Actions, Docker, AWS EC2
