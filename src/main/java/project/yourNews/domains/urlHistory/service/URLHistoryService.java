@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.yourNews.utils.redis.RedisUtil;
+import project.yourNews.common.utils.redis.RedisUtil;
 
-import static project.yourNews.utils.redis.RedisProperties.URL_EXPIRATION_TIME;
-import static project.yourNews.utils.redis.RedisProperties.URL_HISTORY_KEY_PREFIX;
+import static project.yourNews.common.utils.redis.RedisProperties.URL_EXPIRATION_TIME;
+import static project.yourNews.common.utils.redis.RedisProperties.URL_HISTORY_KEY_PREFIX;
 
 @Slf4j
 @RequiredArgsConstructor

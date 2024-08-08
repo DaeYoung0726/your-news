@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.domains.category.dto.CategoryRequestDto;
 import project.yourNews.domains.category.service.CategoryService;
-import project.yourNews.utils.api.ApiUtil;
+import project.yourNews.common.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor

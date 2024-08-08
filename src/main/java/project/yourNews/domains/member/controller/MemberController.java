@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.domains.bannedEmail.service.BannedEmailService;
-import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.dto.MemberUpdateDto;
 import project.yourNews.domains.member.dto.SignUpDto;
 import project.yourNews.domains.member.service.MemberService;
-import project.yourNews.handler.exceptionHandler.error.ErrorCode;
-import project.yourNews.handler.exceptionHandler.exception.CustomException;
-import project.yourNews.utils.api.ApiUtil;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor

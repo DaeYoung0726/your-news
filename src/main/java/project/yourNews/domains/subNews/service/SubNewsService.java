@@ -10,8 +10,8 @@ import project.yourNews.domains.news.domain.News;
 import project.yourNews.domains.news.repository.NewsRepository;
 import project.yourNews.domains.subNews.domain.SubNews;
 import project.yourNews.domains.subNews.repository.SubNewsRepository;
-import project.yourNews.handler.exceptionHandler.error.ErrorCode;
-import project.yourNews.handler.exceptionHandler.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.exception.CustomException;
 
 import java.util.List;
 

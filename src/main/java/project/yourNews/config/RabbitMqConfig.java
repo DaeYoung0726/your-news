@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor;
-import project.yourNews.mail.service.NewsMailService;
+import project.yourNews.common.mail.mail.service.NewsMailService;
 
 @Configuration
 public class RabbitMqConfig {

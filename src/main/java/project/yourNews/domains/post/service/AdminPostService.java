@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.common.service.AssociatedEntityService;
 import project.yourNews.domains.post.domain.Post;
 import project.yourNews.domains.post.repository.PostRepository;
-import project.yourNews.handler.exceptionHandler.error.ErrorCode;
-import project.yourNews.handler.exceptionHandler.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.exception.CustomException;
 
 @RequiredArgsConstructor
 @Service

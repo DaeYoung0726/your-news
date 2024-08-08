@@ -11,9 +11,9 @@ import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.dto.MemberInfoDto;
 import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.repository.MemberRepository;
-import project.yourNews.handler.exceptionHandler.error.ErrorCode;
-import project.yourNews.handler.exceptionHandler.exception.CustomException;
-import project.yourNews.stibee.service.StibeeService;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.mail.stibee.service.StibeeService;
 
 @Slf4j
 @RequiredArgsConstructor

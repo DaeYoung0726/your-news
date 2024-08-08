@@ -11,10 +11,8 @@ import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.dto.NewsRequestDto;
 import project.yourNews.domains.news.dto.NewsResponseDto;
 import project.yourNews.domains.news.repository.NewsRepository;
-import project.yourNews.handler.exceptionHandler.error.ErrorCode;
-import project.yourNews.handler.exceptionHandler.exception.CustomException;
-
-import java.util.stream.Collectors;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.exception.CustomException;
 
 @RequiredArgsConstructor
 @Service

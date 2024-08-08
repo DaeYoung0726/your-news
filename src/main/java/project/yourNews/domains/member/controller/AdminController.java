@@ -1,7 +1,6 @@
 package project.yourNews.domains.member.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -15,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.domains.bannedEmail.dto.BannedEmailRequestDto;
 import project.yourNews.domains.bannedEmail.service.BannedEmailService;
-import project.yourNews.domains.member.dto.MemberInfoDto;
-import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.service.AdminService;
 import project.yourNews.domains.post.service.AdminPostService;
-import project.yourNews.utils.api.ApiUtil;
+import project.yourNews.common.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor

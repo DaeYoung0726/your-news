@@ -2,7 +2,6 @@ package project.yourNews.domains.post.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -17,11 +16,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import project.yourNews.domains.post.dto.PostInfoDto;
 import project.yourNews.domains.post.dto.PostRequestDto;
 import project.yourNews.domains.post.dto.PostResponseDto;
 import project.yourNews.domains.post.service.PostService;
-import project.yourNews.utils.api.ApiUtil;
+import project.yourNews.common.utils.api.ApiUtil;
 
 import java.util.HashMap;
 import java.util.Map;

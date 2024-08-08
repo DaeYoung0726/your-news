@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.yourNews.aop.annotation.VerifyAuthentication;
+import project.yourNews.common.aop.annotation.VerifyAuthentication;
 import project.yourNews.domains.category.domain.Category;
 import project.yourNews.domains.category.repository.CategoryRepository;
 import project.yourNews.domains.common.service.AssociatedEntityService;
@@ -17,8 +17,8 @@ import project.yourNews.domains.post.dto.PostInfoDto;
 import project.yourNews.domains.post.dto.PostRequestDto;
 import project.yourNews.domains.post.dto.PostResponseDto;
 import project.yourNews.domains.post.repository.PostRepository;
-import project.yourNews.handler.exceptionHandler.error.ErrorCode;
-import project.yourNews.handler.exceptionHandler.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.exception.CustomException;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.category.domain.Category;
 import project.yourNews.domains.category.dto.CategoryRequestDto;
 import project.yourNews.domains.category.repository.CategoryRepository;
-import project.yourNews.handler.exceptionHandler.error.ErrorCode;
-import project.yourNews.handler.exceptionHandler.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.exception.CustomException;
 
 @Slf4j
 @RequiredArgsConstructor
