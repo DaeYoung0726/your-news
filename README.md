@@ -15,7 +15,8 @@
 ![image](https://github.com/user-attachments/assets/6888d914-0287-462f-ae24-742cb66fd054)
 
 ### 🔧 CD Flow
-![image](https://github.com/user-attachments/assets/6e122d05-bb5c-4317-9130-f3d016e69c51)
+![image](https://github.com/user-attachments/assets/ffebe0cb-1668-48e5-a94b-6df12a3659ff)
+
 
 
 ### ERD
