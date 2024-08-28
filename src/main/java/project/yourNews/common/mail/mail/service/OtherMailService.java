@@ -49,7 +49,7 @@ public class OtherMailService {
     private void getCodeMessage(String email, String code) {
 
         String emailUsername = email.split("@")[0];
-        String emailContent = "사용자 : " + emailUsername + "<br>" + MailProperties.CODE_TEXT + code;
+        String emailContent = createContent(emailUsername, MailProperties.CODE_TEXT, code);
 
         sendStibeeEmail(StibeeRequest.builder()
                 .subscriber(email)
@@ -63,7 +63,7 @@ public class OtherMailService {
     private void getPassMessage(String email, String pass) {
 
         String emailUsername = email.split("@")[0];
-        String emailContent = "사용자 : " + emailUsername + "<br>" + MailProperties.PASS_TEXT + pass;
+        String emailContent = createContent(emailUsername, MailProperties.PASS_TEXT, pass);
 
         sendStibeeEmail(StibeeRequest.builder()
                 .subscriber(email)
@@ -77,7 +77,7 @@ public class OtherMailService {
     private void getAskMessage(String email, String askContent) {
 
         String emailUsername = email.split("@")[0];
-        String emailContent = "사용자 : " + emailUsername + "<br>" + MailProperties.ASK_TEXT + email + "<br>" + askContent;
+        String emailContent = createContent(emailUsername, MailProperties.ASK_TEXT, email) + "<br>" + askContent;
 
         sendStibeeEmail(StibeeRequest.builder()
                 .subscriber(adminEmail)
@@ -85,6 +85,11 @@ public class OtherMailService {
                 .content(emailContent)
                 .build()
         );
+    }
+
+    private String createContent(String emailUsername, String mailText, String content) {
+
+        return "사용자 : " + emailUsername + "<br>" + mailText + content;
     }
 
     /* 스티비 API를 사용하여 이메일 보내기 */
