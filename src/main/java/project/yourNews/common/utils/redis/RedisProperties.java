@@ -8,4 +8,5 @@ public interface RedisProperties {
     long CODE_EXPIRATION_TIME = 3*60;
     String URL_HISTORY_KEY_PREFIX = "URL::";
     long URL_EXPIRATION_TIME = 7*24*60*60;
+    long YU_URL_EXPIRATION_TIME = 30*24*60*60;
 }
