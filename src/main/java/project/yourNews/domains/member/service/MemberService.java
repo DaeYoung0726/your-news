@@ -102,9 +102,9 @@ public class MemberService {
 
     /* 특정 소식 구독한 사용자 가져오기 */
     @Transactional(readOnly = true)
-    public List<String> getMembersSubscribedToNews(String newsURL) {
+    public List<String> getMembersSubscribedToNews(String newsName) {
 
-        List<Member> members = memberRepository.findBySubStatusAndSubNews_News_NewsURL(true, newsURL);
+        List<Member> members = memberRepository.findBySubStatusAndSubNews_News_NewsName(true, newsName);
         return members.stream().map(Member::getEmail).collect(Collectors.toList());
     }
 
