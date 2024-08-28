@@ -1,5 +1,6 @@
 package project.yourNews.common.crawling.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -8,20 +9,22 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.common.crawling.dto.EmailRequest;
+import project.yourNews.common.crawling.strategy.CrawlingStrategy;
+import project.yourNews.common.crawling.strategy.YutopiaCrawlingStrategy;
+import project.yourNews.common.mail.mail.util.MailProperties;
 import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
-import project.yourNews.domains.urlHistory.service.URLHistoryService;
-import project.yourNews.common.mail.mail.util.MailProperties;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.TimeZone;
 
 @RequiredArgsConstructor
 @Service
@@ -31,59 +34,74 @@ public class CrawlingService {
 
     private final NewsService newsService;
     private final MemberService memberService;
-    private final URLHistoryService urlHistoryService;
     private final RabbitTemplate rabbitTemplate;
-
+    private final List<CrawlingStrategy> strategies;
+    private final TaskScheduler taskScheduler;
 
     @Value("${rabbitmq.exchange.name}")
     private String exchangeName;
 
     @Value("${rabbitmq.routing.key}")
     private String routingKey;
-    private static final String SCHEDULED_TIME = "0 0 8-19 * * MON-FRI";  // 주말 제외, 평일에 1시간마다 크롤링
 
-    @Scheduled(cron = SCHEDULED_TIME, zone = "Asia/Seoul") // 오전 8시부터 오후 7시까지
+    @PostConstruct
+    public void scheduleCrawlingTasks() {
+        // 각 전략별로 스케줄링 작업을 등록
+        for (CrawlingStrategy strategy : strategies) {
+            String cronExpression = strategy.getScheduledTime();
+            taskScheduler.schedule(() -> startCrawling(strategy),
+                    new CronTrigger(cronExpression, TimeZone.getTimeZone("Asia/Seoul")));
+        }
+    }
+
     @Async
-    @Transactional
-    public void startCrawling() throws IOException {
+    public void startCrawling(CrawlingStrategy strategy) {
 
-        List<NewsInfoDto> news = newsService.readAllNews();
-        for (NewsInfoDto readNews : news) {
-            analyzeWeb(readNews.getNewsName(), readNews.getNewsURL());
+        List<NewsInfoDto> newsList = newsService.readAllNews();
+
+        for (NewsInfoDto news : newsList) {
+            if (strategy.canHandle(news.getNewsName())) {
+                if (strategy instanceof YutopiaCrawlingStrategy) {
+                    // YutopiaCrawlingStrategy이면 여러 URL을 처리
+                    List<String> urlsToCrawl =
+                            ((YutopiaCrawlingStrategy) strategy).getUrlsForYuTopiaNews(news);
+                    for (String url : urlsToCrawl) {
+                        analyzeWeb(news.getNewsName(), url, strategy);
+                    }
+                } else {
+                    // 그 외의 경우 단일 URL 처리
+                    analyzeWeb(news.getNewsName(), news.getNewsURL(), strategy);
+                }
+            }
         }
     }
 
     /* 페이지 크롤링 */
-    private void analyzeWeb(String newsName, String newsURL) throws IOException {
+    private void analyzeWeb(String newsName, String newsURL, CrawlingStrategy strategy) {
         try {
             // 해당 소식 구독한 회원의 이메일 불러오기
-            List<String> memberEmails = memberService.getMembersSubscribedToNews(newsURL);
+            List<String> memberEmails = memberService.getMembersSubscribedToNews(newsName);
 
             // 웹 페이지 가져오기
             Document doc = Jsoup.connect(newsURL).get();
 
             // 게시글 요소 찾기
-            Elements postElements = doc.select("tr[class='']"); // class가 없는 경우
-            postElements.addAll(doc.select("tr.b-top-box")); // b-top-box 클래스를 포함하는 경우
+            Elements postElements = strategy.getPostElements(doc);
 
             // 게시글 제목과 URL 출력
             for (Element postElement : postElements) {
-                Element newPostElement = postElement.selectFirst("p.b-new");
-                if (newPostElement != null) { // 새로운 게시글인 경우에만 처리
-                    Element titleElement = postElement.selectFirst("div.b-title-box > a");
-                    String postTitle = titleElement.text();
-                    String postURL = titleElement.absUrl("href");
+                if (strategy.shouldProcessElement(postElement)) {
+                    String postTitle = strategy.extractPostTitle(postElement);
+                    String postURL = strategy.extractPostURL(postElement);
 
-                    // 새로운 게시글인 경우에만 출력
-                    if (!urlHistoryService.existsURLCheck(postURL)) {
-
+                    if (!strategy.isExisted(postURL)) {
                         sendNewsToMember(memberEmails, newsName, postTitle, postURL);
                         // 새로운 게시글 URL을 목록에 추가
-                        urlHistoryService.saveURL(postURL);
+                        strategy.saveURL(postURL);
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("An error occurred while processing news for URL: {}", newsURL);
         }
     }
