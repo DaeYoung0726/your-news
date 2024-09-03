@@ -33,6 +33,8 @@ public class MemberService {
     private final AssociatedEntityService associatedEntityService;
     private final StibeeService stibeeService;
     private final RedisUtil redisUtil;
+
+    private static final String YU_NEWS_NAME = "영대소식";
     private static final String USERNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-z0-9-_]{4,20}$";
     private static final String NICKNAME_PATTERN = "^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$";
 
@@ -53,9 +55,13 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        if (signUpDto.getSubNewsNames() != null) {
-            for (String subNews : signUpDto.getSubNewsNames()) {     // 소식 구독하기
-                subNewsService.saveSubNews(signUpDto.getUsername(), subNews);
+        if (!signUpDto.getSubNewsNames().isEmpty()) {
+            for (String subNews: signUpDto.getSubNewsNames()) {
+
+                if (subNews.equals(YU_NEWS_NAME))   // 키워드와 함꼐
+                    subNewsService.subscribeToNewsWithKeyword(member, subNews, signUpDto.getKeywords());
+                else
+                    subNewsService.subscribeToNews(member, subNews);
             }
         }
     }
@@ -108,6 +114,14 @@ public class MemberService {
         return members.stream().map(Member::getEmail).collect(Collectors.toList());
     }
 
+    /* 특정 소식 구독한 사용자 가져오기 - 키워드 기반 */
+    @Transactional(readOnly = true)
+    public List<String> getMembersSubscribedToNewsWithKeyword(String keyword) {
+
+        List<Member> members = memberRepository.findBySubStatusAndSubNews_Keyword_KeywordName(true, keyword);
+        return members.stream().map(Member::getEmail).collect(Collectors.toList());
+    }
+
     /* 정보 수신 상태 변경 */
     @Transactional
     public void updateSubStatus(String username, boolean status) {
@@ -129,7 +143,7 @@ public class MemberService {
     /* 아이디 중복 확인 */
     public boolean existsUsernameCheck(String username) {
 
-        if(!username.matches(USERNAME_PATTERN)) {
+        if (!username.matches(USERNAME_PATTERN)) {
             throw new CustomException(ErrorCode.INVALID_USERNAME_PATTERN);
         }
         return memberRepository.existsByUsername(username);

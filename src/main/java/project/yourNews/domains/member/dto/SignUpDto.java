@@ -39,6 +39,8 @@ public class SignUpDto {
 
     private List<String> subNewsNames;
 
+    private List<String> keywords;
+
     public Member toMemberEntity() {
         return Member.builder()
                 .username(username)
