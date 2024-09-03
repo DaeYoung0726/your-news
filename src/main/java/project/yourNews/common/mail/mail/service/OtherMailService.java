@@ -1,7 +1,7 @@
 package project.yourNews.common.mail.mail.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -10,13 +10,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.exception.CustomException;
-import project.yourNews.common.mail.mail.util.MailProperties;
+import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.mail.mail.MailType;
 import project.yourNews.common.mail.mail.dto.StibeeRequest;
+import project.yourNews.common.mail.mail.util.MailProperties;
 
-@RequiredArgsConstructor
 @Transactional
 @Slf4j
 @Service
@@ -27,9 +26,12 @@ public class OtherMailService {
     @Value("${mail.admin.email}")
     private String adminEmail;
 
-
     @Value("${stibee.url}")
     private String stibeeUrl;
+
+    public OtherMailService(@Qualifier("stibeeRestTemplate") RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     /* 메일 보내기 */
     @Async

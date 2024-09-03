@@ -2,8 +2,8 @@ package project.yourNews.common.mail.stibee.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.mail.stibee.dto.StibeeSubscribeRequest;
 import project.yourNews.common.mail.stibee.dto.Subscriber;
 
@@ -20,12 +20,18 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class StibeeService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+
+    public StibeeService(
+            @Qualifier("stibeeRestTemplate") RestTemplate restTemplate,
+            ObjectMapper objectMapper) {
+        this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
+    }
 
     @Value("${stibee.api.url}")
     private String apiUrl;

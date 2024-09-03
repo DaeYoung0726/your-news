@@ -1,7 +1,7 @@
 package project.yourNews.common.mail.mail.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import project.yourNews.common.crawling.dto.EmailRequest;
-import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.mail.mail.dto.StibeeRequest;
 
-@RequiredArgsConstructor
 @Transactional
 @Slf4j
 @Service
 public class NewsMailService {
+
 
     private final RestTemplate restTemplate;
 
@@ -27,6 +27,10 @@ public class NewsMailService {
 
     @Value("${mail.unsubscribe.link}")
     private String unsubscribeLink;
+
+    public NewsMailService(@Qualifier("stibeeRestTemplate") RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     /* 메일 보내기 */
     public void sendMail(EmailRequest emailRequest) {
