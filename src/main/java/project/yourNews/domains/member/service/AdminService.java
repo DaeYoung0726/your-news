@@ -14,6 +14,9 @@ import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.exception.CustomException;
 import project.yourNews.common.mail.stibee.service.StibeeService;
+import project.yourNews.domains.subNews.service.SubNewsService;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class AdminService {
     private final MemberRepository memberRepository;
     private final AssociatedEntityService associatedEntityService;
     private final StibeeService stibeeService;
+    private final SubNewsService subNewsService;
 
     /* 사용자 전체 불러오기 */
     @Transactional(readOnly = true)
@@ -40,7 +44,8 @@ public class AdminService {
         Member foundMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return new MemberResponseDto(foundMember);
+        List<String> keywords = subNewsService.getSubscribedKeyword(memberId);
+        return new MemberResponseDto(foundMember, keywords);
     }
 
     /* nickname으로 특정 사용자 불러오기 */
@@ -50,7 +55,8 @@ public class AdminService {
         Member foundMember = memberRepository.findByNickname(nickname).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return new MemberResponseDto(foundMember);
+        List<String> keywords = subNewsService.getSubscribedKeyword(foundMember.getId());
+        return new MemberResponseDto(foundMember, keywords);
     }
 
     /* 사용자 탈퇴 */

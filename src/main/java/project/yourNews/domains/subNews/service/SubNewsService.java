@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.common.exception.CustomException;
 import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.domains.common.service.AssociatedEntityService;
+import project.yourNews.domains.keyword.entity.Keyword;
 import project.yourNews.domains.keyword.service.KeywordService;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
@@ -15,7 +16,10 @@ import project.yourNews.domains.subNews.domain.SubNews;
 import project.yourNews.domains.subNews.dto.SubNewsUpdateDto;
 import project.yourNews.domains.subNews.repository.SubNewsRepository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -75,6 +79,21 @@ public class SubNewsService {
                     keywordService.linkNewsToKeyword(savedSubNews, keyword);
                 }
             }
+        }
+    }
+
+    /* 구독한 키워드 불러오기 */
+    @Transactional(readOnly = true)
+    public List<String> getSubscribedKeyword(Long memberId) {
+
+        Optional<SubNews> subNews = subNewsRepository.findByMember_IdAndNews_NewsName(memberId, YU_NEWS_NAME);
+
+        if (subNews.isPresent()) {
+            return subNews.get().getKeyword().stream()
+                    .map(Keyword::getKeywordName)
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
         }
     }
 }

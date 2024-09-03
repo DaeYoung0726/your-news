@@ -73,7 +73,9 @@ public class MemberService {
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return new MemberResponseDto(findMember);
+        List<String> keywords = subNewsService.getSubscribedKeyword(findMember.getId());
+
+        return new MemberResponseDto(findMember, keywords);
     }
 
     /* 멤버 정보 업데이트 */
