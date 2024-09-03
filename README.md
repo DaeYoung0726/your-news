@@ -21,5 +21,6 @@
 
 ### ERD
 
-![image](https://github.com/user-attachments/assets/11d5c5f7-411e-41ea-9fc2-7bc2f368132d)
+![image](https://github.com/user-attachments/assets/c259dad8-7d94-4c6e-b16a-0af8249d05d9)
+
 
