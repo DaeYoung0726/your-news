@@ -34,7 +34,7 @@ public class YUNewsCrawlingStrategy implements CrawlingStrategy{
 
     @Override
     public String getScheduledTime() {
-        return "55 18 * * * MON-FRI";  // 주말 제외, 평일에 1시간마다 크롤링
+        return "0 0 8-19 * * MON-FRI";  // 주말 제외, 평일에 1시간마다 크롤링
     }
 
     @Override
