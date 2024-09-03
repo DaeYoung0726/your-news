@@ -38,7 +38,7 @@ public class NewsMailService {
             for (String email : emailRequest.getSubscriber()) {
                 String emailUsername = email.split("@")[0];
                 String emailContent = "사용자 : " + emailUsername + "<br>" + emailRequest.getContent() +
-                        "<p>소식을 그만 받고 싶으신가요? <a href=\"" + unsubscribeLink + "\">구독 취소</a></p>";
+                        "<br><p><small>소식을 그만 받고 싶으신가요? <a href=\"" + unsubscribeLink + "\">구독 취소</a></small></p>";
                 sendStibeeEmail(
                         StibeeRequest.builder()
                         .subscriber(email)
