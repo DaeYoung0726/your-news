@@ -58,7 +58,8 @@ public enum ErrorCode {
     EMAIL_SENDING_FAILED(400, "이메일 전송을 실패했습니다."),
 
     // 서버 에러
-    INTERNAL_SERVER_ERROR(500, "서버 에러입니다. 서버 팀에 연락주세요.");
+    INTERNAL_SERVER_ERROR(500, "서버 에러입니다. 서버 팀에 연락주세요."),
+    THREAD_INTERRUPTED(500, "스레드 대기 중 인터럽트 발생");
 
     private final int status;
     private final String message;
