@@ -582,3 +582,43 @@ th {
         margin-bottom: 10px;
     }
 }
+
+#additionalOptions {
+    display: none;
+    margin-top: 10px;
+}
+
+.option-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.option-group label {
+    margin-right: 15px;
+    font-weight: normal;
+    font-size: 1em;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* 각 항목 사이의 간격을 설정 */
+    justify-content: flex-start; /* 항목들이 왼쪽 정렬되도록 설정 */
+}
+
+.checkbox-group label {
+    display: block;
+    width: calc(50% - 10px); /* 각 항목이 화면의 절반 너비를 차지하도록 설정 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+.checkbox-group input {
+    margin-right: 0; /* 체크박스와 텍스트 사이의 간격을 제거 */
+    margin-left: 0; /* 체크박스 왼쪽 여백 제거 */
+    vertical-align: middle; /* 체크박스와 텍스트가 같은 높이로 정렬되도록 설정 */
+}
+
+.checkbox-group span {
+    margin-left: 5px; /* 체크박스와 텍스트 사이의 여백 최소화 */
+}

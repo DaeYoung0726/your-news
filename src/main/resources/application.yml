@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
@@ -52,6 +52,11 @@ rabbitmq:
   routing:
     key: ${RABBITMQ_ROUTING_KEY:key}
 
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+    url: ${OPENAI_API_URL}
+    model: ${OPENAI_API_MODEL}
 
 logging:
   level:

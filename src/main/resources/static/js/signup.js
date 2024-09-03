@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const signupForm = document.getElementById('signupForm');
     const responseMessage = document.getElementById('responseMessage');
-    const news1Select = document.getElementById('news1');
     const news2Select = document.getElementById('news2');
     const news3Select = document.getElementById('news3');
     const sendVerificationCodeButton = document.getElementById('sendVerificationCode');
@@ -21,20 +20,28 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             data.forEach(news => {
-                let option1 = document.createElement('option');
-                option1.text = news.newsName;
-                news1Select.add(option1);
+                if (news.newsName !== '영대소식') {
+                    let option2 = document.createElement('option');
+                    option2.text = news.newsName;
+                    news2Select.add(option2);
 
-                let option2 = document.createElement('option');
-                option2.text = news.newsName;
-                news2Select.add(option2);
-
-                let option3 = document.createElement('option');
-                option3.text = news.newsName;
-                news3Select.add(option3);
+                    let option3 = document.createElement('option');
+                    option3.text = news.newsName;
+                    news3Select.add(option3);
+                }
             });
         })
         .catch(error => console.error('Error fetching news options:', error));
+
+    function toggleOptions(isReceiving) {
+        const additionalOptions = document.getElementById('additionalOptions');
+        if (isReceiving) {
+            additionalOptions.style.display = 'block';
+        } else {
+            additionalOptions.style.display = 'none';
+        }
+    }
+    window.toggleOptions = toggleOptions;
 
     // 인증코드 보내기
     sendVerificationCodeButton.addEventListener('click', async () => {
@@ -180,18 +187,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 최소 하나의 뉴스 선택 확인
-        const news1 = document.getElementById('news1').value;
         const news2 = document.getElementById('news2').value;
         const news3 = document.getElementById('news3').value;
-        if (!news1 && !news2 && !news3) {
+        if (document.querySelector('input[name="yeongdae"]:checked').value === "not_receive" && !news2 && !news3) {
             responseMessage.textContent = '적어도 하나의 소식을 선택해주세요.';
             return;
         }
 
         const subNewsNames = [];
-        if (news1) subNewsNames.push(news1);
+        const keywords = [];
+
         if (news2) subNewsNames.push(news2);
         if (news3) subNewsNames.push(news3);
+
+
+        if (document.querySelector('input[name="yeongdae"]:checked').value === "receive") {
+            subNewsNames.push("영대소식");
+            document.querySelectorAll('input[name="subNews"]:checked').forEach(checkbox => {
+                keywords.push(checkbox.value);
+            });
+        }
 
         const formData = {
             email: document.getElementById('email').value,
@@ -199,7 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
             username: document.getElementById('username').value,
             password: password,
             subNewsNames: subNewsNames,
-            verificationCode: document.getElementById('verificationCode').value
+            verificationCode: document.getElementById('verificationCode').value,
+            keywords: keywords
         };
 
         try {

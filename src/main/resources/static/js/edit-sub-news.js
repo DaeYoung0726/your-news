@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchInfoButton = document.getElementById('fetchInfoButton');
     const logoutButton = document.getElementById('logoutButton');
     const mainPageButton = document.getElementById('mainPageButton');
-    const news1Select = document.getElementById('news1');
     const news2Select = document.getElementById('news2');
     const news3Select = document.getElementById('news3');
     const updateNewsButton = document.getElementById('updateNewsButton');
@@ -45,36 +44,56 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/main.html';
     });
 
+    function toggleOptions(isReceiving) {
+        const additionalOptions = document.getElementById('additionalOptions');
+        if (isReceiving) {
+            additionalOptions.style.display = 'block';
+        } else {
+            additionalOptions.style.display = 'none';
+        }
+    }
+    window.toggleOptions = toggleOptions;
+
     // 소식 불러오기
     fetchWithAuth('/v1/news')
         .then(response => response.json())
         .then(data => {
             data.forEach(news => {
-                let option1 = document.createElement('option');
-                option1.text = news.newsName;
-                news1Select.add(option1);
+                if (news.newsName !== '영대소식') {
+                    let option2 = document.createElement('option');
+                    option2.text = news.newsName;
+                    news2Select.add(option2);
 
-                let option2 = document.createElement('option');
-                option2.text = news.newsName;
-                news2Select.add(option2);
-
-                let option3 = document.createElement('option');
-                option3.text = news.newsName;
-                news3Select.add(option3);
+                    let option3 = document.createElement('option');
+                    option3.text = news.newsName;
+                    news3Select.add(option3);
+                }
             });
         })
         .catch(error => console.error('Error fetching news options:', error));
 
     // 소식 구독 업데이트
     updateNewsButton.addEventListener('click', async () => {
-        const selectedNews1 = news1Select.value;
+
         const selectedNews2 = news2Select.value;
         const selectedNews3 = news3Select.value;
 
         const newsNames = [];
-        if (selectedNews1) newsNames.push(selectedNews1);
+        const keywords = [];
         if (selectedNews2) newsNames.push(selectedNews2);
         if (selectedNews3) newsNames.push(selectedNews3);
+
+        if (document.querySelector('input[name="yeongdae"]:checked').value === "receive") {
+            newsNames.push("영대소식");
+            document.querySelectorAll('input[name="subNews"]:checked').forEach(checkbox => {
+                keywords.push(checkbox.value);
+            });
+        }
+
+        const formData = {
+            newsNames: newsNames,
+            keywords: keywords
+        };
 
         try {
             const response = await fetchWithAuth('/v1/users/update-sub-news', {
@@ -83,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Authorization': accessToken,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(newsNames)
+                body: JSON.stringify(formData)
             });
 
 

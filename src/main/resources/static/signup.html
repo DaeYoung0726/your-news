@@ -31,6 +31,7 @@
             알림을 받기 위해서는 다음과 같이 진행하여야 합니다.
             <br>@gmail.com 사용 => 'Gmail' 어플 설치
             <br>@naver.com 사용  => '네이버 메일'어플 설치
+            <br>*'네이버'와 '네이버 메일'은 다른 어플입니다.
             <br>(편의를 위한 것이며, 이 외에도 푸시 알림을 받을 수 있는 메일이면 상관없습니다.)
         </div>
         <br>
@@ -50,17 +51,30 @@
             <br>(사용하지 않는다면 '선택하지 않음'을 선택해주세요.)
         </div>
 
-        <label for="news1">받고 싶은 소식 선택 1:</label>
-        <select id="news1" name="news1">
-            <option value="">선택하지 않음</option>
-        </select>
+        <div class="option-group">
+            <label for="yeongdae">영대소식:</label>
+            <label><input type="radio" name="yeongdae" value="receive" onclick="toggleOptions(true)"> 받기</label>
+            <label><input type="radio" name="yeongdae" value="not_receive" onclick="toggleOptions(false)"> 안 받기</label>
+        </div>
 
-        <label for="news2">받고 싶은 소식 선택 2:</label>
+        <div id="additionalOptions" class="checkbox-group">
+            <div class="notification-info">
+                소식을 받고 싶은 키워드를 선택해주세요.
+            </div>
+            <label><input type="checkbox" name="subNews" value="장학금 및 학자금 지원"> 장학금 및 학자금 지원</label>
+            <label><input type="checkbox" name="subNews" value="취업"> 취업</label>
+            <label><input type="checkbox" name="subNews" value="교육 및 강좌"> 교육 및 강좌</label>
+            <label><input type="checkbox" name="subNews" value="학생복지"> 학생복지</label>
+            <label><input type="checkbox" name="subNews" value="연구 및 프로젝트 참여"> 연구 및 프로젝트 참여</label>
+            <label><input type="checkbox" name="subNews" value="행사 및 설명회"> 행사 및 설명회</label>
+        </div>
+
+        <label for="news2">받고 싶은 소식 선택 1:</label>
         <select id="news2" name="news2">
             <option value="">선택하지 않음</option>
         </select>
 
-        <label for="news3">받고 싶은 소식 선택 3:</label>
+        <label for="news3">받고 싶은 소식 선택 2:</label>
         <select id="news3" name="news3">
             <option value="">선택하지 않음</option>
         </select>
