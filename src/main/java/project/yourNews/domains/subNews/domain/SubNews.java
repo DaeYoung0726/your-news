@@ -7,12 +7,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.yourNews.domains.keyword.entity.Keyword;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.news.domain.News;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -32,4 +36,7 @@ public class SubNews {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "news_id")
     private News news;
+
+    @OneToMany(mappedBy = "subNews")
+    private List<Keyword> keyword;
 }
