@@ -16,9 +16,9 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 import project.yourNews.common.crawling.dto.EmailRequest;
 import project.yourNews.common.crawling.strategy.CrawlingStrategy;
+import project.yourNews.common.crawling.strategy.YUNewsCrawlingStrategy;
 import project.yourNews.common.crawling.strategy.YutopiaCrawlingStrategy;
 import project.yourNews.common.mail.mail.util.MailProperties;
-import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
 
@@ -33,7 +33,6 @@ import java.util.TimeZone;
 public class CrawlingService {
 
     private final NewsService newsService;
-    private final MemberService memberService;
     private final RabbitTemplate rabbitTemplate;
     private final List<CrawlingStrategy> strategies;
     private final TaskScheduler taskScheduler;
@@ -79,25 +78,36 @@ public class CrawlingService {
     /* 페이지 크롤링 */
     private void analyzeWeb(String newsName, String newsURL, CrawlingStrategy strategy) {
         try {
-            // 해당 소식 구독한 회원의 이메일 불러오기
-            List<String> memberEmails = memberService.getMembersSubscribedToNews(newsName);
-
             // 웹 페이지 가져오기
             Document doc = Jsoup.connect(newsURL).get();
 
             // 게시글 요소 찾기
             Elements postElements = strategy.getPostElements(doc);
 
-            // 게시글 제목과 URL 출력
-            for (Element postElement : postElements) {
-                if (strategy.shouldProcessElement(postElement)) {
-                    String postTitle = strategy.extractPostTitle(postElement);
-                    String postURL = strategy.extractPostURL(postElement);
+            List<String> memberEmails = List.of();
+            boolean isYUNews = strategy instanceof YUNewsCrawlingStrategy;
 
-                    if (!strategy.isExisted(postURL)) {
-                        sendNewsToMember(memberEmails, newsName, postTitle, postURL);
-                        // 새로운 게시글 URL을 목록에 추가
-                        strategy.saveURL(postURL);
+            if (!postElements.isEmpty()) {
+                // 해당 소식 구독한 회원의 이메일 불러오기
+                if (!isYUNews)
+                    memberEmails = strategy.getSubscribedMembers(newsName);
+
+                // 게시글 제목과 URL 출력
+                for (Element postElement : postElements) {
+                    if (strategy.shouldProcessElement(postElement)) {
+                        String postTitle = strategy.extractPostTitle(postElement);
+                        String postURL = strategy.extractPostURL(postElement);
+
+                        if (isYUNews) {
+                            ((YUNewsCrawlingStrategy) strategy).setCurrentPostElement(postTitle);
+                            memberEmails = strategy.getSubscribedMembers(newsName);
+                        }
+
+                        if (!strategy.isExisted(postURL)) {
+                            sendNewsToMember(memberEmails, newsName, postTitle, postURL);
+                            // 새로운 게시글 URL을 목록에 추가
+                            strategy.saveURL(postURL);
+                        }
                     }
                 }
             }

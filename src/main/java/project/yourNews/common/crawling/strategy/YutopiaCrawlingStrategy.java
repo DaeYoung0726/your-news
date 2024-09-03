@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
+import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.urlHistory.service.URLHistoryService;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class YutopiaCrawlingStrategy implements CrawlingStrategy {
 
+    private final MemberService memberService;
     private final URLHistoryService urlHistoryService;
 
     private static final String NEWS_NAME = "YuTopia(비교과)";
@@ -49,6 +51,10 @@ public class YutopiaCrawlingStrategy implements CrawlingStrategy {
     @Override
     public String extractPostURL(Element postElement) {
         return postElement.selectFirst("a").absUrl("href");
+    }
+
+    public List<String> getSubscribedMembers(String newsName) {
+        return memberService.getMembersSubscribedToNews(newsName);
     }
 
     @Override

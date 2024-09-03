@@ -5,13 +5,19 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
+import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.urlHistory.service.URLHistoryService;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class DefaultCrawlingStrategy implements CrawlingStrategy {
 
+    private final MemberService memberService;
     private final URLHistoryService urlHistoryService;
+
+    private static final List<String> EXCLUDED_NEWS_NAME = List.of("YuTopia(비교과)", "영대소식");
 
     @Override
     public String getScheduledTime() {
@@ -20,7 +26,7 @@ public class DefaultCrawlingStrategy implements CrawlingStrategy {
 
     @Override
     public boolean canHandle(String newsName) {
-        return true;  // 기본 전략, 모든 뉴스 처리
+        return !EXCLUDED_NEWS_NAME.contains(newsName);  // 기본 전략, 모든 뉴스 처리
     }
 
     @Override
@@ -46,6 +52,10 @@ public class DefaultCrawlingStrategy implements CrawlingStrategy {
     public String extractPostURL(Element postElement) {
         Element titleElement = postElement.selectFirst("div.b-title-box > a");
         return titleElement.absUrl("href");
+    }
+
+    public List<String> getSubscribedMembers(String newsName) {
+        return memberService.getMembersSubscribedToNews(newsName);
     }
 
     @Override
