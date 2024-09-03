@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             usernameInput.value = data.username;
             emailInput.value = data.email;
             nicknameInput.value = data.nickname;
-            subNewsInput.value = data.subNews.map(news => news.news).join(', ');
+            subNewsInput.innerHTML = data.subNews.map(news => news.news.replace(/\\n/g, '<br>'));
         })
         .catch(error => console.error('Error fetching user info:', error));
 
