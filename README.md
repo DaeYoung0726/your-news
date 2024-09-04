@@ -1,6 +1,11 @@
 ## ✉️ Your News
 영남대학교 공지사항 및 학과 공지사항에 대하여 새로운 글을 이메일로 보내주는 서비스입니다.
 
+## Update
+ - 2024.06.12. - 초기 서비스 완성
+ - 2024.08.29. - HTML 구조에 따른 팩토리 메서드 설정 및 크롤링 수정
+ - 2024.09.03. - 키워드를 통한 알림 추가 (ChatGPT API 사용) 
+
 ### 🚀 Tech Stacks
  - Language: Java
  - Build tool: Gradle
@@ -12,7 +17,9 @@
 ### 🏗️ Architecture
 
 ### 🔄 System Flow
-![image](https://github.com/user-attachments/assets/6888d914-0287-462f-ae24-742cb66fd054)
+![image](https://github.com/user-attachments/assets/fc3dd12f-e803-4722-88fc-29c87766bf29)
+
+
 
 ### 🔧 CD Flow
 ![image](https://github.com/user-attachments/assets/ffebe0cb-1668-48e5-a94b-6df12a3659ff)
