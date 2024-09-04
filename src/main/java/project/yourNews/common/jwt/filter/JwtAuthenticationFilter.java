@@ -32,8 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
     private final TokenBlackListService tokenBlackListService;
-    private static final String SPECIAL_CHARACTERS_PATTERN = "[`':;|~!@#$%()^&*+=?/{}\\[\\]\\\"\\\\\"]+$";
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -68,7 +66,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String resolveAccessToken(HttpServletResponse response, String accessTokenGetHeader) throws IOException {
         String accessToken = accessTokenGetHeader.substring(TOKEN_PREFIX.length()).trim();
 
-        accessToken = accessToken.replaceAll(SPECIAL_CHARACTERS_PATTERN, "");   // 토큰 끝 특수문자 제거
 
         if(tokenBlackListService.existsBlackListCheck(accessToken)) {       // AccessToken이 블랙리스트에 있는지.
             handleExceptionToken(response, ErrorCode.BLACKLIST_ACCESS_TOKEN);
@@ -82,7 +79,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return null;
         }
 
-        if (!"access".equals(jwtUtil.getCategory(accessToken))) {         // jwt에 담긴 category를 통해 access 가 맞는지 확인.
+        if (!jwtUtil.isBase64URL(accessToken) || !"access".equals(jwtUtil.getCategory(accessToken))) {
             handleExceptionToken(response, ErrorCode.INVALID_ACCESS_TOKEN);
             return null;
         }

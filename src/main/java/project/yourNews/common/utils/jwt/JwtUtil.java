@@ -91,4 +91,8 @@ public class JwtUtil {
     public boolean isExpired(String token) {
         return parseClaims(token).getExpiration().before(new Date());
     }
+
+    public boolean isBase64URL(String token) {
+        return token.matches("^[0-9A-Za-z-_.]+$");
+    }
 }
