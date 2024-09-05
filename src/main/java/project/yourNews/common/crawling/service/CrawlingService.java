@@ -98,12 +98,12 @@ public class CrawlingService {
                         String postTitle = strategy.extractPostTitle(postElement);
                         String postURL = strategy.extractPostURL(postElement);
 
-                        if (isYUNews) {
-                            ((YUNewsCrawlingStrategy) strategy).setCurrentPostElement(postTitle);
-                            memberEmails = strategy.getSubscribedMembers(newsName);
-                        }
-
                         if (!strategy.isExisted(postURL)) {
+
+                            if (isYUNews) {
+                                ((YUNewsCrawlingStrategy) strategy).setCurrentPostElement(postTitle);
+                                memberEmails = strategy.getSubscribedMembers(newsName);
+                            }
                             sendNewsToMember(memberEmails, newsName, postTitle, postURL);
                             // 새로운 게시글 URL을 목록에 추가
                             strategy.saveURL(postURL);
