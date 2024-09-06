@@ -6,11 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import project.yourNews.domains.keyword.entity.Keyword;
 
-import java.util.List;
-
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 
     @Modifying
-    @Query("delete from Keyword k where k.id in :ids")
-    void deleteAllKeywordByIdInQuery(@Param("ids") List<Long> ids);
+    @Query("DELETE FROM Keyword k WHERE k.subNews.id IN (SELECT s.id FROM SubNews s WHERE s.member.id = :memberId)")
+    void deleteByMemberId(@Param("memberId") Long memberId);
+
+    @Modifying
+    @Query("DELETE FROM Keyword k WHERE k.subNews.id IN (SELECT s.id FROM SubNews s WHERE s.news.id = :newsId)")
+    void deleteByNewsId(@Param("newsId") Long newsId);
+
+    @Modifying
+    @Query("DELETE FROM Keyword k WHERE k.subNews.id = :subNewsId")
+    void deleteBySubNewsId(@Param("subNewsId") Long subNewsId);
 }

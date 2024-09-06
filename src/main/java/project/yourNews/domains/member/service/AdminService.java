@@ -61,17 +61,10 @@ public class AdminService {
 
     /* 사용자 탈퇴 */
     @Transactional
-    public void dropMember(String email) {
+    public void dropMember(Long memberId) {
 
-        Member findMember = memberRepository.findByEmail(email).orElseThrow(() ->
-                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        associatedEntityService.deleteAllLikeByMember(findMember);      // 좋아요 연관관계 삭제
-        associatedEntityService.deleteAllPostByMember(findMember);      // 게시글 연관관계 삭제
-        associatedEntityService.deleteAllSubNewsByMember(findMember);   // 구독 소식 연관관계 삭제
-
-        stibeeService.deleteSubscriber(findMember.getEmail());  //  Stibee 구독 삭제
-
-        memberRepository.delete(findMember);
+        associatedEntityService.deleteAllByMemberId(memberId);
+        stibeeService.deleteSubscriber(memberRepository.findEmailByMemberId(memberId));  //  Stibee 구독 삭제
+        memberRepository.deleteById(memberId);
     }
 }

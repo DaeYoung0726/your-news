@@ -49,11 +49,7 @@ public class AdminNewsService {
     @Transactional
     public void deleteNews(Long newsId) {
 
-        News findNews = newsRepository.findById(newsId).orElseThrow(() ->
-                new CustomException(ErrorCode.NEWS_NOT_FOUND));
-
-        associatedEntityService.deleteAllSubNewsByNews(findNews);   // 구독 소식 연관관계 삭제
-
-        newsRepository.delete(findNews);
+        associatedEntityService.deleteAllByNewsId(newsId);
+        newsRepository.deleteById(newsId);
     }
 }

@@ -65,12 +65,7 @@ public class SubNewsService {
         Member member = memberRepository.findByUsername(username).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // 사용자가 구독한 소식 삭제
-        for (SubNews sub: member.getSubNews()) {
-            associatedEntityService.deleteAllKeywordBySubNews(sub);
-        }
-
-        subNewsRepository.deleteAllByMember(member);
+        associatedEntityService.deleteAllSubNewsByMemberId(member.getId());
 
         for (String newsName: updateDto.getNewsNames()) {
             SubNews savedSubNews = this.subscribeToNews(member, newsName);

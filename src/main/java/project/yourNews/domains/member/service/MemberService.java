@@ -68,9 +68,9 @@ public class MemberService {
 
     /* 멤버 정보 불러오기 */
     @Transactional(readOnly = true)
-    public MemberResponseDto readMember(String username) {
+    public MemberResponseDto readMember(Long memberId) {
 
-        Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         List<String> keywords = subNewsService.getSubscribedKeyword(findMember.getId());
@@ -80,9 +80,9 @@ public class MemberService {
 
     /* 멤버 정보 업데이트 */
     @Transactional
-    public void updateMember(MemberUpdateDto memberUpdateDto, String username) {
+    public void updateMember(MemberUpdateDto memberUpdateDto, Long memberId) {
 
-        Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
+        Member findMember = memberRepository.findById(memberId).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         if (!passwordEncoder.matches(memberUpdateDto.getCurrentPassword(), findMember.getPassword())) {
@@ -94,18 +94,11 @@ public class MemberService {
 
     /* 멤버 삭제하기 */
     @Transactional
-    public void deleteMember(String username) {
+    public void deleteMember(Long memberId) {
 
-        Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        associatedEntityService.deleteAllLikeByMember(findMember);      // 좋아요 연관관계 삭제
-        associatedEntityService.deleteAllPostByMember(findMember);      // 게시글 연관관계 삭제
-        associatedEntityService.deleteAllSubNewsByMember(findMember);   // 구독 소식 연관관계 삭제
-
-        stibeeService.deleteSubscriber(findMember.getEmail());  //  Stibee 구독 삭제
-
-        memberRepository.delete(findMember);
+        associatedEntityService.deleteAllByMemberId(memberId);
+        stibeeService.deleteSubscriber(memberRepository.findEmailByMemberId(memberId));  //  Stibee 구독 삭제
+        memberRepository.deleteById(memberId);
     }
 
     /* 특정 소식 구독한 사용자 가져오기 */

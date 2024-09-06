@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,13 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.utils.api.ApiUtil;
 import project.yourNews.domains.bannedEmail.service.BannedEmailService;
 import project.yourNews.domains.member.dto.MemberUpdateDto;
 import project.yourNews.domains.member.dto.SignUpDto;
 import project.yourNews.domains.member.service.MemberService;
-import project.yourNews.common.exception.error.ErrorCode;
-import project.yourNews.common.exception.CustomException;
-import project.yourNews.common.utils.api.ApiUtil;
+import project.yourNews.security.auth.CustomDetails;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,25 +43,25 @@ public class MemberController {
 
     /* 회원 정보 불러오기 (개인정보) */
     @GetMapping
-    public ResponseEntity<?> readMember(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> readMember(@AuthenticationPrincipal CustomDetails userDetails) {
 
-        return ResponseEntity.ok(memberService.readMember(userDetails.getUsername()));
+        return ResponseEntity.ok(memberService.readMember(userDetails.getUserId()));
     }
 
     /* 회원 정보 업데이트 */
     @PutMapping
     public ResponseEntity<?> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto,
-                                               @AuthenticationPrincipal UserDetails userDetails) {
+                                               @AuthenticationPrincipal CustomDetails userDetails) {
 
-        memberService.updateMember(memberUpdateDto, userDetails.getUsername());
+        memberService.updateMember(memberUpdateDto, userDetails.getUserId());
         return ResponseEntity.ok(ApiUtil.from("회원 정보 업데이트 성공."));
     }
 
     /* 회원 정보 삭제 */
     @DeleteMapping
-    public ResponseEntity<?> deleteMember(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> deleteMember(@AuthenticationPrincipal CustomDetails userDetails) {
 
-        memberService.deleteMember(userDetails.getUsername());
+        memberService.deleteMember(userDetails.getUserId());
         return ResponseEntity.ok(ApiUtil.from("회원 정보 삭제 성공."));
     }
 

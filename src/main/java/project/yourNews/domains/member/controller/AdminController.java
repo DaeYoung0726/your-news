@@ -51,7 +51,7 @@ public class AdminController {
     public ResponseEntity<?> dropMember(@RequestBody BannedEmailRequestDto bannedEmailDto) {
 
         bannedEmailService.setBannedEmail(bannedEmailDto);
-        adminService.dropMember(bannedEmailDto.getEmail());
+        adminService.dropMember(bannedEmailDto.getId());
         return ResponseEntity.ok(ApiUtil.from("회원 탈퇴 성공."));
     }
 

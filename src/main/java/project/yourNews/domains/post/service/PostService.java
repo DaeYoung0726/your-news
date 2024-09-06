@@ -85,11 +85,7 @@ public class PostService {
     @VerifyAuthentication
     public void deletePost(Long postId) {
 
-        Post findPost = postRepository.findById(postId).orElseThrow(() ->
-                new CustomException(ErrorCode.POST_NOT_FOUND));
-
-        associatedEntityService.deleteAllLikeByPost(findPost);  // 좋아요 연관관계 삭제
-
-        postRepository.delete(findPost);
+        associatedEntityService.deleteAllByPostId(postId);  // 좋아요 연관관계 삭제
+        postRepository.deleteById(postId);
     }
 }

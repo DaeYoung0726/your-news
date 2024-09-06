@@ -4,12 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.domains.like.domain.Like;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.post.domain.Post;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
@@ -18,6 +16,14 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     boolean existsByMemberAndPost(Member member, Post post);
 
     @Modifying
-    @Query("delete from Likes l where l.id in :ids")
-    void deleteAllLikeByIdInQuery(@Param("ids") List<Long> ids);
+    @Query("DELETE FROM Likes l WHERE l.member.id = :memberId")
+    void deleteByMemberId(@Param("memberId") Long memberId);
+
+    @Modifying
+    @Query("DELETE FROM Likes l WHERE l.post.id IN (SELECT p.id FROM Post p WHERE p.writer.id = :writerId)")
+    void deletePostLikeByWriterId(@Param("writerId") Long writerId);
+
+    @Modifying
+    @Query("DELETE FROM Likes l WHERE l.post.id = :postId")
+    void deleteByPostId(@Param("postId") Long postId);
 }
