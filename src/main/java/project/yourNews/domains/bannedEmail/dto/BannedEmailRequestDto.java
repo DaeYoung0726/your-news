@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class BannedEmailRequestDto {
 
+    private Long id;
     private String email;
     private String reason;
     private LocalDateTime bannedAt;

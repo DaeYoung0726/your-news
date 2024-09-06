@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const memberId = urlParams.get('id');
     const memberNickname = urlParams.get('nickname');
+    let id;
 
     // 사용자 정보 불러오기
     let fetchUrl;
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
         .then(response => response.json())
         .then(data => {
+            id = data.id;
             usernameInput.value = data.username;
             emailInput.value = data.email;
             nicknameInput.value = data.nickname;
@@ -118,6 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        id: id,
                         email: email,
                         reason: banReason
                     })
