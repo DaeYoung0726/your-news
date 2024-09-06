@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import project.yourNews.domains.member.domain.Member;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,6 +36,10 @@ public class CustomDetails implements UserDetails {
     @Override
     public String getUsername() {
         return member.getUsername();
+    }
+
+    public Long getUserId() {
+        return member.getId();
     }
 
     @Override
