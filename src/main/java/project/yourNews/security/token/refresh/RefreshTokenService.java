@@ -53,8 +53,9 @@ public class RefreshTokenService {
 
         String username = jwtUtil.getUsername(refreshToken);
         String role = jwtUtil.getRole(refreshToken);
+        Long userId = jwtUtil.getUserId(refreshToken);
 
-        return jwtUtil.generateAccessToken(role, username);      // 재발급
+        return jwtUtil.generateAccessToken(role, username, userId);      // 재발급
     }
 
     /* Refresh token rotation(RTR) 사용 */
@@ -64,8 +65,9 @@ public class RefreshTokenService {
 
         String username = jwtUtil.getUsername(refreshToken);
         String role = jwtUtil.getRole(refreshToken);
+        Long userId = jwtUtil.getUserId(refreshToken);
 
-        String refreshTokenReIssue = jwtUtil.generateRefreshToken(role, username);
+        String refreshTokenReIssue = jwtUtil.generateRefreshToken(role, username, userId);
 
         this.saveRefreshToken(username, refreshTokenReIssue);
 

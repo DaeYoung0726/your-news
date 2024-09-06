@@ -45,8 +45,10 @@ public class AuthService {
 
         String role = String.valueOf(findMember.getRole());
         String username = findMember.getUsername();
-        String accessToken = TOKEN_PREFIX + jwtUtil.generateAccessToken(role, username);
-        String refreshToken = jwtUtil.generateRefreshToken(role, username);
+        Long userId = findMember.getId();
+
+        String accessToken = TOKEN_PREFIX + jwtUtil.generateAccessToken(role, username, userId);
+        String refreshToken = jwtUtil.generateRefreshToken(role, username, userId);
 
         refreshTokenService.saveRefreshToken(username, refreshToken);
 
