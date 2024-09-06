@@ -181,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (password !== confirmPassword) {
             passwordError.textContent = '비밀번호가 일치하지 않습니다.';
+            alert('비밀번호가 일치하지 않습니다.');
             return;
         } else {
             passwordError.textContent = '';
@@ -191,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const news3 = document.getElementById('news3').value;
         if (document.querySelector('input[name="yeongdae"]:checked').value === "not_receive" && !news2 && !news3) {
             responseMessage.textContent = '적어도 하나의 소식을 선택해주세요.';
+            alert('적어도 하나의 소식을 선택해주세요.');
             return;
         }
 
