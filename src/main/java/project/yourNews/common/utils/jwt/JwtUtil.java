@@ -31,22 +31,22 @@ public class JwtUtil {
     }
 
     /* access Token 발급 */
-    public String generateAccessToken(String role, String username) {
+    public String generateAccessToken(String role, String username, Long userId) {
 
-        return createJwt(createClaims(role, "access"), username, accessExpiration);
+        return createJwt(createClaims(role, userId), username, accessExpiration);
     }
 
     /* refresh Token 발급 */
-    public String generateRefreshToken(String role, String username) {
+    public String generateRefreshToken(String role, String username, Long userId) {
 
-        return createJwt(createClaims(role, "refresh"), username, refreshExpiration);
+        return createJwt(createClaims(role, userId), username, refreshExpiration);
     }
 
     /* claims 생성 */
-    private Map<String, Object> createClaims(String role, String category) {
+    private Map<String, Object> createClaims(String role, Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
-        claims.put("category", category);
+        claims.put("userId", userId);
         return claims;
     }
 
@@ -83,8 +83,8 @@ public class JwtUtil {
     }
 
     /* 토큰(claim)에 저장된 category가 refresh, access인지 확인 */
-    public String getCategory(String token) {
-        return parseClaims(token).get("category", String.class);
+    public Long getUserId(String token) {
+        return parseClaims(token).get("userId", Long.class);
     }
 
     /* 토큰에 지정한 만료 시간 확인*/

@@ -67,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = accessTokenGetHeader.substring(TOKEN_PREFIX.length()).trim();
 
 
-        if(tokenBlackListService.existsBlackListCheck(accessToken)) {       // AccessToken이 블랙리스트에 있는지.
+        if (tokenBlackListService.existsBlackListCheck(accessToken)) {       // AccessToken이 블랙리스트에 있는지.
             handleExceptionToken(response, ErrorCode.BLACKLIST_ACCESS_TOKEN);
             return null;
         }
@@ -79,7 +79,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return null;
         }
 
-        if (!jwtUtil.isBase64URL(accessToken) || !"access".equals(jwtUtil.getCategory(accessToken))) {
+        if (!jwtUtil.isBase64URL(accessToken)) {
             handleExceptionToken(response, ErrorCode.INVALID_ACCESS_TOKEN);
             return null;
         }
