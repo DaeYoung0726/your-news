@@ -34,22 +34,21 @@ public class NewsMailService {
 
     /* 메일 보내기 */
     public void sendMail(EmailRequest emailRequest) {
-        try {
-            for (String email : emailRequest.getSubscriber()) {
+        for (String email : emailRequest.getSubscriber()) {
+            try {
                 String emailUsername = email.split("@")[0];
                 String emailContent = "사용자 : " + emailUsername + "<br>" + emailRequest.getContent() +
                         "<br><p><small>소식을 그만 받고 싶으신가요? <a href=\"" + unsubscribeLink + "\">구독 취소</a></small></p>";
                 sendStibeeEmail(
                         StibeeRequest.builder()
-                        .subscriber(email)
-                        .title(emailRequest.getTitle())
-                        .content(emailContent)
-                        .build()
+                                .subscriber(email)
+                                .title(emailRequest.getTitle())
+                                .content(emailContent)
+                                .build()
                 );
+            } catch (Exception e) {
+                log.error("Failed to send email to {}: {}", email, e.getMessage(), e);
             }
-
-        } catch (Exception e) {
-            log.error("Failed to send email", e);
         }
     }
 

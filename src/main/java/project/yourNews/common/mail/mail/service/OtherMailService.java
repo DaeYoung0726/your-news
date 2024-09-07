@@ -43,7 +43,7 @@ public class OtherMailService {
                 case ASK -> getAskMessage(email, content);
             }
         } catch (Exception e) {
-            log.error("Failed to send email", e);
+            log.error("Failed to send email to {}: {}", email, e.getMessage(), e);
         }
     }
 
