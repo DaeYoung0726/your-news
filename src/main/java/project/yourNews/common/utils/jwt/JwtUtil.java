@@ -2,11 +2,17 @@ package project.yourNews.common.utils.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoder;
+import io.jsonwebtoken.io.Encoder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import project.yourNews.common.utils.jwt.customBase64Url.CustomBase64UrlDecoder;
+import project.yourNews.common.utils.jwt.customBase64Url.CustomBase64UrlEncoder;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +25,9 @@ public class JwtUtil {
     private final long accessExpiration;
     private final long refreshExpiration;
     private final String issuer;
+
+    private final Encoder<OutputStream, OutputStream> base64UrlEncoder = new CustomBase64UrlEncoder();
+    private final Decoder<InputStream, InputStream> base64UrlDecoder = new CustomBase64UrlDecoder();
 
     public JwtUtil(@Value("${spring.jwt.secret}") String SECRET_KEY,
                    @Value("${spring.jwt.access-expiration}") long accessExpiration,
@@ -56,17 +65,19 @@ public class JwtUtil {
         return Jwts.builder()
                 .subject(subject)
                 .claims(claims)
+                .b64Url(base64UrlEncoder)
                 .issuer(issuer)
-                .issuedAt(new Date(System.currentTimeMillis()))     // JWT의 발행 시간을 설정
-                .expiration(new Date(System.currentTimeMillis() + expirationTime))  // 만료 시간 설정.
-                .signWith(secretKey)        //  JWT에 서명을 추가. JWT의 무결성을 보장하기 위해 사용.
-                .compact();     // 설정된 정보를 기반으로 JWT를 생성하고 문자열로 직렬화.
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(secretKey)
+                .compact();
     }
 
     /* 토큰 정보 불러오기 */
     private Claims parseClaims(String token){
         return Jwts.parser()
                 .verifyWith(secretKey)
+                .b64Url(base64UrlDecoder)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
