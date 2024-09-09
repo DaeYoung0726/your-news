@@ -93,7 +93,7 @@ public class JwtUtil {
         return parseClaims(token).get("role", String.class);
     }
 
-    /* 토큰(claim)에 저장된 category가 refresh, access인지 확인 */
+    /* 토큰(claim)에 저장된 id 가져오기 */
     public Long getUserId(String token) {
         return parseClaims(token).get("userId", Long.class);
     }
