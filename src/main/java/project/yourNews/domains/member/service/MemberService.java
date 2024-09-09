@@ -126,12 +126,6 @@ public class MemberService {
 
         String email = findMember.getEmail();
 
-        // Stibee 구독 처리 과정
-        if (status)         // 수신 허용
-            stibeeService.subscribe(email);
-        else                // 수신 거부
-            stibeeService.deleteSubscriber(email);
-
         findMember.updateSubStatus(status);
     }
 
