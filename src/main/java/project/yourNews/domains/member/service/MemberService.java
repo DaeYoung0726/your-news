@@ -121,12 +121,7 @@ public class MemberService {
     @Transactional
     public void updateSubStatus(String username, boolean status) {
 
-        Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        String email = findMember.getEmail();
-
-        findMember.updateSubStatus(status);
+        memberRepository.updateSubStatusByUsername(username, status);
     }
 
     /* 아이디 중복 확인 */

@@ -75,9 +75,4 @@ public class Member extends BaseTimeEntity {
     public void updatePass(String password) {
         this.password = password;
     }
-
-    /* 구독 상태 업데이트 */
-    public void updateSubStatus(boolean status) {
-        this.subStatus = status;
-    }
 }

@@ -1,6 +1,7 @@
 package project.yourNews.domains.member.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import project.yourNews.domains.member.domain.Member;
@@ -22,4 +23,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m.email FROM Member m WHERE m.id = :memberId")
     String findEmailByMemberId(@Param("memberId") Long memberId);
+
+    @Modifying
+    @Query("update Member m set m.subStatus = :subStatus where m.username = :username")
+    void updateSubStatusByUsername(@Param("username") String username, @Param("subStatus") boolean subStatus);
 }
