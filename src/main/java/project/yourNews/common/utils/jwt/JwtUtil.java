@@ -14,6 +14,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,6 +85,13 @@ public class JwtUtil {
                 .getPayload();
     }
 
+    /* 토큰의 만료시간 가져오기 */
+    public LocalDateTime getExpiryDate(String token) {
+        return parseClaims(token).getExpiration().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
     /* 토큰(claim)에서 username 가져오기 */
     public String getUsername(String token) {
         return parseClaims(token).getSubject();
@@ -103,7 +112,4 @@ public class JwtUtil {
         return parseClaims(token).getExpiration().before(new Date());
     }
 
-    public boolean isBase64URL(String token) {
-        return token.matches("^[0-9A-Za-z-_.]+$");
-    }
 }

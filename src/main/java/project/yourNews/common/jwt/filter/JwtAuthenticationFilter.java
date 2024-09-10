@@ -79,10 +79,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return null;
         }
 
-        if (!jwtUtil.isBase64URL(accessToken)) {
-            handleExceptionToken(response, ErrorCode.INVALID_ACCESS_TOKEN);
-            return null;
-        }
         return accessToken;
     }
 

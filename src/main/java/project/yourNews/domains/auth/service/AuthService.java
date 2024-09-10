@@ -17,6 +17,8 @@ import project.yourNews.security.token.tokenBlackList.TokenBlackListService;
 import project.yourNews.common.utils.cookie.CookieUtil;
 import project.yourNews.common.utils.jwt.JwtUtil;
 
+import java.time.LocalDateTime;
+
 import static project.yourNews.common.utils.jwt.JwtProperties.REFRESH_COOKIE_VALUE;
 import static project.yourNews.common.utils.jwt.JwtProperties.TOKEN_PREFIX;
 
@@ -58,10 +60,10 @@ public class AuthService {
     /* 로그아웃 메서드 */
     public void logout(String accessTokenHeader, String refreshToken, HttpServletResponse response) {
         String accessToken = accessTokenHeader.substring(TOKEN_PREFIX.length()).trim();
+        LocalDateTime accessTokenExpireAt = jwtUtil.getExpiryDate(accessToken);
 
         cookieUtil.deleteCookie(REFRESH_COOKIE_VALUE, response);    // 쿠키값 삭제
-
-        tokenBlackListService.saveBlackList(accessToken);           // accessToken 블랙리스트에 담기
+        tokenBlackListService.saveBlackList(accessToken, accessTokenExpireAt);           // accessToken 블랙리스트에 담기
         refreshTokenService.deleteRefreshToken(refreshToken);       // 로그아웃 시 redis에서 refreshToken 삭제
     }
 
