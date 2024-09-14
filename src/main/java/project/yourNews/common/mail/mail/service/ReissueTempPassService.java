@@ -1,14 +1,15 @@
 package project.yourNews.common.mail.mail.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.mail.mail.service.strategy.MailStrategy;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
-import project.yourNews.common.exception.error.ErrorCode;
-import project.yourNews.common.exception.CustomException;
-import project.yourNews.common.mail.mail.MailType;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -21,6 +22,9 @@ public class ReissueTempPassService {
     private final MemberRepository memberRepository;
     private final OtherMailService otherMailService;
     private final PasswordEncoder passwordEncoder;
+    @Qualifier("passMailStrategy")
+    private final MailStrategy passMailStrategy;
+
     private static final String PASS_CONTAINS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     /* 임시 비밀번호 설정 후 메일로 보내기 */
@@ -34,7 +38,8 @@ public class ReissueTempPassService {
 
         member.updatePass(passwordEncoder.encode(tempPass));
 
-        otherMailService.sendMail(email, tempPass, MailType.PASS);
+        passMailStrategy.setReceiver(email);
+        otherMailService.sendMail(email, tempPass, passMailStrategy);
     }
 
     /* 임시 비밀번호 발급 */

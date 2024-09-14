@@ -1,12 +1,13 @@
 package project.yourNews.common.mail.mail.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import project.yourNews.domains.member.repository.MemberRepository;
-import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.exception.CustomException;
-import project.yourNews.common.mail.mail.MailType;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.mail.mail.service.strategy.MailStrategy;
 import project.yourNews.common.utils.redis.RedisUtil;
+import project.yourNews.domains.member.repository.MemberRepository;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -23,6 +24,9 @@ public class CodeService {
     private final MemberRepository memberRepository;
     private final OtherMailService otherMailService;
     private final RedisUtil redisUtil;
+    @Qualifier("codeMailStrategy")
+    private final MailStrategy codeMailStrategy;
+
     private static final int RESEND_THRESHOLD_SECONDS = 2 * 60; // 2분을 초로 환산
 
     /* 회원가입 인증번호 확인 메서드. */
@@ -38,7 +42,8 @@ public class CodeService {
 
         String authCode = createCode();
 
-        otherMailService.sendMail(email, authCode, MailType.CODE);
+        codeMailStrategy.setReceiver(email);
+        otherMailService.sendMail(email, authCode, codeMailStrategy);
 
         String key = CODE_KEY_PREFIX + email;
         redisUtil.set(key, authCode);
