@@ -46,12 +46,7 @@ public class LikeService {
     @Transactional
     public void unLikePost(String username, Long postId) {
 
-        Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
-                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-        Post findPost = postRepository.findById(postId).orElseThrow(() ->
-                new CustomException(ErrorCode.POST_NOT_FOUND));
-
-        Like findLike = likeRepository.findByMemberAndPost(findMember, findPost).orElseThrow(() ->
+        Like findLike = likeRepository.findByMember_UsernameAndPost_Id(username, postId).orElseThrow(() ->
                 new CustomException(ErrorCode.LIKE_NOT_FOUND));
 
         likeRepository.delete(findLike);

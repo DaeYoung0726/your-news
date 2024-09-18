@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    Optional<Like> findByMemberAndPost(Member member, Post post);
+    Optional<Like> findByMember_UsernameAndPost_Id(String username, Long postId);
     boolean existsByMemberAndPost(Member member, Post post);
 
     @Modifying
