@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import project.yourNews.domains.common.entity.BaseTimeEntity;
 import project.yourNews.domains.like.domain.Like;
 import project.yourNews.domains.post.domain.Post;
@@ -25,6 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DynamicUpdate
 @Entity
 public class Member extends BaseTimeEntity {
 
