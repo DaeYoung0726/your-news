@@ -1,4 +1,4 @@
-package project.yourNews.common.utils.jwt;
+package project.yourNews.domains.auth.helper;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import project.yourNews.common.exception.CustomException;
 import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.utils.cookie.CookieUtil;
+import project.yourNews.common.utils.jwt.JwtUtil;
 import project.yourNews.domains.auth.dto.TokenDto;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.security.token.refresh.RefreshTokenService;

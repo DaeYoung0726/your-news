@@ -5,21 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.domains.auth.helper.JwtHelper;
 import project.yourNews.domains.auth.dto.LoginDto;
 import project.yourNews.domains.auth.dto.TokenDto;
 import project.yourNews.domains.auth.dto.UserRoleDto;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
-import project.yourNews.common.exception.error.ErrorCode;
-import project.yourNews.common.exception.CustomException;
-import project.yourNews.security.token.refresh.RefreshTokenService;
-import project.yourNews.security.token.tokenBlackList.TokenBlackListService;
-import project.yourNews.common.utils.cookie.CookieUtil;
-import project.yourNews.common.utils.jwt.JwtUtil;
 
-import java.time.LocalDateTime;
-
-import static project.yourNews.common.utils.jwt.JwtProperties.REFRESH_COOKIE_VALUE;
 import static project.yourNews.common.utils.jwt.JwtProperties.TOKEN_PREFIX;
 
 @Service
@@ -28,11 +22,8 @@ import static project.yourNews.common.utils.jwt.JwtProperties.TOKEN_PREFIX;
 public class AuthService {
 
     private final MemberRepository memberRepository;
-    private final RefreshTokenService refreshTokenService;
-    private final TokenBlackListService tokenBlackListService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
-    private final CookieUtil cookieUtil;
+    private final JwtHelper jwtHelper;
 
     /* 로그인 메서드 */
     public TokenDto login(LoginDto loginDto) {
@@ -45,38 +36,20 @@ public class AuthService {
             throw new CustomException(ErrorCode.USER_INVALID_PASSWORD);
         }
 
-        String role = String.valueOf(findMember.getRole());
-        String username = findMember.getUsername();
-        Long userId = findMember.getId();
-
-        String accessToken = TOKEN_PREFIX + jwtUtil.generateAccessToken(role, username, userId);
-        String refreshToken = jwtUtil.generateRefreshToken(role, username, userId);
-
-        refreshTokenService.saveRefreshToken(username, refreshToken);
-
-        return new TokenDto(accessToken, refreshToken);
+        return jwtHelper.createToken(findMember);
     }
 
     /* 로그아웃 메서드 */
     public void logout(String accessTokenHeader, String refreshToken, HttpServletResponse response) {
-        String accessToken = accessTokenHeader.substring(TOKEN_PREFIX.length()).trim();
-        LocalDateTime accessTokenExpireAt = jwtUtil.getExpiryDate(accessToken);
 
-        cookieUtil.deleteCookie(REFRESH_COOKIE_VALUE, response);    // 쿠키값 삭제
-        tokenBlackListService.saveBlackList(accessToken, accessTokenExpireAt);           // accessToken 블랙리스트에 담기
-        refreshTokenService.deleteRefreshToken(refreshToken);       // 로그아웃 시 redis에서 refreshToken 삭제
+        String accessToken = accessTokenHeader.substring(TOKEN_PREFIX.length()).trim();
+        jwtHelper.removeToken(accessToken, refreshToken, response);
     }
 
     /* access 토큰 재발급 */
-    public TokenDto reissueAccessToken(String refreshTokenInCookie) {
+    public TokenDto reissueAccessToken(String refreshToken) {
 
-        String refreshToken = refreshTokenService.findRefreshToken(refreshTokenInCookie);
-        String accessTokenReIssue = TOKEN_PREFIX + refreshTokenService.accessTokenReIssue(refreshToken);
-
-        // Refresh token rotation(RTR) 사용
-        String refreshTokenReIssue = refreshTokenService.refreshTokenReIssue(refreshToken);
-
-        return new TokenDto(accessTokenReIssue, refreshTokenReIssue);
+        return jwtHelper.reissueToken(refreshToken);
     }
 
     /* 비밀번호 확인 */
@@ -90,7 +63,6 @@ public class AuthService {
 
         String splitToken = accessToken.substring(TOKEN_PREFIX.length()).trim();
 
-        String role = jwtUtil.getRole(splitToken);
-        return new UserRoleDto(role);
+        return new UserRoleDto(jwtHelper.getRole(splitToken));
     }
 }
