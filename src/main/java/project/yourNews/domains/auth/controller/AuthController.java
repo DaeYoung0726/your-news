@@ -38,15 +38,7 @@ public class AuthController {
 
         TokenDto tokenDto = authService.login(loginDto);
 
-        Map<String, Object> responseData = new HashMap<>();
-        responseData.put("accessToken", tokenDto.getAccessToken());
-
-        // 쿠키에 refresh Token값 저장.
-        response.addHeader("Set-Cookie",
-                cookieUtil.createCookie(REFRESH_COOKIE_VALUE, tokenDto.getRefreshToken()).toString());
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        return ResponseEntity.ok(responseData);
+        return createTokenRes(tokenDto);
     }
 
     /* 로그아웃 */
@@ -66,7 +58,7 @@ public class AuthController {
 
     /* accessToken 재발급 */
     @PostMapping("/reissue")
-    public ResponseEntity<?> accessTokenReissue(@CookieValue("RefreshToken") String refreshToken, HttpServletResponse response) {
+    public ResponseEntity<?> accessTokenReissue(@CookieValue("RefreshToken") String refreshToken) {
 
         if (refreshToken == null) {     // 쿠키에 Refresh Token이 없다면
             throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
@@ -74,15 +66,7 @@ public class AuthController {
 
         TokenDto tokenDto = authService.reissueAccessToken(refreshToken);
 
-        Map<String, Object> responseData = new HashMap<>();
-        responseData.put("newAccessToken", tokenDto.getAccessToken());
-
-        // 쿠키에 refresh Token값 저장.
-        response.addHeader("Set-Cookie",
-                cookieUtil.createCookie(REFRESH_COOKIE_VALUE, tokenDto.getRefreshToken()).toString());
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        return ResponseEntity.ok(responseData);
+        return createTokenRes(tokenDto);
     }
 
     /* 아이디 찾기 */
@@ -96,7 +80,7 @@ public class AuthController {
     /* 비밀번호 찾기 */
     @PostMapping("/find-pass")
     public ResponseEntity<?> findPass(@RequestParam("email") @Valid @Email String email,
-                                           @RequestParam("username") String username) {
+                                      @RequestParam("username") String username) {
 
         if (bannedEmailService.checkBannedEmail(email))
             throw new CustomException(ErrorCode.BANNED_EMAIL);
@@ -118,5 +102,17 @@ public class AuthController {
 
         boolean check = authService.login(loginDto) != null;
         return ResponseEntity.ok(ApiUtil.from(check));
+    }
+
+    /* 토큰과 관련된 응답값 생성.  */
+    private ResponseEntity<?> createTokenRes(TokenDto tokenDto) {
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("accessToken", tokenDto.getAccessToken());
+
+        return ResponseEntity.ok()
+                .header("Set-Cookie",
+                        cookieUtil.createCookie(REFRESH_COOKIE_VALUE, tokenDto.getRefreshToken()).toString())
+                .body(responseData);
     }
 }

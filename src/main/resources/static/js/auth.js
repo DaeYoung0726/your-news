@@ -30,7 +30,7 @@ async function fetchWithAuth(url, options = {}) {
 
         if (refreshResponse.ok) {
             const data = await refreshResponse.json();
-            accessToken = data.newAccessToken;
+            accessToken = data.accessToken;
             localStorage.setItem('accessToken', accessToken);
 
             // 새로 발급받은 토큰으로 원래 요청 재시도
