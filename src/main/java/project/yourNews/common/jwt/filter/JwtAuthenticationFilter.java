@@ -35,12 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        String requestUri = request.getRequestURI();
-        if ("/".equals(requestUri)) {       // index화면 넘기기.
-            filterChain.doFilter(request, response);
-            return;
-        }
+        
         String accessTokenGetHeader = request.getHeader(ACCESS_HEADER_VALUE);
 
         /* 로그인 되어 있지 않은 사용자 */
