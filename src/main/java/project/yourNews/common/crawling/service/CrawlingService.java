@@ -18,6 +18,7 @@ import project.yourNews.common.crawling.dto.EmailRequest;
 import project.yourNews.common.crawling.strategy.CrawlingStrategy;
 import project.yourNews.common.crawling.strategy.YUNewsCrawlingStrategy;
 import project.yourNews.common.crawling.strategy.YutopiaCrawlingStrategy;
+import project.yourNews.common.mail.mail.MailContentBuilder;
 import project.yourNews.common.mail.mail.util.MailProperties;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
@@ -119,9 +120,7 @@ public class CrawlingService {
     /* 소식 구독자에게 메일 보내기 */
     private void sendNewsToMember(List<String> memberEmails, String newsName, String postTitle, String postURL) {
 
-        String mailContent = "[" + newsName + "]<br>" +
-                postTitle +
-                "<p><a href=" + postURL + ">게시글 링크</a></p>";
+        String mailContent = MailContentBuilder.buildNewsMailContent(newsName, postTitle, postURL);
 
         EmailRequest emailRequest = new EmailRequest(memberEmails, MailProperties.NEWS_SUBJECT, mailContent);
         try {
@@ -129,6 +128,5 @@ public class CrawlingService {
         } catch (Exception e) {
             log.error("Failed to send email request to RabbitMQ: {}", emailRequest, e);
         }
-
     }
 }

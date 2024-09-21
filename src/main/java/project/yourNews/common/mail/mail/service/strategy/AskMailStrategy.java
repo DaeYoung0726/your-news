@@ -27,7 +27,6 @@ public class AskMailStrategy implements MailStrategy {
 
     @Override
     public String generateContent(String email, String askContent) {
-        String emailUsername = email.split("@")[0];
-        return "사용자 : " + emailUsername + "<br>" + ASK_TEXT + email + "<br>" + askContent;
+        return ASK_TEXT + email + "<br>" + askContent;
     }
 }

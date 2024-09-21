@@ -1,6 +1,7 @@
 package project.yourNews.common.mail.mail.service.strategy;
 
 import org.springframework.stereotype.Component;
+import project.yourNews.common.mail.mail.MailContentBuilder;
 
 import static project.yourNews.common.mail.mail.util.MailProperties.PASS_SUBJECT;
 import static project.yourNews.common.mail.mail.util.MailProperties.PASS_TEXT;
@@ -28,6 +29,7 @@ public class PassMailStrategy implements MailStrategy {
     @Override
     public String generateContent(String email, String pass) {
         String emailUsername = email.split("@")[0];
-        return "사용자 : " + emailUsername + "<br>" + PASS_TEXT + pass;
+
+        return PASS_TEXT + pass + "<br>" + MailContentBuilder.buildUserEmailContent(emailUsername);
     }
 }

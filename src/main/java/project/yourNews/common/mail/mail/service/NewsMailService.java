@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import project.yourNews.common.crawling.dto.EmailRequest;
 import project.yourNews.common.exception.CustomException;
 import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.mail.mail.MailContentBuilder;
 import project.yourNews.common.mail.mail.dto.StibeeRequest;
 
 @Slf4j
@@ -35,8 +36,12 @@ public class NewsMailService {
         for (String email : emailRequest.getSubscriber()) {
             try {
                 String emailUsername = email.split("@")[0];
-                String emailContent = "사용자 : " + emailUsername + "<br>" + emailRequest.getContent() +
-                        "<br><p><small>소식을 그만 받고 싶으신가요? <a href=\"" + unsubscribeLink + "\">구독 취소</a></small></p>";
+                String emailContent = MailContentBuilder.buildRegularMailContent(
+                        emailRequest.getContent(),
+                        unsubscribeLink,
+                        emailUsername
+                );
+
                 sendStibeeEmail(
                         StibeeRequest.builder()
                                 .subscriber(email)
