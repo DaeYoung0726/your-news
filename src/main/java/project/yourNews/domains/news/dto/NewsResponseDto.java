@@ -11,10 +11,10 @@ public class NewsResponseDto {
     private final String newsURL;
     private final int subMemberSize;
 
-    public NewsResponseDto(News news) {
+    public NewsResponseDto(News news, int subMemberSize) {
         this.id = news.getId();
         this.newsName = news.getNewsName();
         this.newsURL = news.getNewsURL();
-        this.subMemberSize = news.getMemberSubNews().size();
+        this.subMemberSize = subMemberSize;
     }
 }

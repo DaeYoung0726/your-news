@@ -42,7 +42,9 @@ public class AdminNewsService {
         News findNews = newsRepository.findById(newsId).orElseThrow(() ->
                 new CustomException(ErrorCode.NEWS_NOT_FOUND));
 
-        return new NewsResponseDto(findNews);
+        int subNewsMember = newsRepository.countSubNewsByNewsId(newsId);
+
+        return new NewsResponseDto(findNews, subNewsMember);
     }
 
     /* 소식 삭제하기 */
