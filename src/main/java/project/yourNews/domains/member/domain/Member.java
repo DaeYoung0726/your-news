@@ -16,8 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import project.yourNews.domains.common.entity.BaseTimeEntity;
-import project.yourNews.domains.like.domain.Like;
-import project.yourNews.domains.post.domain.Post;
 import project.yourNews.domains.subNews.domain.SubNews;
 
 import java.util.List;
@@ -54,14 +52,6 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "writer")
-    private List<Post> posts;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "member")
-    private List<Like> likes;
 
     @JsonIgnore
     @OneToMany(mappedBy = "member")
