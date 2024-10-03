@@ -16,7 +16,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        default_batch_fetch_size: 100
+        default_batch_fetch_size: 500
         dialect: org.hibernate.dialect.MySQLDialect
 
   data:
