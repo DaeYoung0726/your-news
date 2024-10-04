@@ -146,14 +146,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         fetchWithAuth(url)
             .then(response => response.json())
             .then(data => {
-                const posts = data.content; // Assuming the response is a Page object
-                totalPages = data.totalPages; // Total number of pages
+                const posts = data.content;
+                totalPages = data.totalPages;
+                const totalPosts = data.totalElements;
+                const startNumber = totalPosts - (page * 10);
+
                 if (category === 'notice') {
                     noticePostsContainer.innerHTML = '';
-                    posts.forEach(post => {
+                    posts.forEach((post, index) => {
+                        const postNumber = startNumber - index;
                         const postElement = document.createElement('tr');
                         postElement.innerHTML = `
-                            <td>${post.id}</td>
+                            <td>${postNumber}</td>
                             <td><a href="/post.html?id=${post.id}" class="post-link">${post.title}</a></td>
                              ${userRole === 'ADMIN' ? `
                             <td>
@@ -166,10 +170,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     displayPagination(noticePagination, totalPages, category);
                 } else if (category === 'news-request') {
                     newsRequestPostsContainer.innerHTML = '';
-                    posts.forEach(post => {
+                    posts.forEach((post, index) => {
+                        const postNumber = startNumber - index;
                         const postElement = document.createElement('tr');
                         postElement.innerHTML = `
-                            <td>${post.id}</td>
+                            <td>${postNumber}</td>
                             <td><a href="/post.html?id=${post.id}" class="post-link">${post.title}</a></td>
                             ${userRole === 'ADMIN' ? `
                             <td>
