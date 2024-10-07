@@ -1,7 +1,6 @@
 package project.yourNews.common.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.exception.error.ErrorDto;
-import project.yourNews.security.token.tokenBlackList.TokenBlackListService;
 import project.yourNews.common.utils.jwt.JwtUtil;
+import project.yourNews.security.token.tokenBlackList.TokenBlackListService;
 
 import java.io.IOException;
 
@@ -56,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /*
-     * @throws accessToken이 blackList에 저장되어 있거나, 만료되었거나, access 토큰이 아니거나.
+     * @throws accessToken이 blackList에 저장되어 있거나, 만료되었거나.
      */
     private String resolveAccessToken(HttpServletResponse response, String accessTokenGetHeader) throws IOException {
         String accessToken = accessTokenGetHeader.substring(TOKEN_PREFIX.length()).trim();
@@ -67,16 +66,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return null;
         }
 
-        try {
-            jwtUtil.isExpired(accessToken);      // 만료되었는지
-        } catch (ExpiredJwtException e) {
+        if (jwtUtil.isExpired(accessToken)) {       // 만료 되었는지
             handleExceptionToken(response, ErrorCode.ACCESS_TOKEN_EXPIRED);
             return null;
         }
 
         return accessToken;
     }
-
 
     /* Authentication 가져오기 */
     private Authentication getAuthentication(String token) {
