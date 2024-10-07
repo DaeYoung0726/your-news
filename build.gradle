@@ -45,6 +45,8 @@ dependencies {
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
 
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:7.6.0'
 }
 
 tasks.named('test') {
