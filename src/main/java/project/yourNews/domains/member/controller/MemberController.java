@@ -51,7 +51,7 @@ public class MemberController {
     /* 회원 정보 업데이트 */
     @PutMapping
     public ResponseEntity<?> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto,
-                                               @AuthenticationPrincipal CustomDetails userDetails) {
+                                          @AuthenticationPrincipal CustomDetails userDetails) {
 
         memberService.updateMember(memberUpdateDto, userDetails.getUserId());
         return ResponseEntity.ok(ApiUtil.from("회원 정보 업데이트 성공."));

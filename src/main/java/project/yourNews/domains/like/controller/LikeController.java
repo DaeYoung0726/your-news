@@ -22,7 +22,7 @@ public class LikeController {
     /* 게시글 좋아요 증가 */
     @PostMapping("/{postId}/like")
     public ResponseEntity<?> likePost(@PathVariable Long postId,
-                                                 @AuthenticationPrincipal UserDetails userDetails) {
+                                      @AuthenticationPrincipal UserDetails userDetails) {
 
         likeService.likePost(userDetails.getUsername(), postId);
         return ResponseEntity.ok(ApiUtil.from("게시글 좋아요 증가."));
@@ -31,7 +31,7 @@ public class LikeController {
     /* 게시글 좋아요 감소 */
     @DeleteMapping("/{postId}/un-like")
     public ResponseEntity<?> unLikePost(@PathVariable Long postId,
-                                             @AuthenticationPrincipal UserDetails userDetails) {
+                                        @AuthenticationPrincipal UserDetails userDetails) {
 
         likeService.unLikePost(userDetails.getUsername(), postId);
         return ResponseEntity.ok(ApiUtil.from("게시글 좋아요 감소."));

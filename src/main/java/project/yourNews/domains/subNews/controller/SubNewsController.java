@@ -19,7 +19,7 @@ public class SubNewsController {
 
     @PutMapping("/v1/users/update-sub-news")
     public ResponseEntity<?> updateSubNews(@RequestBody SubNewsUpdateDto updateDto,
-                                                @AuthenticationPrincipal UserDetails userDetails) {
+                                           @AuthenticationPrincipal UserDetails userDetails) {
 
         subNewsService.updateUserSubNews(userDetails.getUsername(), updateDto);
         return ResponseEntity.ok(ApiUtil.from("소식 구독 업데이트 성공."));
