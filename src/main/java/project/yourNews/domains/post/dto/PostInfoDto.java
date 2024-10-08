@@ -1,15 +1,17 @@
 package project.yourNews.domains.post.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import project.yourNews.domains.post.domain.Post;
 
 @Getter
+@NoArgsConstructor
 public class PostInfoDto {
 
-    private final Long id;
-    private final String title;
-    private final String writer;
-    private final int likeCount;
+    private Long id;
+    private String title;
+    private String writer;
+    private int likeCount;
 
     public PostInfoDto(Post post) {
         this.id = post.getId();

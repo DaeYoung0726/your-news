@@ -2,6 +2,8 @@ package project.yourNews.domains.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.yourNews.common.aop.annotation.VerifyAuthentication;
 import project.yourNews.common.exception.CustomException;
 import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.common.utils.page.RestPage;
 import project.yourNews.domains.category.domain.Category;
 import project.yourNews.domains.category.repository.CategoryRepository;
 import project.yourNews.domains.common.service.AssociatedEntityService;
@@ -32,6 +35,7 @@ public class PostService {
 
     /* 게시글 저장 */
     @Transactional
+    @CacheEvict(value = "noticePosts", allEntries = true, condition = "#categoryName.equals('notice')")
     public Long savePost(PostRequestDto postDto, String username, String categoryName) {
 
         Member findMember = memberRepository.findByUsername(username).orElseThrow(() ->
@@ -61,20 +65,22 @@ public class PostService {
 
     /* 카테고리 게시글 전체 들고오기 */
     @Transactional(readOnly = true)
-    public Page<PostInfoDto> readPostsByCategory(String categoryName, Pageable pageable) {
+    @Cacheable(value = "noticePosts", key = "#categoryName + ':' + #pageable.pageNumber", condition = "#categoryName.equals('notice')")
+    public RestPage<PostInfoDto> readPostsByCategory(String categoryName, Pageable pageable) {
 
         Category findCategory = categoryRepository.findByName(categoryName).orElseThrow(() ->
                 new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
 
         Page<Post> posts = postRepository.findByCategory(findCategory, pageable);
 
-        return posts.map(PostInfoDto::new);
+        return new RestPage<>(posts.map(PostInfoDto::new));
     }
 
     /* 게시글 업데이트 */
     @Transactional
     @VerifyAuthentication
-    public void updatePost(PostRequestDto postDto, Long postId) {
+    @CacheEvict(value = "noticePosts", allEntries = true, condition = "#categoryName.equals('notice')")
+    public void updatePost(PostRequestDto postDto, Long postId, String categoryName) {
 
         Post findPost = postRepository.findById(postId).orElseThrow(() ->
                 new CustomException(ErrorCode.POST_NOT_FOUND));
