@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.domains.category.domain.Category;
 import project.yourNews.domains.category.dto.CategoryRequestDto;
 import project.yourNews.domains.category.repository.CategoryRepository;
-import project.yourNews.common.exception.error.ErrorCode;
-import project.yourNews.common.exception.CustomException;
 
 @Slf4j
 @RequiredArgsConstructor

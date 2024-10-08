@@ -39,12 +39,6 @@ public class AssociatedEntityService {
         subNewsRepository.deleteByNewsId(newsId);
     }
 
-    /* 구독 소식을 FK로 가지는 데이터 지우기 */
-    public void deleteAllBySubNewsId(Long subNewsId) {
-
-        keywordRepository.deleteBySubNewsId(subNewsId);
-    }
-
     /* 사용자가 구독한 데아터 지우기 */
     public void deleteAllSubNewsByMemberId(Long memberId) {
         keywordRepository.deleteByMemberId(memberId);

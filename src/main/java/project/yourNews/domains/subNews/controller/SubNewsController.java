@@ -7,11 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import project.yourNews.common.utils.api.ApiUtil;
 import project.yourNews.domains.subNews.dto.SubNewsUpdateDto;
 import project.yourNews.domains.subNews.service.SubNewsService;
-import project.yourNews.common.utils.api.ApiUtil;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

@@ -29,9 +29,4 @@ public class News {
     @NotNull
     @Column(unique = true)
     private String newsURL;
-
-    public void updateNewsInfo(String newsName, String newsURL) {
-        this.newsName = newsName;
-        this.newsURL = newsURL;
-    }
 }

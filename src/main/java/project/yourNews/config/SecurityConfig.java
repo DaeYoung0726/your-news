@@ -14,11 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import project.yourNews.domains.member.domain.Role;
 import project.yourNews.common.jwt.filter.JwtAuthenticationFilter;
 import project.yourNews.common.jwt.filter.JwtExceptionFilter;
-import project.yourNews.security.token.tokenBlackList.TokenBlackListService;
 import project.yourNews.common.utils.jwt.JwtUtil;
+import project.yourNews.domains.member.domain.Role;
+import project.yourNews.security.token.tokenBlackList.TokenBlackListService;
 
 @Configuration
 @EnableWebSecurity

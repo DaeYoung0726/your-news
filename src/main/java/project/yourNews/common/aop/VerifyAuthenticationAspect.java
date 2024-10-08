@@ -7,9 +7,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import project.yourNews.domains.post.repository.PostRepository;
-import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
+import project.yourNews.domains.post.repository.PostRepository;
 
 @Aspect
 @Component

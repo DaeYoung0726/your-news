@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import project.yourNews.domains.like.service.LikeService;
 import project.yourNews.common.utils.api.ApiUtil;
+import project.yourNews.domains.like.service.LikeService;
 
 @RestController
 @RequiredArgsConstructor

@@ -15,8 +15,4 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
     @Modifying
     @Query("DELETE FROM Keyword k WHERE k.subNews.id IN (SELECT s.id FROM SubNews s WHERE s.news.id = :newsId)")
     void deleteByNewsId(@Param("newsId") Long newsId);
-
-    @Modifying
-    @Query("DELETE FROM Keyword k WHERE k.subNews.id = :subNewsId")
-    void deleteBySubNewsId(@Param("subNewsId") Long subNewsId);
 }

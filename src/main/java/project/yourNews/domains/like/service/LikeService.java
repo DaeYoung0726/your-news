@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.domains.like.domain.Like;
 import project.yourNews.domains.like.repository.LikeRepository;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.domains.post.domain.Post;
 import project.yourNews.domains.post.repository.PostRepository;
-import project.yourNews.common.exception.error.ErrorCode;
-import project.yourNews.common.exception.CustomException;
 
 @Slf4j
 @RequiredArgsConstructor

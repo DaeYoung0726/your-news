@@ -5,9 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import project.yourNews.domains.subNews.domain.SubNews;
-
-import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor

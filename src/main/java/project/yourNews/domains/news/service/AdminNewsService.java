@@ -5,14 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.yourNews.common.exception.CustomException;
+import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.domains.common.service.AssociatedEntityService;
 import project.yourNews.domains.news.domain.News;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.dto.NewsRequestDto;
 import project.yourNews.domains.news.dto.NewsResponseDto;
 import project.yourNews.domains.news.repository.NewsRepository;
-import project.yourNews.common.exception.error.ErrorCode;
-import project.yourNews.common.exception.CustomException;
 
 @RequiredArgsConstructor
 @Service

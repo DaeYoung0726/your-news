@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import project.yourNews.common.utils.api.ApiUtil;
 import project.yourNews.domains.category.dto.CategoryRequestDto;
 import project.yourNews.domains.category.service.CategoryService;
-import project.yourNews.common.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor

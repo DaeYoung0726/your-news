@@ -32,14 +32,6 @@ public class URLHistoryService {
         redisUtil.expire(key, YU_URL_EXPIRATION_TIME);
     }
 
-    /* 저장된 url 삭제하기 */
-    public void deleteURL(String dispatchedURL) {
-
-        String key = URL_HISTORY_KEY_PREFIX + dispatchedURL;
-
-        redisUtil.del(key);
-    }
-
     /* 이미 보낸 소식인지 확인 */
     public boolean existsURLCheck(String url) {
 

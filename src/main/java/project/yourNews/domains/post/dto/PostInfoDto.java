@@ -1,7 +1,6 @@
 package project.yourNews.domains.post.dto;
 
 import lombok.Getter;
-import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.post.domain.Post;
 
 @Getter

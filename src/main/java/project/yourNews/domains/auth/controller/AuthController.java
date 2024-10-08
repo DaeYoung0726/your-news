@@ -34,7 +34,7 @@ public class AuthController {
 
     /* 로그인 */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto) {
 
         TokenDto tokenDto = authService.login(loginDto);
 

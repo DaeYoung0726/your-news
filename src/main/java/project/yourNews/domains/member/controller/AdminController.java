@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import project.yourNews.common.utils.api.ApiUtil;
 import project.yourNews.domains.bannedEmail.dto.BannedEmailRequestDto;
 import project.yourNews.domains.bannedEmail.service.BannedEmailService;
 import project.yourNews.domains.member.service.AdminService;
 import project.yourNews.domains.post.service.AdminPostService;
-import project.yourNews.common.utils.api.ApiUtil;
 
 @RestController
 @RequiredArgsConstructor

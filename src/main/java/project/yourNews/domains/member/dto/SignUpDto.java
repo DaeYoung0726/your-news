@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.domain.Role;
-import project.yourNews.domains.subNews.domain.SubNews;
 
 import java.util.List;
 
