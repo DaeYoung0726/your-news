@@ -1,4 +1,4 @@
-package project.yourNews.config;
+package project.yourNews.common.utils.page;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
