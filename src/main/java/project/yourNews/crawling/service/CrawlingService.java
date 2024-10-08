@@ -1,4 +1,4 @@
-package project.yourNews.common.crawling.service;
+package project.yourNews.crawling.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +14,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
-import project.yourNews.common.crawling.dto.EmailRequest;
-import project.yourNews.common.crawling.strategy.CrawlingStrategy;
-import project.yourNews.common.crawling.strategy.YUNewsCrawlingStrategy;
-import project.yourNews.common.crawling.strategy.YutopiaCrawlingStrategy;
+import project.yourNews.crawling.dto.EmailRequest;
+import project.yourNews.crawling.strategy.CrawlingStrategy;
+import project.yourNews.crawling.strategy.YUNewsCrawlingStrategy;
+import project.yourNews.crawling.strategy.YutopiaCrawlingStrategy;
 import project.yourNews.common.mail.mail.MailContentBuilder;
 import project.yourNews.common.mail.mail.util.MailProperties;
 import project.yourNews.domains.news.dto.NewsInfoDto;

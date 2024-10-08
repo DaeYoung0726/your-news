@@ -1,4 +1,4 @@
-package project.yourNews.common.crawling.strategy;
+package project.yourNews.crawling.strategy;
 
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;

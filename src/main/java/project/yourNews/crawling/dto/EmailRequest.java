@@ -1,4 +1,4 @@
-package project.yourNews.common.crawling.dto;
+package project.yourNews.crawling.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

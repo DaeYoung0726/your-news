@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import project.yourNews.common.crawling.dto.EmailRequest;
+import project.yourNews.crawling.dto.EmailRequest;
 import project.yourNews.common.exception.CustomException;
 import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.mail.mail.MailContentBuilder;

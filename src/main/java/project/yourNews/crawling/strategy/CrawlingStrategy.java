@@ -1,4 +1,4 @@
-package project.yourNews.common.crawling.strategy;
+package project.yourNews.crawling.strategy;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

@@ -1,4 +1,4 @@
-package project.yourNews.common.crawling.strategy;
+package project.yourNews.crawling.strategy;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
