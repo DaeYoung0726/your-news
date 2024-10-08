@@ -20,10 +20,7 @@ public class PostRequestDto {
     @NotBlank(message = "내용은 필수 입력입니다.")
     private String content;
 
-    private Member writer;
-    private Category category;
-
-    public Post toPostEntity() {
+    public Post toPostEntity(Member writer, Category category) {
         return Post.builder()
                 .title(title)
                 .content(content)

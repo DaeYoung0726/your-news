@@ -40,10 +40,12 @@ public class PostService {
         Category findCategory = categoryRepository.findByName(categoryName).orElseThrow(() ->
                 new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
 
-        postDto.setWriter(findMember);
-        postDto.setCategory(findCategory);
-
-        Post createdPost = postRepository.save(postDto.toPostEntity());
+        Post createdPost = postRepository.save(
+                postDto.toPostEntity(
+                        findMember,
+                        findCategory
+                )
+        );
         return createdPost.getId();
     }
 
