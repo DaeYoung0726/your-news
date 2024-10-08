@@ -56,10 +56,11 @@ public class AdminController {
     }
 
     /* 글 삭제 - 어드민 */
-    @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<?> deletePostByAdmin(@PathVariable Long postId) {
+    @DeleteMapping("/posts/{categoryName}/{postId}")
+    public ResponseEntity<?> deletePostByAdmin(@PathVariable Long postId,
+                                               @PathVariable String categoryName) {
 
-        adminPostService.deletePostByAdmin(postId);
+        adminPostService.deletePostByAdmin(postId, categoryName);
         return ResponseEntity.ok(ApiUtil.from("글 삭제 성공."));
     }
 }

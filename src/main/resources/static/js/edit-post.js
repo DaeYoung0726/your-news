@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get('id');
 
+    let categoryName = '';
+
     // 게시글 정보 불러오기
     if (postId) {
         fetchWithAuth(`/v1/posts/${postId}`)
@@ -15,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 titleInput.value = data.post.title;
                 contentTextarea.value = data.post.content;
+                categoryName = data.post.category;
             })
             .catch(error => console.error('Error fetching post:', error));
     }
@@ -32,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetchWithAuth(`/v1/posts/${postId}`, {
+            const response = await fetchWithAuth(`/v1/posts/${categoryName}/${postId}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': accessToken,

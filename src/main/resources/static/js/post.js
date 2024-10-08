@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let userRole = ''; // 사용자 역할을 저장할 변수
     var currentLikeCount = 0;
+    let categoryName = '';
 
     async function getUserRole() {
         try {
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const confirmed = confirm('정말 이 게시글을 삭제하시겠습니까?');
         if (confirmed) {
             try {
-                const deleteUrl = userRole === 'ADMIN' ? `/v1/admin/posts/${postId}` : `/v1/posts/${postId}`;
+                const deleteUrl = userRole === 'ADMIN' ? `/v1/admin/posts/${categoryName}/${postId}` : `/v1/posts/${postId}`;
                 const response = await fetchWithAuth(deleteUrl, {
                     method: 'DELETE',
                     headers: {
@@ -94,6 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 contentTextarea.value = post.content;
                 postLikes.textContent = post.likeCount;
                 currentLikeCount = post.likeCount;
+                categoryName = post.category;
 
                 if (post.category === "notice") {
                     categoryInput.value = "공지사항";

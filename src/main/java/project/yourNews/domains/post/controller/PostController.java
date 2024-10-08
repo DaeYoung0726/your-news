@@ -66,11 +66,12 @@ public class PostController {
     }
 
     /* 게시글 업데이트 */
-    @PutMapping("/posts/{postId}")
+    @PutMapping("/posts/{categoryName}/{postId}")
     public ResponseEntity<?> updatePost(@Valid @RequestBody PostRequestDto postRequestDto,
-                                             @PathVariable Long postId) {
+                                        @PathVariable Long postId,
+                                        @PathVariable String categoryName) {
 
-        postService.updatePost(postRequestDto, postId);
+        postService.updatePost(postRequestDto, postId, categoryName);
         return ResponseEntity.ok(ApiUtil.from("게시글 업데이트 성공."));
     }
 
