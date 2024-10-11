@@ -14,12 +14,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
+import project.yourNews.common.mail.mail.MailContentBuilder;
+import project.yourNews.common.mail.mail.util.MailProperties;
 import project.yourNews.crawling.dto.EmailRequest;
 import project.yourNews.crawling.strategy.CrawlingStrategy;
 import project.yourNews.crawling.strategy.YUNewsCrawlingStrategy;
 import project.yourNews.crawling.strategy.YutopiaCrawlingStrategy;
-import project.yourNews.common.mail.mail.MailContentBuilder;
-import project.yourNews.common.mail.mail.util.MailProperties;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
 
@@ -47,32 +47,25 @@ public class CrawlingService {
     @PostConstruct
     public void scheduleCrawlingTasks() {
         // 각 전략별로 스케줄링 작업을 등록
-        for (CrawlingStrategy strategy : strategies) {
-            String cronExpression = strategy.getScheduledTime();
-            taskScheduler.schedule(() -> startCrawling(strategy),
-                    new CronTrigger(cronExpression, TimeZone.getTimeZone("Asia/Seoul")));
-        }
+        strategies.forEach(strategy -> taskScheduler.schedule(
+                () -> startCrawling(strategy),
+                new CronTrigger(strategy.getScheduledTime(), TimeZone.getTimeZone("Asia/Seoul")))
+        );
     }
 
     @Async
     public void startCrawling(CrawlingStrategy strategy) {
+        newsService.readAllNews().stream()
+                .filter(news -> strategy.canHandle(news.getNewsName()))
+                .forEach(news -> processCrawling(strategy, news));
+    }
 
-        List<NewsInfoDto> newsList = newsService.readAllNews();
-
-        for (NewsInfoDto news : newsList) {
-            if (strategy.canHandle(news.getNewsName())) {
-                if (strategy instanceof YutopiaCrawlingStrategy) {
-                    // YutopiaCrawlingStrategy이면 여러 URL을 처리
-                    List<String> urlsToCrawl =
-                            ((YutopiaCrawlingStrategy) strategy).getUrlsForYuTopiaNews(news);
-                    for (String url : urlsToCrawl) {
-                        analyzeWeb(news.getNewsName(), url, strategy);
-                    }
-                } else {
-                    // 그 외의 경우 단일 URL 처리
-                    analyzeWeb(news.getNewsName(), news.getNewsURL(), strategy);
-                }
-            }
+    private void processCrawling(CrawlingStrategy strategy, NewsInfoDto news) {
+        if (strategy instanceof YutopiaCrawlingStrategy) {
+            ((YutopiaCrawlingStrategy) strategy).getUrlsForYuTopiaNews(news)
+                    .forEach(url -> analyzeWeb(news.getNewsName(), url, strategy));
+        } else {
+            analyzeWeb(news.getNewsName(), news.getNewsURL(), strategy);
         }
     }
 
@@ -85,35 +78,55 @@ public class CrawlingService {
             // 게시글 요소 찾기
             Elements postElements = strategy.getPostElements(doc);
 
-            List<String> memberEmails = List.of();
-            boolean isYUNews = strategy instanceof YUNewsCrawlingStrategy;
+            if (postElements.isEmpty())
+                return;
 
-            if (!postElements.isEmpty()) {
-                // 해당 소식 구독한 회원의 이메일 불러오기
-                if (!isYUNews)
-                    memberEmails = strategy.getSubscribedMembers(newsName);
-
-                // 게시글 제목과 URL 출력
-                for (Element postElement : postElements) {
-                    if (strategy.shouldProcessElement(postElement)) {
-                        String postTitle = strategy.extractPostTitle(postElement);
-                        String postURL = strategy.extractPostURL(postElement);
-
-                        if (!strategy.isExisted(postURL)) {
-
-                            if (isYUNews) {
-                                ((YUNewsCrawlingStrategy) strategy).setCurrentPostElement(postTitle);
-                                memberEmails = strategy.getSubscribedMembers(newsName);
-                            }
-                            sendNewsToMember(memberEmails, newsName, postTitle, postURL);
-                            // 새로운 게시글 URL을 목록에 추가
-                            strategy.saveURL(postURL);
-                        }
-                    }
-                }
+            // isYUNews 여부에 따라 처리 방식 분리
+            if (strategy instanceof YUNewsCrawlingStrategy) {
+                processYUNewsPosts(postElements, (YUNewsCrawlingStrategy) strategy, newsName);
+            } else {
+                processOtherNewsPosts(postElements, strategy, newsName);
             }
+
         } catch (IOException e) {
             log.error("An error occurred while processing news for URL: {}", newsURL);
+        }
+    }
+
+    /* 크롤링 전략이 YUNews 일 시. */
+    private void processYUNewsPosts(Elements postElements, YUNewsCrawlingStrategy strategy, String newsName) {
+
+        for (Element postElement : postElements) {
+            if (strategy.shouldProcessElement(postElement)) {
+                String postTitle = strategy.extractPostTitle(postElement);
+                String postURL = strategy.extractPostURL(postElement);
+
+                if (!strategy.isExisted(postURL)) {
+                    strategy.setCurrentPostElement(postTitle);
+                    List<String> memberEmails = strategy.getSubscribedMembers(newsName);
+
+                    sendNewsToMember(memberEmails, newsName, postTitle, postURL);
+                    strategy.saveURL(postURL);
+                }
+            }
+        }
+    }
+
+    /* 크롤링 전략이 YUNews 아닐 시. */
+    private void processOtherNewsPosts(Elements postElements, CrawlingStrategy strategy, String newsName) {
+
+        List<String> memberEmails = strategy.getSubscribedMembers(newsName);
+
+        for (Element postElement : postElements) {
+            if (strategy.shouldProcessElement(postElement)) {
+                String postTitle = strategy.extractPostTitle(postElement);
+                String postURL = strategy.extractPostURL(postElement);
+
+                if (!strategy.isExisted(postURL)) {
+                    sendNewsToMember(memberEmails, newsName, postTitle, postURL);
+                    strategy.saveURL(postURL);
+                }
+            }
         }
     }
 
