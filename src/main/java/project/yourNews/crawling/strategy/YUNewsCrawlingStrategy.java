@@ -4,6 +4,7 @@ import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -17,10 +18,13 @@ import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.urlHistory.service.URLHistoryService;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class YUNewsCrawlingStrategy implements CrawlingStrategy{
 
     private final MemberService memberService;
@@ -35,7 +39,7 @@ public class YUNewsCrawlingStrategy implements CrawlingStrategy{
                     " 다음 제목의 키워드를 정확히 말해줘. 가장 유사한 하나의 키워드만 말해줘. 예를 들자면 '취업' 이렇게 말해. ";
 
     private final Bucket bucket = Bucket.builder()
-            .addLimit(Bandwidth.classic(3, Refill.intervally(3, Duration.ofMinutes(1))))
+            .addLimit(Bandwidth.classic(3, Refill.intervally(3, Duration.ofSeconds(90))))
             .build();
 
     @Override
@@ -74,6 +78,10 @@ public class YUNewsCrawlingStrategy implements CrawlingStrategy{
     }
 
     public List<String> getSubscribedMembers(String newsName) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 / HH시 mm분 ss초");
+        System.out.println(LocalDateTime.now().format(formatter));
+        log.error("이름: {}, 시간: {}", newsName, LocalDateTime.now().format(formatter));
+
         String messageContent = MESSAGE_PREFIX + postTitle;
         Message message = Message.builder()
                 .role("user")
