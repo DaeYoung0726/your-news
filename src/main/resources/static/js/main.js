@@ -164,6 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 <a href="/adm/user-info.html?nickname=${post.writer}" class="user-link">${post.writer}</a>
                             </td>` : `<td>${post.writer}</td>`}
                             <td>${post.likeCount}</td>
+                            <td>${post.createdDate}</td>
                         `;
                         noticePostsContainer.appendChild(postElement);
                     });
@@ -181,6 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 <a href="/adm/user-info.html?nickname=${post.writer}" class="user-link">${post.writer}</a>
                             </td>` : `<td>${post.writer}</td>`}
                             <td>${post.likeCount}</td>
+                            <td>${post.createdDate}</td>
                         `;
                         newsRequestPostsContainer.appendChild(postElement);
                     });
