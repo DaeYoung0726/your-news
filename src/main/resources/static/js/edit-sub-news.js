@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainPageButton = document.getElementById('mainPageButton');
     const news2Select = document.getElementById('news2');
     const news3Select = document.getElementById('news3');
+    const news4Select = document.getElementById('news4');
+    const news5Select = document.getElementById('news5');
     const updateNewsButton = document.getElementById('updateNewsButton');
     const responseMessage = document.createElement('div');
     const accessToken = localStorage.getItem('accessToken');
@@ -67,6 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     let option3 = document.createElement('option');
                     option3.text = news.newsName;
                     news3Select.add(option3);
+
+                    let option4 = document.createElement('option');
+                    option4.text = news.newsName;
+                    news4Select.add(option4);
+
+                    let option5 = document.createElement('option');
+                    option5.text = news.newsName;
+                    news5Select.add(option5);
                 }
             });
         })
@@ -75,13 +85,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // 소식 구독 업데이트
     updateNewsButton.addEventListener('click', async () => {
 
-        const selectedNews2 = news2Select.value;
-        const selectedNews3 = news3Select.value;
+        const news2 = document.getElementById('news2').value;
+        const news3 = document.getElementById('news3').value;
+        const news4 = document.getElementById('news4').value;
+        const news5 = document.getElementById('news5').value;
 
         const newsNames = [];
         const keywords = [];
-        if (selectedNews2) newsNames.push(selectedNews2);
-        if (selectedNews3) newsNames.push(selectedNews3);
+
+        if (news2) newsNames.push(news2);
+        if (news3) newsNames.push(news3);
+        if (news4) newsNames.push(news4);
+        if (news5) newsNames.push(news5);
 
         if (document.querySelector('input[name="yeongdae"]:checked').value === "receive") {
             newsNames.push("영대소식");

@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const responseMessage = document.getElementById('responseMessage');
     const news2Select = document.getElementById('news2');
     const news3Select = document.getElementById('news3');
+    const news4Select = document.getElementById('news4');
+    const news5Select = document.getElementById('news5');
     const sendVerificationCodeButton = document.getElementById('sendVerificationCode');
     const verifyCodeButton = document.getElementById('verifyCode');
     const checkUsernameButton = document.getElementById('checkUsername');
@@ -28,6 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     let option3 = document.createElement('option');
                     option3.text = news.newsName;
                     news3Select.add(option3);
+
+                    let option4 = document.createElement('option');
+                    option4.text = news.newsName;
+                    news4Select.add(option4);
+
+                    let option5 = document.createElement('option');
+                    option5.text = news.newsName;
+                    news5Select.add(option5);
                 }
             });
         })
@@ -139,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (response.ok) {
 
-                if (response.ok && !result.response) { // If result.available is false, it means the nickname is not taken
+                if (response.ok && !result.response) {
                     isNicknameChecked = true;
                     nicknameError.textContent = '사용 가능한 닉네임입니다.';
                 } else {
@@ -190,6 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 최소 하나의 뉴스 선택 확인
         const news2 = document.getElementById('news2').value;
         const news3 = document.getElementById('news3').value;
+        const news4 = document.getElementById('news4').value;
+        const news5 = document.getElementById('news5').value;
         if (document.querySelector('input[name="yeongdae"]:checked').value === "not_receive" && !news2 && !news3) {
             responseMessage.textContent = '적어도 하나의 소식을 선택해주세요.';
             alert('적어도 하나의 소식을 선택해주세요.');
@@ -201,6 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (news2) subNewsNames.push(news2);
         if (news3) subNewsNames.push(news3);
+        if (news4) subNewsNames.push(news4);
+        if (news5) subNewsNames.push(news5);
 
 
         if (document.querySelector('input[name="yeongdae"]:checked').value === "receive") {
