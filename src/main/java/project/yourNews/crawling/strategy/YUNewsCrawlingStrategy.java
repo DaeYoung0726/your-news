@@ -95,7 +95,7 @@ public class YUNewsCrawlingStrategy implements CrawlingStrategy{
         String keyword = gptResponse.getChoices().get(0).getMessage().getContent();
         keyword = keyword.replaceAll("^[\"']|[\"']$|\\.$", "");
 
-        return memberService.getMembersSubscribedToNewsWithKeyword(keyword);
+        return memberService.findEmailsBySubscribedNewsKeyword(keyword);
     }
 
     public void setCurrentPostElement(String postTitle) {

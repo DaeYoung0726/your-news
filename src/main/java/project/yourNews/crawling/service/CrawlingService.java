@@ -22,6 +22,7 @@ import project.yourNews.crawling.strategy.YUNewsCrawlingStrategy;
 import project.yourNews.crawling.strategy.YutopiaCrawlingStrategy;
 import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
+import project.yourNews.domains.notification.service.NotificationService;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,6 +38,7 @@ public class CrawlingService {
     private final RabbitTemplate rabbitTemplate;
     private final List<CrawlingStrategy> strategies;
     private final TaskScheduler taskScheduler;
+    private final NotificationService notificationService;
 
     @Value("${rabbitmq.exchange.name}")
     private String exchangeName;
@@ -101,6 +103,8 @@ public class CrawlingService {
                 String postTitle = strategy.extractPostTitle(postElement);
                 String postURL = strategy.extractPostURL(postElement);
 
+                notificationService.saveNewsInfo(newsName, postTitle, postURL);
+
                 if (!strategy.isExisted(postURL)) {
                     strategy.setCurrentPostElement(postTitle);
                     List<String> memberEmails = strategy.getSubscribedMembers(newsName);
@@ -121,6 +125,8 @@ public class CrawlingService {
             if (strategy.shouldProcessElement(postElement)) {
                 String postTitle = strategy.extractPostTitle(postElement);
                 String postURL = strategy.extractPostURL(postElement);
+
+                notificationService.saveNewsInfo(newsName, postTitle, postURL);
 
                 if (!strategy.isExisted(postURL)) {
                     sendNewsToMember(memberEmails, newsName, postTitle, postURL);

@@ -14,11 +14,11 @@ import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.member.dto.MemberResponseDto;
 import project.yourNews.domains.member.dto.MemberUpdateDto;
 import project.yourNews.domains.member.dto.SignUpDto;
+import project.yourNews.domains.member.dto.SubscribeUpdateDto;
 import project.yourNews.domains.member.repository.MemberRepository;
 import project.yourNews.domains.subNews.service.SubNewsService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static project.yourNews.common.utils.redis.RedisProperties.CODE_KEY_PREFIX;
 
@@ -103,25 +103,34 @@ public class MemberService {
 
     /* 특정 소식 구독한 사용자 가져오기 */
     @Transactional(readOnly = true)
-    public List<String> getMembersSubscribedToNews(String newsName) {
+    public List<String> findEmailsBySubscribedNews(String newsName) {
 
-        List<Member> members = memberRepository.findBySubStatusAndSubNews_News_NewsName(true, newsName);
-        return members.stream().map(Member::getEmail).collect(Collectors.toList());
+        return memberRepository.findEmailsByNewsName(true, newsName);
     }
 
     /* 특정 소식 구독한 사용자 가져오기 - 키워드 기반 */
     @Transactional(readOnly = true)
-    public List<String> getMembersSubscribedToNewsWithKeyword(String keyword) {
+    public List<String> findEmailsBySubscribedNewsKeyword(String keyword) {
 
-        List<Member> members = memberRepository.findBySubStatusAndSubNews_Keyword_KeywordName(true, keyword);
-        return members.stream().map(Member::getEmail).collect(Collectors.toList());
+        return memberRepository.findEmailsByNewsKeyword(true, keyword);
+    }
+
+    /* 일간 소식 알림 구독자 가져오기 */
+    @Transactional(readOnly = true)
+    public List<String> findEmailsByDailySubscribedNews(String newsName) {
+
+        return memberRepository.findEmailsByNewsNameWithDailySubStatus(true, newsName);
     }
 
     /* 정보 수신 상태 변경 */
     @Transactional
-    public void updateSubStatus(String username, boolean status) {
+    public void updateSubStatus(SubscribeUpdateDto subscribeUpdateDto) {
 
-        memberRepository.updateSubStatusByUsername(username, status);
+        memberRepository.updateSubStatusByUsername(
+                subscribeUpdateDto.getUsername(),
+                subscribeUpdateDto.isSubStatus(),
+                subscribeUpdateDto.isDailySubStatus()
+        );
     }
 
     /* 아이디 중복 확인 */

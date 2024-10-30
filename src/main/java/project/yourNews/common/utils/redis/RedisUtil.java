@@ -5,6 +5,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
@@ -41,5 +43,16 @@ public class RedisUtil {
     /* Redis 만료시간 설정. */
     public void expire(String key, long seconds) {
         redisTemplate.expire(key, Duration.ofSeconds(seconds));
+    }
+
+    /* List형식 저장 */
+    public void setList(String key, Object value) {
+        redisTemplate.opsForList().rightPush(key, value);
+    }
+
+    /* List형식 불러오기 */
+    public List<Object> getList(String key) {
+        return new ArrayList<>(redisTemplate.opsForList()
+                .range(key, 0, -1));
     }
 }

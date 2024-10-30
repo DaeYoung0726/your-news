@@ -54,7 +54,7 @@ public class YutopiaCrawlingStrategy implements CrawlingStrategy {
     }
 
     public List<String> getSubscribedMembers(String newsName) {
-        return memberService.getMembersSubscribedToNews(newsName);
+        return memberService.findEmailsBySubscribedNews(newsName);
     }
 
     @Override

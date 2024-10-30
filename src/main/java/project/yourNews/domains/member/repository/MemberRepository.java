@@ -18,13 +18,24 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByNickname(String nickname);
     boolean existsByEmail(String email);
     boolean existsByUsernameAndEmail(String username, String email);
-    List<Member> findBySubStatusAndSubNews_News_NewsName(boolean subStatus, String newsName);
-    List<Member> findBySubStatusAndSubNews_Keyword_KeywordName(boolean subStatus, String keyword);
+
+    @Query("SELECT m.email FROM Member m JOIN m.subNews s WHERE m.subStatus = :subStatus AND s.news.newsName = :newsName")
+    List<String> findEmailsByNewsName(@Param("subStatus") boolean subStatus, @Param("newsName") String newsName);
+
+    @Query("SELECT m.email FROM Member m JOIN m.subNews s JOIN s.keyword k WHERE m.subStatus = :subStatus AND k.keywordName = :keyword")
+    List<String> findEmailsByNewsKeyword(@Param("subStatus") boolean subStatus, @Param("keyword") String keyword);
+
+    @Query("SELECT m.email FROM Member m JOIN m.subNews s JOIN s.news n WHERE m.dailySubStatus = :dailySubStatus AND n.newsName = :newsName")
+    List<String> findEmailsByNewsNameWithDailySubStatus(@Param("dailySubStatus") boolean dailySubStatus, @Param("newsName") String newsName);
 
     @Query("SELECT m.email FROM Member m WHERE m.id = :memberId")
     String findEmailByMemberId(@Param("memberId") Long memberId);
 
     @Modifying
-    @Query("update Member m set m.subStatus = :subStatus where m.username = :username")
-    void updateSubStatusByUsername(@Param("username") String username, @Param("subStatus") boolean subStatus);
+    @Query("update Member m set m.subStatus = :subStatus, m.dailySubStatus = :dailySubStatus where m.username = :username")
+    void updateSubStatusByUsername(
+            @Param("username") String username,
+            @Param("subStatus") boolean subStatus,
+            @Param("dailySubStatus") boolean dailySubStatus
+    );
 }
