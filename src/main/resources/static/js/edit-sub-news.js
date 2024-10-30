@@ -90,13 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const news4 = document.getElementById('news4').value;
         const news5 = document.getElementById('news5').value;
 
-        const newsNames = [];
+        const newsNamesSet = new Set();
         const keywords = [];
 
-        if (news2) newsNames.push(news2);
-        if (news3) newsNames.push(news3);
-        if (news4) newsNames.push(news4);
-        if (news5) newsNames.push(news5);
+        if (news2) newsNamesSet.add(news2);
+        if (news3) newsNamesSet.add(news3);
+        if (news4) newsNamesSet.add(news4);
+        if (news5) newsNamesSet.add(news5);
+
+        const newsNames = Array.from(newsNamesSet);
 
         if (document.querySelector('input[name="yeongdae"]:checked').value === "receive") {
             newsNames.push("영대소식");

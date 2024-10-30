@@ -40,13 +40,18 @@ public class SignUpDto {
 
     private List<String> keywords;
 
+    private boolean subStatus;
+
+    private boolean dailySubStatus;
+
     public Member toMemberEntity() {
         return Member.builder()
                 .username(username)
                 .password(password)
                 .nickname(nickname)
                 .email(email)
-                .subStatus(true)
+                .subStatus(subStatus)
+                .dailySubStatus(dailySubStatus)
                 .role(Role.USER)
                 .build();
     }

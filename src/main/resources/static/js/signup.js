@@ -202,19 +202,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const news3 = document.getElementById('news3').value;
         const news4 = document.getElementById('news4').value;
         const news5 = document.getElementById('news5').value;
-        if (document.querySelector('input[name="yeongdae"]:checked').value === "not_receive" && !news2 && !news3) {
+        if (document.querySelector('input[name="yeongdae"]:checked').value === "not_receive" && !news2 && !news3 && !news4 && !news5) {
             responseMessage.textContent = '적어도 하나의 소식을 선택해주세요.';
             alert('적어도 하나의 소식을 선택해주세요.');
             return;
         }
 
-        const subNewsNames = [];
+        const subNewsNamesSet = new Set();
         const keywords = [];
 
-        if (news2) subNewsNames.push(news2);
-        if (news3) subNewsNames.push(news3);
-        if (news4) subNewsNames.push(news4);
-        if (news5) subNewsNames.push(news5);
+        if (news2) subNewsNamesSet.add(news2);
+        if (news3) subNewsNamesSet.add(news3);
+        if (news4) subNewsNamesSet.add(news4);
+        if (news5) subNewsNamesSet.add(news5);
+
+        const subNewsNames = Array.from(subNewsNamesSet);
 
 
         if (document.querySelector('input[name="yeongdae"]:checked').value === "receive") {
@@ -224,6 +226,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        let subStatus = false;
+        let dailySubStatus = false;
+        const selectedNewsType = document.querySelector('input[name="newsType"]:checked');
+
+        if (!selectedNewsType) {
+            alert('알림 방식을 선택해주세요.');
+            return;
+        } else if (selectedNewsType.value === 'hourly') {
+            subStatus = true;
+        } else if (selectedNewsType.value === 'daily') {
+            dailySubStatus = true;
+        } else if (selectedNewsType.value === 'all') {
+            subStatus = true;
+            dailySubStatus = true;
+        }
+
         const formData = {
             email: document.getElementById('email').value,
             nickname: document.getElementById('nickname').value,
@@ -231,7 +249,9 @@ document.addEventListener('DOMContentLoaded', () => {
             password: password,
             subNewsNames: subNewsNames,
             verificationCode: document.getElementById('verificationCode').value,
-            keywords: keywords
+            keywords: keywords,
+            subStatus: subStatus,
+            dailySubStatus: dailySubStatus
         };
 
         try {

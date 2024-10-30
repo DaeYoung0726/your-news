@@ -200,6 +200,13 @@ a:hover {
     font-size: 1em;
 }
 
+.option-group > label:first-child {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
 .checkbox-group {
     display: flex;
     flex-wrap: wrap;

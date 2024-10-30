@@ -19,6 +19,7 @@ import project.yourNews.common.utils.api.ApiUtil;
 import project.yourNews.domains.bannedEmail.service.BannedEmailService;
 import project.yourNews.domains.member.dto.MemberUpdateDto;
 import project.yourNews.domains.member.dto.SignUpDto;
+import project.yourNews.domains.member.dto.SubscribeUpdateDto;
 import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.security.auth.CustomDetails;
 
@@ -81,10 +82,9 @@ public class MemberController {
 
     /* 소식 수신 수정 */
     @PatchMapping("/subscribe")
-    public ResponseEntity<?> subscribe(@RequestParam("username") String username,
-                                       @RequestParam("value") boolean value) {
+    public ResponseEntity<?> subscribe(@RequestBody SubscribeUpdateDto subscribeUpdateDto) {
 
-        memberService.updateSubStatus(username, value);
+        memberService.updateSubStatus(subscribeUpdateDto);
         return ResponseEntity.ok(ApiUtil.from("소식 수신 수정 완료."));
     }
 }

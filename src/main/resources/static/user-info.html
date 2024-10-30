@@ -21,7 +21,7 @@
                 <button id="editSubNewsButton">소식 수정하기</button>
                 <button id="deleteAccountButton" class="danger">탈퇴하기</button>
                 <br>
-                <button id="subscribeButton"></button>
+                <button id="subscribeButton">알림 방식 변경</button>
             </div>
             <div class="info">
                 <div class="form-group">
@@ -47,8 +47,105 @@
             </div>
         </div>
     </main>
+
+    <div id="subscribeModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>소식 알림 방식을 선택하세요</h3>
+            <p>알림 수신을 원하지 않으시면 선택하지 않으셔도 됩니다.</p>
+            <div class="modal-options">
+                <label><input type="checkbox" id="newPostAlert"> 새 글마다 알림</label>
+                <label><input type="checkbox" id="dailySummaryAlert"> 하루 한 번 요약</label>
+            </div>
+            <div class="modal-buttons">
+                <button id="saveSubscribeButton">저장</button>
+                <button id="closeModalButton">닫기</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 <script src="/js/auth.js"></script>
 <script src="/js/user-info.js"></script>
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 30px;
+        width: 320px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+
+    .modal-content h3 {
+        font-size: 1.4em;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .modal-content p {
+        font-size: 0.9em;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+    .modal-options label {
+        display: block;
+        margin: 8px 0;
+        font-size: 1em;
+        color: #333;
+        cursor: pointer;
+    }
+
+    .modal-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    #saveSubscribeButton {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 20px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.3s;
+    }
+
+    #saveSubscribeButton:hover {
+        background-color: #0056b3;
+    }
+
+    #closeModalButton {
+        background-color: #ccc;
+        color: #333;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 20px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.3s;
+    }
+
+    #closeModalButton:hover {
+        background-color: #999;
+    }
+</style>
 </body>
 </html>

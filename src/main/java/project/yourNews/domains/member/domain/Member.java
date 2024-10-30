@@ -50,6 +50,8 @@ public class Member extends BaseTimeEntity {
     @NotNull
     private boolean subStatus;
 
+    private boolean dailySubStatus;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

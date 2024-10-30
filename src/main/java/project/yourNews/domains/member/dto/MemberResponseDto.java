@@ -15,6 +15,7 @@ public class MemberResponseDto {
     private final String nickname;
     private final String email;
     private final boolean subStatus;
+    private final boolean dailySubStatus;
     private final Role role;
     private final List<SubNewsResponseDto> subNews;
 
@@ -24,6 +25,7 @@ public class MemberResponseDto {
         this.nickname = member.getNickname();
         this.email = member.getEmail();
         this.subStatus = member.isSubStatus();
+        this.dailySubStatus = member.isDailySubStatus();
         this.role = member.getRole();
 
         this.subNews = member.getSubNews().stream()

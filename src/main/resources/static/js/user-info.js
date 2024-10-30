@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const editSubNewsButton = document.getElementById('editSubNewsButton');
     const deleteAccountButton = document.getElementById('deleteAccountButton');
     const subscribeButton = document.getElementById('subscribeButton');
+    const saveSubscribeButton = document.getElementById('saveSubscribeButton');
+    const closeModalButton = document.getElementById('closeModalButton');
 
     const usernameInput = document.getElementById('username');
     const emailInput = document.getElementById('email');
@@ -15,21 +17,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const subStatusInput = document.getElementById('subStatus');
     const accessToken = localStorage.getItem('accessToken');
 
-    let currentStatus = false; // 현재 소식 수신 상태를 추적할 변수
+    function updateSubscriptionText(subStatus, dailySubStatus) {
+        let subscriptionText = '';
 
-    // 버튼 스타일 업데이트 함수
-    function updateSubscribeButton(status) {
-        if (status) {
-            subStatusInput.value = "소식 전달 허용 중";
-            subscribeButton.textContent = "소식 전달 거부";
-            subscribeButton.style.backgroundColor = "red";
-            subscribeButton.style.color = "white";
+        if (subStatus && dailySubStatus) {
+            subscriptionText = '새 글마다 알림, 하루 한 번 요약';
+        } else if (subStatus) {
+            subscriptionText = '새 글마다 알림';
+        } else if (dailySubStatus) {
+            subscriptionText = '하루 한 번 요약';
         } else {
-            subStatusInput.value = "소식 전달 거부 중";
-            subscribeButton.textContent = "소식 전달 허용";
-            subscribeButton.style.backgroundColor = "#007bff"; // 진한 파란색
-            subscribeButton.style.color = "white";
+            subscriptionText = '소식 전달 거부';
         }
+
+        subStatusInput.value = subscriptionText;
     }
 
     // 페이지 로드 시 사용자 정보 불러오기
@@ -47,10 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nicknameInput.value = data.nickname;
             subNewsInput.innerHTML = data.subNews.map(news => news.news.replace(/\\n/g, '<br>'));
 
-            currentStatus = data.subStatus;
-
-            // subStatus에 따른 버튼 텍스트 및 색상 설정
-            updateSubscribeButton(currentStatus);
+            updateSubscriptionText(data.subStatus, data.dailySubStatus);
 
         })
         .catch(error => console.error('Error fetching user info:', error));
@@ -122,25 +120,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     subscribeButton.addEventListener('click', () => {
-        const newStatus = !currentStatus;
+        subscribeModal.style.display = 'block';
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        subscribeModal.style.display = 'none';
+    });
+
+    saveSubscribeButton.addEventListener('click', () => {
+        const newPostAlert = document.getElementById('newPostAlert').checked;
+        const dailySummaryAlert = document.getElementById('dailySummaryAlert').checked;
         const username = usernameInput.value; // 이메일 값 가져오기
+
+        const subStatus = newPostAlert;
+        const dailySubStatus = dailySummaryAlert;
 
         fetch('/v1/users/subscribe', {
             method: 'PATCH',
             headers: {
                 'Authorization': accessToken,
+                'Content-Type': 'application/json'
             },
-            body: new URLSearchParams({
+            body: JSON.stringify({
                 username: username,
-                value: newStatus
+                subStatus: subStatus,
+                dailySubStatus: dailySubStatus
             })
         })
             .then(response => response.json())
             .then(updateData => {
-                currentStatus = newStatus; // 상태 업데이트
-                // 버튼 텍스트 및 색상 업데이트
-                updateSubscribeButton(currentStatus);
-
                 alert('소식 전달 상태가 업데이트되었습니다.');
             })
             .catch(error => console.error('Error updating subscription status:', error));
