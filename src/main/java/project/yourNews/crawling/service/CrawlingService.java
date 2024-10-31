@@ -103,9 +103,9 @@ public class CrawlingService {
                 String postTitle = strategy.extractPostTitle(postElement);
                 String postURL = strategy.extractPostURL(postElement);
 
-                notificationService.saveNewsInfo(newsName, postTitle, postURL);
 
                 if (!strategy.isExisted(postURL)) {
+                    notificationService.saveNewsInfo(newsName, postTitle, postURL);
                     strategy.setCurrentPostElement(postTitle);
                     List<String> memberEmails = strategy.getSubscribedMembers(newsName);
 
@@ -126,9 +126,9 @@ public class CrawlingService {
                 String postTitle = strategy.extractPostTitle(postElement);
                 String postURL = strategy.extractPostURL(postElement);
 
-                notificationService.saveNewsInfo(newsName, postTitle, postURL);
 
                 if (!strategy.isExisted(postURL)) {
+                    notificationService.saveNewsInfo(newsName, postTitle, postURL);
                     sendNewsToMember(memberEmails, newsName, postTitle, postURL);
                     strategy.saveURL(postURL);
                 }
