@@ -68,10 +68,7 @@ public class PostService {
     @Cacheable(value = "noticePosts", key = "#categoryName + ':' + #pageable.pageNumber", condition = "#categoryName.equals('notice')")
     public RestPage<PostInfoDto> readPostsByCategory(String categoryName, Pageable pageable) {
 
-        Category findCategory = categoryRepository.findByName(categoryName).orElseThrow(() ->
-                new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
-
-        Page<Post> posts = postRepository.findByCategory(findCategory, pageable);
+        Page<Post> posts = postRepository.findByCategory_Name(categoryName, pageable);
 
         return new RestPage<>(posts.map(PostInfoDto::new));
     }
