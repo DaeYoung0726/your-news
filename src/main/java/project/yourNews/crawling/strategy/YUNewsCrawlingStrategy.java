@@ -18,8 +18,6 @@ import project.yourNews.domains.member.service.MemberService;
 import project.yourNews.domains.urlHistory.service.URLHistoryService;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -78,10 +76,6 @@ public class YUNewsCrawlingStrategy implements CrawlingStrategy{
     }
 
     public List<String> getSubscribedMembers(String newsName) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 / HH시 mm분 ss초");
-        System.out.println(LocalDateTime.now().format(formatter));
-        log.error("이름: {}, 시간: {}", newsName, LocalDateTime.now().format(formatter));
-
         String messageContent = MESSAGE_PREFIX + postTitle;
         Message message = Message.builder()
                 .role("user")
