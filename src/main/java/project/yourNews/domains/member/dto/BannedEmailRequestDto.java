@@ -1,8 +1,8 @@
-package project.yourNews.domains.bannedEmail.dto;
+package project.yourNews.domains.member.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import project.yourNews.domains.bannedEmail.domain.BannedEmail;
+import project.yourNews.domains.member.domain.BannedEmail;
 
 import java.time.LocalDateTime;
 

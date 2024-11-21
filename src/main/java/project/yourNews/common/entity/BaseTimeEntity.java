@@ -1,4 +1,4 @@
-package project.yourNews.domains.common.entity;
+package project.yourNews.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;

@@ -1,11 +1,11 @@
-package project.yourNews.domains.bannedEmail.service;
+package project.yourNews.domains.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.yourNews.domains.bannedEmail.domain.BannedEmail;
-import project.yourNews.domains.bannedEmail.dto.BannedEmailRequestDto;
-import project.yourNews.domains.bannedEmail.repository.BannedEmailRepository;
+import project.yourNews.domains.member.domain.BannedEmail;
+import project.yourNews.domains.member.dto.BannedEmailRequestDto;
+import project.yourNews.domains.member.repository.BannedEmailRepository;
 
 import java.time.LocalDateTime;
 

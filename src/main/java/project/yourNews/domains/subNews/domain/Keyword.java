@@ -1,34 +1,31 @@
-package project.yourNews.domains.bannedEmail.domain;
+package project.yourNews.domains.subNews.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class BannedEmail {
+public class Keyword {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private String email;
+    private String keywordName;
 
-    @NotNull
-    private String reason;
-
-    @NotNull
-    private LocalDateTime bannedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subNews_id")
+    private SubNews subNews;
 }

@@ -2,7 +2,7 @@ package project.yourNews.domains.common.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import project.yourNews.domains.keyword.repository.KeywordRepository;
+import project.yourNews.domains.subNews.repository.KeywordRepository;
 import project.yourNews.domains.like.repository.LikeRepository;
 import project.yourNews.domains.post.repository.PostRepository;
 import project.yourNews.domains.subNews.repository.SubNewsRepository;

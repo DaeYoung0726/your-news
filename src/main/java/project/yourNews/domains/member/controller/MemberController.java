@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.yourNews.common.exception.CustomException;
 import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.utils.api.ApiUtil;
-import project.yourNews.domains.bannedEmail.service.BannedEmailService;
+import project.yourNews.domains.member.service.BannedEmailService;
 import project.yourNews.domains.member.dto.MemberUpdateDto;
 import project.yourNews.domains.member.dto.SignUpDto;
 import project.yourNews.domains.member.dto.SubscribeUpdateDto;

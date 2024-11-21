@@ -16,7 +16,7 @@ import project.yourNews.common.mail.mail.service.AskService;
 import project.yourNews.common.mail.mail.service.CodeService;
 import project.yourNews.common.mail.stibee.service.StibeeService;
 import project.yourNews.common.utils.api.ApiUtil;
-import project.yourNews.domains.bannedEmail.service.BannedEmailService;
+import project.yourNews.domains.member.service.BannedEmailService;
 
 @RestController
 @RequiredArgsConstructor

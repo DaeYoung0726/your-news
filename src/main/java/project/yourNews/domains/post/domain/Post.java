@@ -15,7 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.yourNews.domains.category.domain.Category;
-import project.yourNews.domains.common.entity.BaseTimeEntity;
+import project.yourNews.common.entity.BaseTimeEntity;
 import project.yourNews.domains.like.domain.Like;
 import project.yourNews.domains.member.domain.Member;
 

@@ -11,7 +11,7 @@ import project.yourNews.domains.auth.dto.TokenDto;
 import project.yourNews.domains.auth.dto.UserRoleDto;
 import project.yourNews.domains.auth.service.AccountService;
 import project.yourNews.domains.auth.service.AuthService;
-import project.yourNews.domains.bannedEmail.service.BannedEmailService;
+import project.yourNews.domains.member.service.BannedEmailService;
 import project.yourNews.common.exception.error.ErrorCode;
 import project.yourNews.common.exception.CustomException;
 import project.yourNews.common.utils.api.ApiUtil;

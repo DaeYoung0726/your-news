@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.yourNews.domains.keyword.entity.Keyword;
 import project.yourNews.domains.member.domain.Member;
 import project.yourNews.domains.news.domain.News;
 

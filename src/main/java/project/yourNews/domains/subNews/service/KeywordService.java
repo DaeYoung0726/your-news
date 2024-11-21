@@ -1,10 +1,10 @@
-package project.yourNews.domains.keyword.service;
+package project.yourNews.domains.subNews.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.yourNews.domains.keyword.entity.Keyword;
-import project.yourNews.domains.keyword.repository.KeywordRepository;
+import project.yourNews.domains.subNews.domain.Keyword;
+import project.yourNews.domains.subNews.repository.KeywordRepository;
 import project.yourNews.domains.subNews.domain.SubNews;
 
 @RequiredArgsConstructor

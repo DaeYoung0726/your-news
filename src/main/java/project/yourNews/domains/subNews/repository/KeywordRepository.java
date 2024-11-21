@@ -1,10 +1,10 @@
-package project.yourNews.domains.keyword.repository;
+package project.yourNews.domains.subNews.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import project.yourNews.domains.keyword.entity.Keyword;
+import project.yourNews.domains.subNews.domain.Keyword;
 
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 

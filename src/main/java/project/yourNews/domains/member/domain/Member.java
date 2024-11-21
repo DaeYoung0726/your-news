@@ -15,7 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
-import project.yourNews.domains.common.entity.BaseTimeEntity;
+import project.yourNews.common.entity.BaseTimeEntity;
 import project.yourNews.domains.subNews.domain.SubNews;
 
 import java.util.List;
