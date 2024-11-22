@@ -15,6 +15,7 @@ import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
 import project.yourNews.domains.notification.dto.NewsNotificationDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -53,14 +54,28 @@ public class NotificationScheduler {
 
     /* 소식 구독자에게 메일 보내기 */
     private void sendNewsToMember(List<String> memberEmails, String newsName, List<NewsNotificationDto> notificationDtos) {
-
         String mailContent = MailContentBuilder.buildNewsMailContent(newsName, notificationDtos);
 
-        EmailRequest emailRequest = new EmailRequest(memberEmails, MailProperties.NEWS_SUBJECT, mailContent);
-        try {
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, emailRequest);
-        } catch (Exception e) {
-            log.error("Failed to send email request to RabbitMQ: {}", emailRequest, e);
+        int batchSize = 100;
+        List<List<String>> emailBatches = partitionList(memberEmails, batchSize);
+
+        for (List<String> emailBatch : emailBatches) {
+            EmailRequest emailRequest = new EmailRequest(emailBatch, MailProperties.NEWS_SUBJECT, mailContent);
+
+            try {
+                rabbitTemplate.convertAndSend(exchangeName, routingKey, emailRequest);
+
+            } catch (Exception e) {
+                log.error("Failed to send email request to RabbitMQ : {}", newsName, e);
+            }
         }
+    }
+
+    private List<List<String>> partitionList(List<String> list, int batchSize) {
+        List<List<String>> partitions = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += batchSize) {
+            partitions.add(list.subList(i, Math.min(i + batchSize, list.size())));
+        }
+        return partitions;
     }
 }

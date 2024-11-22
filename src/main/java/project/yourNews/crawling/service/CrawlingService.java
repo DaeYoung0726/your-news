@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 import project.yourNews.common.mail.mail.MailContentBuilder;
+import project.yourNews.common.mail.mail.service.NewsMailService;
 import project.yourNews.common.mail.mail.util.MailProperties;
 import project.yourNews.crawling.dto.EmailRequest;
 import project.yourNews.crawling.strategy.CrawlingStrategy;
@@ -25,6 +26,7 @@ import project.yourNews.domains.news.service.NewsService;
 import project.yourNews.domains.notification.service.NotificationService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -39,6 +41,7 @@ public class CrawlingService {
     private final List<CrawlingStrategy> strategies;
     private final TaskScheduler taskScheduler;
     private final NotificationService notificationService;
+    private final NewsMailService newsMailService;
 
     private static final int MAX_RETRIES = 2;
 
@@ -155,27 +158,26 @@ public class CrawlingService {
     /* 소식 구독자에게 메일 보내기 */
     private void sendNewsToMember(List<String> memberEmails, String newsName, String postTitle, String postURL) {
         String mailContent = MailContentBuilder.buildNewsMailContent(newsName, postTitle, postURL);
-        EmailRequest emailRequest = new EmailRequest(memberEmails, MailProperties.NEWS_SUBJECT, mailContent);
 
-        int retryCount = 0;
+        int batchSize = 100;
+        List<List<String>> emailBatches = partitionList(memberEmails, batchSize);
 
-        while (retryCount <= MAX_RETRIES) {
+        for (List<String> emailBatch : emailBatches) {
+            EmailRequest emailRequest = new EmailRequest(emailBatch, MailProperties.NEWS_SUBJECT, mailContent);
+
             try {
                 rabbitTemplate.convertAndSend(exchangeName, routingKey, emailRequest);
-                break; // 성공적으로 전송되었으면 루프 종료
             } catch (Exception e) {
-                log.error("Failed to send email request to RabbitMQ on attempt {}: {}", ++retryCount, newsName, e);
-
-                if (retryCount > MAX_RETRIES) {
-                    log.error("Max retries reached for newsName : {}", newsName);
-                } else {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
+                log.error("Failed to send email request to RabbitMQ : {}", newsName, e);
             }
         }
+    }
+
+    private List<List<String>> partitionList(List<String> list, int batchSize) {
+        List<List<String>> partitions = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += batchSize) {
+            partitions.add(list.subList(i, Math.min(i + batchSize, list.size())));
+        }
+        return partitions;
     }
 }
