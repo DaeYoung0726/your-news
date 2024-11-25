@@ -19,13 +19,18 @@ function confirmUnsubscribe() {
             .then(data => {
                 if (data.response === true) {
                     // 계정 확인 성공 시 구독 취소 요청
-                    const unsubscribeData = new FormData();
-                    unsubscribeData.append('username', formData.get('username'));
-                    unsubscribeData.append('value', 'false');
+                    const unsubscribeData = {
+                        username: formData.get('username'),
+                        subStatus: false,
+                        dailySubStatus: false
+                    };
 
                     fetch('/v1/users/subscribe', {
                         method: 'PATCH',
-                        body: unsubscribeData,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(unsubscribeData),
                     })
                         .then(response => {
                             if (response.ok) {
