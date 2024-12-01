@@ -15,7 +15,6 @@ import project.yourNews.domains.news.dto.NewsInfoDto;
 import project.yourNews.domains.news.service.NewsService;
 import project.yourNews.domains.notification.dto.NewsNotificationDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -56,11 +55,9 @@ public class NotificationScheduler {
     private void sendNewsToMember(List<String> memberEmails, String newsName, List<NewsNotificationDto> notificationDtos) {
         String mailContent = MailContentBuilder.buildNewsMailContent(newsName, notificationDtos);
 
-        int batchSize = 100;
-        List<List<String>> emailBatches = partitionList(memberEmails, batchSize);
 
-        for (List<String> emailBatch : emailBatches) {
-            EmailRequest emailRequest = new EmailRequest(emailBatch, MailProperties.NEWS_SUBJECT, mailContent);
+        for (String email : memberEmails) {
+            EmailRequest emailRequest = new EmailRequest(email, MailProperties.NEWS_SUBJECT, mailContent);
 
             try {
                 rabbitTemplate.convertAndSend(exchangeName, routingKey, emailRequest);
@@ -69,13 +66,5 @@ public class NotificationScheduler {
                 log.error("Failed to send email request to RabbitMQ : {}", newsName, e);
             }
         }
-    }
-
-    private List<List<String>> partitionList(List<String> list, int batchSize) {
-        List<List<String>> partitions = new ArrayList<>();
-        for (int i = 0; i < list.size(); i += batchSize) {
-            partitions.add(list.subList(i, Math.min(i + batchSize, list.size())));
-        }
-        return partitions;
     }
 }

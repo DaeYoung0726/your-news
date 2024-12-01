@@ -15,7 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 import project.yourNews.common.mail.mail.MailContentBuilder;
-import project.yourNews.common.mail.mail.service.NewsMailService;
 import project.yourNews.common.mail.mail.util.MailProperties;
 import project.yourNews.crawling.dto.EmailRequest;
 import project.yourNews.crawling.strategy.CrawlingStrategy;
@@ -26,7 +25,6 @@ import project.yourNews.domains.news.service.NewsService;
 import project.yourNews.domains.notification.service.NotificationService;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -41,7 +39,6 @@ public class CrawlingService {
     private final List<CrawlingStrategy> strategies;
     private final TaskScheduler taskScheduler;
     private final NotificationService notificationService;
-    private final NewsMailService newsMailService;
 
     private static final int MAX_RETRIES = 2;
 
@@ -159,11 +156,8 @@ public class CrawlingService {
     private void sendNewsToMember(List<String> memberEmails, String newsName, String postTitle, String postURL) {
         String mailContent = MailContentBuilder.buildNewsMailContent(newsName, postTitle, postURL);
 
-        int batchSize = 100;
-        List<List<String>> emailBatches = partitionList(memberEmails, batchSize);
-
-        for (List<String> emailBatch : emailBatches) {
-            EmailRequest emailRequest = new EmailRequest(emailBatch, MailProperties.NEWS_SUBJECT, mailContent);
+        for (String email : memberEmails) {
+            EmailRequest emailRequest = new EmailRequest(email, MailProperties.NEWS_SUBJECT, mailContent);
 
             try {
                 rabbitTemplate.convertAndSend(exchangeName, routingKey, emailRequest);
@@ -171,13 +165,5 @@ public class CrawlingService {
                 log.error("Failed to send email request to RabbitMQ : {}", newsName, e);
             }
         }
-    }
-
-    private List<List<String>> partitionList(List<String> list, int batchSize) {
-        List<List<String>> partitions = new ArrayList<>();
-        for (int i = 0; i < list.size(); i += batchSize) {
-            partitions.add(list.subList(i, Math.min(i + batchSize, list.size())));
-        }
-        return partitions;
     }
 }
