@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 
         ErrorCode errorCode = ex.getErrorCode();
         ErrorDto errorDto = new ErrorDto(errorCode.getStatus(), errorCode.getMessage());
-        log.error("Error occurred : {}, Stack trace: {}", ex.getMessage(), getCustomStackTrace(ex));
+        log.error("Error occurred : [errorCode={}, message={}]", errorCode.getStatus(), errorCode.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatusCode.valueOf(errorDto.getStatus()));
     }
 
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     protected ResponseEntity<?> customServerException(Exception ex) {
         ErrorDto error = new ErrorDto(ErrorCode.INTERNAL_SERVER_ERROR.getStatus(), ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
-        log.error("Error occurred : {}, Stack trace: {}", ex.getMessage(), getCustomStackTrace(ex));
+        log.error("Error occurred : [errorCode={}, message={}]", error.getStatus(), error.getMessage());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
